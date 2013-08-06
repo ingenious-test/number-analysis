@@ -4,7 +4,7 @@ AverangeIgnoreNullAnalisys::AverangeIgnoreNullAnalisys()
 {
 }
 
-double AverangeIgnoreNullAnalisys::analyze(const QList<double> &values) const
+double AverangeIgnoreNullAnalisys::analyze(const PointList &values) const
 {
     if(values.isEmpty())
     {
@@ -14,7 +14,7 @@ double AverangeIgnoreNullAnalisys::analyze(const QList<double> &values) const
     const double sum = AbstractAnalysis::listSum(values);
     int length = 0;
 
-    foreach(const double value, values)
+    foreach(const Point value, values)
     {
         if(value != 0)
         {

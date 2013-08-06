@@ -7,12 +7,12 @@
 class StupidAnalysis : public AbstractAnalysis
 {
 public:
-    StupidAnalysis(const double value);
+    StupidAnalysis(const Point value);
 
-    double analyze(const QList<double> &list) const;
+    double analyze(const PointList &list) const;
 
 private:
-    double value_;
+    Point value_;
 };
 
 #endif // STUPIDANALYSIS_H

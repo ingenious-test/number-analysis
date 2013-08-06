@@ -4,7 +4,7 @@ AverangeAnalisys::AverangeAnalisys()
 {
 }
 
-double AverangeAnalisys::analyze(const QList<double> &values) const
+double AverangeAnalisys::analyze(const PointList &values) const
 {
     if(values.isEmpty())
     {

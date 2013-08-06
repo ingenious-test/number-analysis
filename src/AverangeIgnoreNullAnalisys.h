@@ -9,7 +9,7 @@ class AverangeIgnoreNullAnalisys : public AbstractAnalysis
 public:
     AverangeIgnoreNullAnalisys();
 
-    double analyze(const QList<double> &values) const;
+    double analyze(const PointList &values) const;
 };
 
 #endif // AVERANGEIGNORENULLANALISYS_H

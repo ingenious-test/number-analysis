@@ -4,6 +4,11 @@
 
 #include <QtCore>
 
+typedef double Point;
+typedef QList<Point> PointList;
+
+Q_DECLARE_METATYPE(PointList)
+
 class AbstractAnalysis
 {
     friend class AverageAnalisys;
@@ -11,9 +16,9 @@ class AbstractAnalysis
     friend class StupidAnalysis;
 
 public:
-    static double listSum(const QList<double> list);
+    static double listSum(const PointList &list);
 
-    virtual double analyze(const QList<double> &list) const = 0;
+    virtual double analyze(const PointList &list) const = 0;
 
 protected:
     AbstractAnalysis();
