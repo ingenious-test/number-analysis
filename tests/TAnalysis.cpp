@@ -73,7 +73,7 @@ void TAnalysis::TestStupidAnalysis()
     const double actualResult = analysis.analyze(PointList());
     const double expectedResult = result;
 
-    QCOMPARE(actualResult, expectedResult);
+    FUZZY_COMPARE(actualResult, expectedResult);
 }
 
 void TAnalysis::TestAverageAnalysis_data()
@@ -108,7 +108,7 @@ void TAnalysis::TestAverageAnalysis()
     const double actualResult = analysis.analyze(values);
     const double expectedResult = result;
 
-    QCOMPARE(actualResult, expectedResult);
+    FUZZY_COMPARE(actualResult, expectedResult);
 
 }
 
@@ -146,5 +146,5 @@ void TAnalysis::TestAverageIgnoreNullAnalysis()
     const double actualResult = analysis.analyze(values);
     const double expectedResult = result;
 
-    QCOMPARE(actualResult, expectedResult);
+    FUZZY_COMPARE(actualResult, expectedResult);
 }
