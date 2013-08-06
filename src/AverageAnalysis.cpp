@@ -1,11 +1,11 @@
-#include "AverangeAnalisys.h"
+#include "AverageAnalysis.h"
 
-AverangeAnalisys::AverangeAnalisys():
+AverageAnalysis::AverageAnalysis():
     AbstractAnalysis("average")
 {
 }
 
-double AverangeAnalisys::analyze(const PointList &values) const
+double AverageAnalysis::analyze(const PointList &values) const
 {
     if(values.isEmpty())
     {

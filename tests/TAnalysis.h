@@ -2,12 +2,12 @@
 
 #define TANALYSIS_H
 
-#include <QTest>
-
 #include "../src/AbstractAnalysis.h"
 #include "../src/StupidAnalysis.h"
-#include "../src/AverangeAnalisys.h"
-#include "../src/AverangeIgnoreNullAnalisys.h"
+#include "../src/AverageAnalysis.h"
+#include "../src/AverageIgnoreNullAnalysis.h"
+
+#include "TestingUtilities.h"
 
 class TAnalysis : public QObject
 {
@@ -25,11 +25,11 @@ private slots:
     void TestStupidAnalysis_data();
     void TestStupidAnalysis();
 
-    void TestAverangeAnalysis_data();
-    void TestAverangeAnalysis();
+    void TestAverageAnalysis_data();
+    void TestAverageAnalysis();
 
-    void TestAverangeIgnoreNullAnalysis_data();
-    void TestAverangeIgnoreNullAnalysis();
+    void TestAverageIgnoreNullAnalysis_data();
+    void TestAverageIgnoreNullAnalysis();
 
 };
 

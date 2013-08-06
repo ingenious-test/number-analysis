@@ -23,18 +23,19 @@ CONFIG(test){
 SOURCES += main.cpp\
         mainwindow.cpp \
     src/StupidAnalysis.cpp \
-    src/AverangeAnalisys.cpp \
+    src/AverageAnalysis.cpp \
     tests/TAnalysis.cpp \
-    src/AverangeIgnoreNullAnalisys.cpp \
+    src/AverageIgnoreNullAnalysis.cpp \
     src/AbstractAnalysis.cpp \
     tests/TAnalysisCollection.cpp \
     src/AnalysisCollection.cpp
 
 HEADERS  += mainwindow.h \
     src/StupidAnalysis.h \
-    src/AverangeAnalisys.h \
     tests/TAnalysis.h \
-    src/AverangeIgnoreNullAnalisys.h \
     src/AbstractAnalysis.h \
     tests/TAnalysisCollection.h \
-    src/AnalysisCollection.h
+    src/AnalysisCollection.h \
+    tests/TestingUtilities.h \
+    src/AverageIgnoreNullAnalysis.h \
+    src/AverageAnalysis.h

@@ -11,8 +11,8 @@ Q_DECLARE_METATYPE(PointList)
 
 class AbstractAnalysis
 {
-    friend class AverageAnalisys;
-    friend class AverangeIgnoreNullAnalisys;
+    friend class AverageAnalysis;
+    friend class AverageIgnoreNullAnalysis;
     friend class StupidAnalysis;
 
 public:

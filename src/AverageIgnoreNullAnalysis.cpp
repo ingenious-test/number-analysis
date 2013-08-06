@@ -1,11 +1,11 @@
-#include "AverangeIgnoreNullAnalisys.h"
+#include "AverageIgnoreNullAnalysis.h"
 
-AverangeIgnoreNullAnalisys::AverangeIgnoreNullAnalisys() :
+AverageIgnoreNullAnalysis::AverageIgnoreNullAnalysis() :
     AbstractAnalysis("average-ignore-null")
 {
 }
 
-double AverangeIgnoreNullAnalisys::analyze(const PointList &values) const
+double AverageIgnoreNullAnalysis::analyze(const PointList &values) const
 {
     if(values.isEmpty())
     {
