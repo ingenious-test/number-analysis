@@ -5,7 +5,7 @@ StupidAnalysis::StupidAnalysis(const double value) :
 {
 }
 
-double StupidAnalysis::analyze()
+double StupidAnalysis::analyze(const QList<double> &list) const
 {
     return value_;
 }

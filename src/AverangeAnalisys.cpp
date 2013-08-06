@@ -4,20 +4,14 @@ AverangeAnalisys::AverangeAnalisys()
 {
 }
 
-double AverangeAnalisys::analyze(const QList<double> &values)
+double AverangeAnalisys::analyze(const QList<double> &values) const
 {
     if(values.isEmpty())
     {
         return 0;
     }
 
-    double sum = 0.0;
-
-    foreach(const double value, values)
-    {
-        sum += value;
-    }
-
+    const double sum = AbstractAnalysis::listSum(values);
     const double result = sum / static_cast<double>(values.length());
 
     return result;

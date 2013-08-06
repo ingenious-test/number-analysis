@@ -24,9 +24,13 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     src/StupidAnalysis.cpp \
     src/AverangeAnalisys.cpp \
-    tests/TAnalysis.cpp
+    tests/TAnalysis.cpp \
+    src/AverangeIgnoreNullAnalisys.cpp \
+    src/AbstractAnalysis.cpp
 
 HEADERS  += mainwindow.h \
     src/StupidAnalysis.h \
     src/AverangeAnalisys.h \
-    tests/TAnalysis.h
+    tests/TAnalysis.h \
+    src/AverangeIgnoreNullAnalisys.h \
+    src/AbstractAnalysis.h

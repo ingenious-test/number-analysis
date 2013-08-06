@@ -2,12 +2,14 @@
 
 #define STUPIDANALYSIS_H
 
-class StupidAnalysis
+#include "AbstractAnalysis.h"
+
+class StupidAnalysis : public AbstractAnalysis
 {
 public:
     StupidAnalysis(const double value);
 
-    double analyze();
+    double analyze(const QList<double> &list) const;
 
 private:
     double value_;
