@@ -1,6 +1,7 @@
 #include "AverangeAnalisys.h"
 
-AverangeAnalisys::AverangeAnalisys()
+AverangeAnalisys::AverangeAnalisys():
+    AbstractAnalysis("average")
 {
 }
 

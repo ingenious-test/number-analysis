@@ -20,8 +20,15 @@ public:
 
     virtual double analyze(const PointList &list) const = 0;
 
+    QString name();
+
 protected:
-    AbstractAnalysis();
+    AbstractAnalysis(const QString &name);
+
+private:
+    QString name_;
 };
+
+Q_DECLARE_METATYPE(AbstractAnalysis*)
 
 #endif // ABSTRACTANALYSIS_H

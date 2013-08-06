@@ -12,4 +12,6 @@ public:
     double analyze(const PointList &values) const;
 };
 
+Q_DECLARE_METATYPE(AverangeAnalisys*)
+
 #endif // AVERANGEANALISYS_H

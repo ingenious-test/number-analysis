@@ -1,6 +1,7 @@
 #include "AverangeIgnoreNullAnalisys.h"
 
-AverangeIgnoreNullAnalisys::AverangeIgnoreNullAnalisys()
+AverangeIgnoreNullAnalisys::AverangeIgnoreNullAnalisys() :
+    AbstractAnalysis("average-ignore-null")
 {
 }
 

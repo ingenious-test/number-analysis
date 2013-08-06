@@ -16,6 +16,9 @@ public:
     TAnalysis();
 
 private slots:
+    void TestAbstractAnalysis_data();
+    void TestAbstractAnalysis();
+
     void TestListSum_data();
     void TestListSum();
 
@@ -27,6 +30,7 @@ private slots:
 
     void TestAverangeIgnoreNullAnalysis_data();
     void TestAverangeIgnoreNullAnalysis();
+
 };
 
 #endif // TANALYSIS_H

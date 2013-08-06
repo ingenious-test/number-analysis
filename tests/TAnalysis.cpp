@@ -5,6 +5,28 @@ TAnalysis::TAnalysis()
 {
 }
 
+void TAnalysis::TestAbstractAnalysis_data()
+{
+    QTest::addColumn<AbstractAnalysis*>("analysis");
+    QTest::addColumn<QString>("name");
+
+    QTest::newRow("average") << static_cast<AbstractAnalysis*>(new AverangeAnalisys) << "average";
+    QTest::newRow("average-with-ignore-null")
+            << static_cast<AbstractAnalysis*>(new AverangeIgnoreNullAnalisys)
+            << "average-ignore-null";
+    QTest::newRow("stupid") << static_cast<AbstractAnalysis*>(new StupidAnalysis) << "stupid";
+}
+
+void TAnalysis::TestAbstractAnalysis()
+{
+    QFETCH(AbstractAnalysis*, analysis);
+    QFETCH(QString, name);
+
+    QCOMPARE(analysis->name(), name);
+
+    delete analysis;
+}
+
 void TAnalysis::TestListSum_data()
 {
     QTest::addColumn< QList<double> >("list");

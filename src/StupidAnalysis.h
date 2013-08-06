@@ -7,6 +7,7 @@
 class StupidAnalysis : public AbstractAnalysis
 {
 public:
+    StupidAnalysis();
     StupidAnalysis(const Point value);
 
     double analyze(const PointList &list) const;
@@ -14,5 +15,7 @@ public:
 private:
     Point value_;
 };
+
+Q_DECLARE_METATYPE(StupidAnalysis*)
 
 #endif // STUPIDANALYSIS_H
