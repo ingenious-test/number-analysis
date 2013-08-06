@@ -26,11 +26,15 @@ SOURCES += main.cpp\
     src/AverangeAnalisys.cpp \
     tests/TAnalysis.cpp \
     src/AverangeIgnoreNullAnalisys.cpp \
-    src/AbstractAnalysis.cpp
+    src/AbstractAnalysis.cpp \
+    tests/TAnalysisCollection.cpp \
+    src/AnalysisCollection.cpp
 
 HEADERS  += mainwindow.h \
     src/StupidAnalysis.h \
     src/AverangeAnalisys.h \
     tests/TAnalysis.h \
     src/AverangeIgnoreNullAnalisys.h \
-    src/AbstractAnalysis.h
+    src/AbstractAnalysis.h \
+    tests/TAnalysisCollection.h \
+    src/AnalysisCollection.h
