@@ -15,13 +15,32 @@ public:
 };
 Q_DECLARE_METATYPE(AnalysisResult)
 
+typedef QList<AbstractAnalysis*> AnalysisList;
+
 class AnalysisCollection
 {
 public:
     AnalysisCollection();
-    AnalysisCollection(QList<AbstractAnalysis*> analyzes);
+    AnalysisCollection(AnalysisList analyzes);
+
+    ~AnalysisCollection();
 
     AnalysisResult analyze(const PointList &list) const;
+
+    bool isAdded(AbstractAnalysis *analysis);
+    void addAnalysis(AbstractAnalysis *analysis);
+
+    void removeAnalysis(const int i);
+    void removeAll();
+
+    const QStringList getNameList();
+
+    const int length();
+
+
+private:
+    AnalysisList analysisList_;
+
 };
 Q_DECLARE_METATYPE(AnalysisCollection)
 

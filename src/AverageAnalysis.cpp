@@ -5,6 +5,12 @@ AverageAnalysis::AverageAnalysis():
 {
 }
 
+AverageAnalysis::AverageAnalysis(const AverageAnalysis &a):
+    AbstractAnalysis("average")
+{
+
+}
+
 double AverageAnalysis::analyze(const PointList &values) const
 {
     if(values.isEmpty())
@@ -16,4 +22,9 @@ double AverageAnalysis::analyze(const PointList &values) const
     const double result = sum / static_cast<double>(values.length());
 
     return result;
+}
+
+AverageAnalysis *AverageAnalysis::clone()
+{
+    return new AverageAnalysis(*this);
 }

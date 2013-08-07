@@ -10,6 +10,7 @@ double AbstractAnalysis::listSum(const PointList &list)
     return sum;
 }
 
+
 QString AbstractAnalysis::name()
 {
     return name_;

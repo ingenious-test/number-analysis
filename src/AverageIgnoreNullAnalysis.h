@@ -8,8 +8,11 @@ class AverageIgnoreNullAnalysis : public AbstractAnalysis
 {
 public:
     AverageIgnoreNullAnalysis();
+    AverageIgnoreNullAnalysis(const AverageIgnoreNullAnalysis &a);
+
 
     double analyze(const PointList &values) const;
+    AverageIgnoreNullAnalysis* clone();
 };
 
 Q_DECLARE_METATYPE(AverageIgnoreNullAnalysis*)

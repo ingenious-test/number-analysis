@@ -5,6 +5,11 @@ AverageIgnoreNullAnalysis::AverageIgnoreNullAnalysis() :
 {
 }
 
+AverageIgnoreNullAnalysis::AverageIgnoreNullAnalysis(const AverageIgnoreNullAnalysis &a):
+    AbstractAnalysis("average-ignore-null")
+{
+}
+
 double AverageIgnoreNullAnalysis::analyze(const PointList &values) const
 {
     if(values.isEmpty())
@@ -26,4 +31,9 @@ double AverageIgnoreNullAnalysis::analyze(const PointList &values) const
     const double result = sum / static_cast<double>(length);
 
     return result;
+}
+
+AverageIgnoreNullAnalysis *AverageIgnoreNullAnalysis::clone()
+{
+    return new AverageIgnoreNullAnalysis(*this);
 }

@@ -19,6 +19,7 @@ public:
     static double listSum(const PointList &list);
 
     virtual double analyze(const PointList &list) const = 0;
+    virtual AbstractAnalysis* clone() = 0;
 
     QString name();
 
