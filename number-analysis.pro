@@ -5,9 +5,8 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+QT += testlib
 TARGET = number-analysis
-
 
 CONFIG(app){
     message("bulding app")
@@ -15,7 +14,6 @@ CONFIG(app){
 }
 
 CONFIG(test){
-    QT += testlib
     message("bulding tests")
     DEFINES += TEST
 }
@@ -28,7 +26,9 @@ SOURCES += main.cpp\
     src/AverageIgnoreNullAnalysis.cpp \
     src/AbstractAnalysis.cpp \
     tests/TAnalysisCollection.cpp \
-    src/AnalysisCollection.cpp
+    src/AnalysisCollection.cpp \
+    tests/TAnalysisTableModel.cpp \
+    src/AnalysisTableModel.cpp
 
 HEADERS  += mainwindow.h \
     src/StupidAnalysis.h \
@@ -38,4 +38,6 @@ HEADERS  += mainwindow.h \
     src/AnalysisCollection.h \
     tests/TestingUtilities.h \
     src/AverageIgnoreNullAnalysis.h \
-    src/AverageAnalysis.h
+    src/AverageAnalysis.h \
+    tests/TAnalysisTableModel.h \
+    src/AnalysisTableModel.h

@@ -1,12 +1,17 @@
 #include <QtGui/QApplication>
 
+
 #ifdef TEST
-    #include <iostream>
-    #include "tests/TAnalysis.h"
-    #include "tests/TAnalysisCollection.h"
-#else
-    #include "mainwindow.h"
+#include <iostream>
+#include "tests/TAnalysis.h"
+#include "tests/TAnalysisCollection.h"
+#include"tests/TAnalysisTableModel.h"
 #endif
+
+#ifndef TEST
+#include "mainwindow.h"
+#endif
+
 
 int main(int argc, char *argv[])
 {
@@ -20,7 +25,14 @@ int main(int argc, char *argv[])
 
     TAnalysisCollection tAnalysisCollection;
     QTest::qExec(&tAnalysisCollection);
-#else
+
+    std::cout << "\r\n";
+
+    TAnalysisTableModel tAnalysisTableModel;
+    QTest::qExec(&tAnalysisTableModel);
+#endif
+
+#ifndef TEST
     MainWindow w;
     w.show();
 #endif

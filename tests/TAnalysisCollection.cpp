@@ -44,10 +44,10 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove_data()
 {
     QTest::addColumn<AnalysisCollection>("collection");
     QTest::addColumn<int>("length");
-    QTest::addColumn<QStringList>("nameList");
+    QTest::addColumn<IDList>("nameList");
 
 
-    QTest::newRow("empty-collection") << AnalysisCollection() << 0 << QStringList();
+    QTest::newRow("empty-collection") << AnalysisCollection() << 0 << IDList();
 
     AnalysisCollection test1;
 
@@ -59,7 +59,7 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove_data()
         QTest::newRow(QString("stupid-analysis-collection-added-" + QString::number(i)).toStdString().c_str())
                 << test1
                 << 1
-                << (QStringList() << "stupid");
+                << (IDList() << "stupid");
 
         if(i != 9)
         {
@@ -68,7 +68,7 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove_data()
             QTest::newRow(QString("stupid-analysis-collection-removed-" + QString::number(i)).toStdString().c_str())
                     << test1
                     << 0
-                    << QStringList();
+                    << IDList();
         }
 
         delete stupidAnalysis;
@@ -89,7 +89,7 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove_data()
         QTest::newRow(QString("stupid-avarage-analysis-collection-added-" + QString::number(i)).toStdString().c_str())
                 << test2
                 << 2
-                << (QStringList() << "stupid" << "average");
+                << (IDList() << "stupid" << "average");
 
         if(i != 9)
         {
@@ -98,7 +98,7 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove_data()
             QTest::newRow(QString("stupid-avarage-analysis-collection-removed-" + QString::number(i)).toStdString().c_str())
                     << test2
                     << 0
-                    << QStringList();
+                    << IDList();
         }
 
         delete stupidAnalysis;
@@ -111,15 +111,15 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove()
 {
     QFETCH(AnalysisCollection, collection);
     QFETCH(int, length);
-    QFETCH(QStringList, nameList);
+    QFETCH(IDList, nameList);
 
     const int actualLength = collection.length();
     const int expectedLength = length;
 
     QCOMPARE(actualLength, expectedLength);
 
-    const QStringList actualNames = collection.getNameList();
-    const QStringList expectedNames = nameList;
+    const IDList actualNames = collection.getNameList();
+    const IDList expectedNames = nameList;
 
     QCOMPARE(actualNames, expectedNames);
 }

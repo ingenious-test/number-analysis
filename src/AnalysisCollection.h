@@ -7,7 +7,7 @@
 class AnalysisResult : public QHash<QString, double>
 {
 public:
-    AnalysisResult& insertInc(const QString &name, const double &value)
+    AnalysisResult& insertInc(const ID &name, const double &value)
     {
         insert(name, value);
         return *this;
@@ -33,7 +33,7 @@ public:
     void removeAnalysis(const int i);
     void removeAll();
 
-    const QStringList getNameList();
+    const IDList getNameList();
 
     const int length();
 

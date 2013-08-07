@@ -76,9 +76,9 @@ void AnalysisCollection::removeAll()
     analysisList_.clear();
 }
 
-const QStringList AnalysisCollection::getNameList()
+const IDList AnalysisCollection::getNameList()
 {
-    QStringList list;
+    IDList list;
 
     foreach(AbstractAnalysis* item, analysisList_)
     {

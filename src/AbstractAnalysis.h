@@ -8,8 +8,10 @@ typedef double Point;
 typedef QList<Point> PointList;
 
 typedef QString ID;
+typedef QList<ID> IDList;
 
 Q_DECLARE_METATYPE(PointList)
+Q_DECLARE_METATYPE(IDList)
 
 class AbstractAnalysis
 {
@@ -23,13 +25,13 @@ public:
     virtual double analyze(const PointList &list) const = 0;
     virtual AbstractAnalysis* clone() = 0;
 
-    QString name();
+    ID name();
 
 protected:
-    AbstractAnalysis(const QString &name);
+    AbstractAnalysis(const ID &name);
 
 private:
-    QString name_;
+    ID name_;
 };
 
 Q_DECLARE_METATYPE(AbstractAnalysis*)
