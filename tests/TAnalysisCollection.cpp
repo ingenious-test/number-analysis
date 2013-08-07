@@ -19,6 +19,13 @@ void TAnalysisCollection::TestAnalyzeAnalysis_data()
                                                 << (PointList() << 1.0)
                                                 << (AnalysisResult()
                                                     .insertInc(StupidAnalysis().name(), 1.0));
+
+    QTest::newRow("stupid-average-analysis-collection") << AnalysisCollection(AnalysisList()
+                                                                              << new StupidAnalysis() << new AverageAnalysis())
+                                                << (PointList() << 5.0 << 9.0 << 14.0)
+                                                << (AnalysisResult()
+                                                    .insertInc(StupidAnalysis().name(), 5.0 + 9.0 + 14.0)
+                                                    .insertInc(AverageAnalysis().name(), (5.0 + 9.0 + 14.0)/3.0));
 }
 
 void TAnalysisCollection::TestAnalyzeAnalysis()

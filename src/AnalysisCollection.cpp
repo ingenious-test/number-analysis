@@ -6,6 +6,10 @@ AnalysisCollection::AnalysisCollection()
 
 AnalysisCollection::AnalysisCollection(AnalysisList analyzes)
 {
+    foreach(AbstractAnalysis* item, analyzes)
+    {
+        addAnalysis(item);
+    }
 }
 
 AnalysisCollection::~AnalysisCollection()
@@ -15,7 +19,24 @@ AnalysisCollection::~AnalysisCollection()
 
 AnalysisResult AnalysisCollection::analyze(const PointList &list) const
 {
-    return AnalysisResult();
+    if(list.isEmpty())
+    {
+        return AnalysisResult();
+    }
+
+    if(analysisList_.empty())
+    {
+        return AnalysisResult();
+    }
+
+    AnalysisResult analysisResult;
+
+    foreach(AbstractAnalysis* item, analysisList_)
+    {
+       analysisResult.insert(item->name(), item->analyze(list));
+    }
+
+    return analysisResult;
 }
 
 bool AnalysisCollection::isAdded(AbstractAnalysis *analysis)

@@ -1,29 +1,21 @@
 #include "StupidAnalysis.h"
 
 StupidAnalysis::StupidAnalysis() :
-    AbstractAnalysis("stupid"),
-    value_(0.0)
+    AbstractAnalysis("stupid")
 {
 
-}
-
-StupidAnalysis::StupidAnalysis(const Point value) :
-    AbstractAnalysis("stupid"),
-    value_(value)
-{
 }
 
 StupidAnalysis::StupidAnalysis(const StupidAnalysis &a)
     :
-       AbstractAnalysis("stupid"),
-       value_(a.value_)
+       AbstractAnalysis("stupid")
 {
 
 }
 
 double StupidAnalysis::analyze(const PointList &list) const
 {
-    return value_;
+    return listSum(list);
 }
 
 StupidAnalysis *StupidAnalysis::clone()

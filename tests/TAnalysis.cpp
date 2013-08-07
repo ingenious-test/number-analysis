@@ -55,22 +55,22 @@ void TAnalysis::TestListSum()
 
 void TAnalysis::TestStupidAnalysis_data()
 {
-    QTest::addColumn<Point>("value");
+    QTest::addColumn<PointList>("value");
     QTest::addColumn<double>("result");
 
-    QTest::newRow("zero-value") << 0.0 << 0.0;
-    QTest::newRow("non-zero-value") << 1.0 << 1.0;
-    QTest::newRow("negative-value") << -1.0 << -1.0;
+    QTest::newRow("zero-value") << PointList() << 0.0;
+    QTest::newRow("non-zero-value") << (PointList() << 1.0) << 1.0;
+    QTest::newRow("negative-value") << (PointList() << 10.0 << 5.0) << 15.0;
 }
 
 void TAnalysis::TestStupidAnalysis()
 {
-    QFETCH(Point, value);
+    QFETCH(PointList, value);
     QFETCH(double, result);
 
-    StupidAnalysis analysis(value);
+    StupidAnalysis analysis;
 
-    const double actualResult = analysis.analyze(PointList());
+    const double actualResult = analysis.analyze(value);
     const double expectedResult = result;
 
     FUZZY_COMPARE(actualResult, expectedResult);
