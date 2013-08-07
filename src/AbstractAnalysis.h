@@ -7,6 +7,8 @@
 typedef double Point;
 typedef QList<Point> PointList;
 
+typedef QString ID;
+
 Q_DECLARE_METATYPE(PointList)
 
 class AbstractAnalysis
