@@ -6,6 +6,8 @@
 #include <QtGui/QLayout>
 
 #include "src/AnalysisTableModel.h"
+#include "src/StupidAnalysis.h"
+#include "src/AverageAnalysis.h"
 
 class MainWindow : public QMainWindow
 {

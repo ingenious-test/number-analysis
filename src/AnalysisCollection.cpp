@@ -2,6 +2,15 @@
 
 AnalysisCollection::AnalysisCollection()
 {
+    analysisList_.clear();
+}
+
+AnalysisCollection::AnalysisCollection(const AnalysisCollection &collection)
+{
+    foreach(AbstractAnalysis* item, collection.analysisList_)
+    {
+        addAnalysis(item);
+    }
 }
 
 AnalysisCollection::AnalysisCollection(AnalysisList analyzes)
@@ -33,7 +42,7 @@ AnalysisResult AnalysisCollection::analyze(const PointList &list) const
 
     foreach(AbstractAnalysis* item, analysisList_)
     {
-       analysisResult.insert(item->name(), item->analyze(list));
+        analysisResult.insert(item->name(), item->analyze(list));
     }
 
     return analysisResult;
@@ -91,4 +100,9 @@ const IDList AnalysisCollection::getNameList()
 const int AnalysisCollection::length()
 {
     return analysisList_.length();
+}
+
+AnalysisCollection *AnalysisCollection::clone()
+{
+    return new AnalysisCollection(*this);
 }
