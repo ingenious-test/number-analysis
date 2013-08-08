@@ -24,17 +24,17 @@ Q_DECLARE_METATYPE(AnalysisResult)
 class AnalysisList : public QHash<QString, AbstractAnalysis*>
 {
 public:
-    AnalysisList& insertInc(AbstractAnalysis* value)
+    AnalysisList& insertInc(AbstractAnalysis* analysis)
     {
-        QString name = value->name();
+        QString name = analysis->name();
 
         if(contains(name))
         {
-            delete this->value(name);
             remove(name);
+            qWarning() << "Analysis " + name + " is replaced";
         }
 
-        insert(name, value);
+        insert(name, analysis);
         return *this;
     }
 };
@@ -57,7 +57,7 @@ public:
     void removeAnalysis(const QString &name);
     void removeAll();
 
-    const IDList getNameList() const;
+    const IDAnalysisList getNameList() const;
 
     const int size() const;
 

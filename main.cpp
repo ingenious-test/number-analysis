@@ -1,6 +1,8 @@
 #include <QtGui/QApplication>
 
 #include <QDebug>
+#include <QTextCodec>
+
 #include "tests/TAnalysis.h"
 #include "tests/TAnalysisCollection.h"
 #include "tests/TAnalysisTableModel.h"
@@ -11,6 +13,10 @@
 
 int main(int argc, char *argv[])
 {
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+
     QApplication a(argc, argv);
 
 #ifdef TEST

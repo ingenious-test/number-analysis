@@ -32,12 +32,12 @@ QModelIndex AnalysisTableModel::parent(const QModelIndex &child) const
 
 int AnalysisTableModel::rowCount(const QModelIndex &parent) const
 {
-    return results_.length();
+    return idResults_.size();
 }
 
 int AnalysisTableModel::columnCount(const QModelIndex &parent) const
 {
-    return collection_.size();
+    return collection_.size() + 1;
 }
 
 QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
@@ -47,18 +47,24 @@ QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    IDList list = collection_.getNameList();
-
-    bool isValidColumn = (index.column() > -1) && (index.column() < list.length());
-
-    if(!isValidColumn)
-    {
-        return QVariant();
-    }
+    IDAnalysisList listAnalysis = collection_.getNameList();
 
     if (role == Qt::DisplayRole)
     {
-        return results_.at(index.row()).value(list.at(index.column()),0);
+        if(results_.isEmpty())
+        {
+            return 0;
+        }
+
+        QList<ID> listResults = results_.keys();
+        if(index.column() == 0)
+        {
+            return listResults.at(index.row());
+        }
+        else
+        {
+            return results_.value(listResults.at(index.row())).value(listAnalysis.at(index.column() - 1),0);
+        }
     }
     else
     {
@@ -77,16 +83,16 @@ QVariant AnalysisTableModel::headerData(int section, Qt::Orientation orientation
 
     QStringList list = collection_.getNameList();
 
-    bool isValidSection = (section > -1) && (section < list.length());
-
-    if(!isValidSection)
-    {
-        return QVariant();
-    }
-
     if (orientation == Qt::Horizontal)
     {
-        return list.at(section);
+        if(section == 0)
+        {
+            return QString("Идентификатор результата");
+        }
+        else
+        {
+            return list.at(section-1);
+        }
     }
 
     if (orientation == Qt::Vertical)
@@ -97,7 +103,7 @@ QVariant AnalysisTableModel::headerData(int section, Qt::Orientation orientation
     return QVariant();
 }
 
-IDList AnalysisTableModel::getHeaders()
+IDAnalysisList AnalysisTableModel::getHeaders()
 {
     return collection_.getNameList();
 }
@@ -107,9 +113,24 @@ void AnalysisTableModel::analyze()
     if(collection_.size() > 0)
     {
         results_.clear();
-        foreach(PointList item, seqPointList_)
+        if(idResults_.isEmpty())
         {
-            results_.append(collection_.analyze(item));
+            qWarning() << "Set ID for Results";
+            return ;
+        }
+
+        if(idResults_.size() != seqPointList_.size())
+        {
+            qWarning() << "ID must be set to all results (need "
+                          + QString::number(seqPointList_.size()) + " ID results. ";
+            qWarning() << "You have only " + QString::number(idResults_.size()) + " ID results. ";
+            return;
+        }
+        QList<ID> idResultsList = idResults_.toList();
+
+        for(int i = 0; i < seqPointList_.length(); i++)
+        {
+            results_.insert(idResultsList[i], collection_.analyze(seqPointList_[i]));
         }
     }
 }
@@ -157,4 +178,45 @@ void AnalysisTableModel::removePointList(const int index)
     {
         seqPointList_.removeAt(index);
     }
+}
+
+const IDSet &AnalysisTableModel::getIDs()
+{
+    return this->idResults_;
+}
+
+bool AnalysisTableModel::insertID(const ID &id)
+{
+    if(!idResults_.contains(id))
+    {
+        idResults_.insert(id);
+        return true;
+    }
+    else
+    {
+        qWarning() << "ID " + id + " exists";
+        return false;
+    }
+}
+
+void AnalysisTableModel::insertID(const IDSet &idSet)
+{
+    foreach(ID id, idSet)
+    {
+        insertID(id);
+    }
+}
+
+bool AnalysisTableModel::removeID(const ID &id)
+{
+    if(idResults_.contains(id))
+    {
+        return idResults_.remove(id);
+    }
+    else
+    {
+        qWarning() << "ID " + id + " not exists";
+        return false;
+    }
+    return false;
 }

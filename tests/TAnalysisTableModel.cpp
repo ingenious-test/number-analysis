@@ -9,13 +9,15 @@ void TAnalysisTableModel::TestAddRemove_data()
 {
     QTest::addColumn<AnalysisList>("analyzes");
     QTest::addColumn<SequencePointList>("list");
-    QTest::addColumn<IDList>("nameList");
+    QTest::addColumn<IDSet>("idSet");
+    QTest::addColumn<IDAnalysisList>("nameList");
     QTest::addColumn< AnalysisResults >("results");
 
     QTest::newRow("null")
             << AnalysisList()
             << SequencePointList()
-            << IDList()
+            << IDSet()
+            << IDAnalysisList()
             << AnalysisResults();
 
 
@@ -23,22 +25,26 @@ void TAnalysisTableModel::TestAddRemove_data()
                                           .insertInc(new StupidAnalysis(1.0))
                                        << (SequencePointList()
                                            << (PointList() << 2.0 << 3.0) << (PointList() << 1.0 << 2.0 << 4.0))
-                                       << (IDList() << "stupid")
-                                       << (AnalysisResults()
-                                           << (AnalysisResult().insertInc(StupidAnalysis().name(), 1.0))
-                                           << (AnalysisResult().insertInc(StupidAnalysis().name(), 1.0)));
+                                       << IDSet().insertInc("Первый").insertInc("Второй")
+                                       << (IDAnalysisList() << "stupid")
+                                       << AnalysisResults()
+                                          .insertInc("Первый", AnalysisResult().insertInc(StupidAnalysis().name(), 1.0))
+                                          .insertInc("Второй", AnalysisResult().insertInc(StupidAnalysis().name(), 1.0));
 
     QTest::newRow("stupid-average-analysis-collection") << AnalysisList()
                                                            .insertInc(new StupidAnalysis(1.0))
                                                            .insertInc(new AverageAnalysis())
                                                         << (SequencePointList()
                                                             << (PointList() << 2.0 << 3.0) << (PointList() << 1.0 << 2.0 << 4.0))
-                                                        << (IDList() << "stupid" << "average")
-                                                        << (AnalysisResults()
-                                                            << (AnalysisResult().insertInc(StupidAnalysis().name(), 1.0)
-                                                                .insertInc(AverageAnalysis().name(), (2.0 + 3.0) / 2.0))
-                                                            << (AnalysisResult().insertInc(StupidAnalysis().name(), 1.0))
-                                                            .insertInc(AverageAnalysis().name(), (1.0 + 2.0 + 4.0) / 3.0));
+                                                        << IDSet().insertInc("Первый").insertInc("Второй")
+                                                        << (IDAnalysisList() << "stupid" << "average")
+                                                        << AnalysisResults()
+                                                           .insertInc("Первый", AnalysisResult()
+                                                                      .insertInc(StupidAnalysis().name(), 1.0)
+                                                                      .insertInc(AverageAnalysis().name(), (2.0 + 3.0) / 2.0))
+                                                           .insertInc("Второй", AnalysisResult()
+                                                                      .insertInc(StupidAnalysis().name(), 1.0)
+                                                                      .insertInc(AverageAnalysis().name(), (1.0 + 2.0 + 4.0) / 3.0));
 
 }
 
@@ -46,7 +52,8 @@ void TAnalysisTableModel::TestAddRemove()
 {
     QFETCH(AnalysisList, analyzes);
     QFETCH(SequencePointList, list);
-    QFETCH(IDList, nameList);
+    QFETCH(IDSet, idSet);
+    QFETCH(IDAnalysisList, nameList);
     QFETCH(AnalysisResults, results);
 
 
@@ -59,6 +66,7 @@ void TAnalysisTableModel::TestAddRemove()
     analyzes.clear();
 
     AnalysisTableModel model(collection, list);
+    model.insertID(idSet);
     model.analyze();
 
 
@@ -68,12 +76,12 @@ void TAnalysisTableModel::TestAddRemove()
     QCOMPARE(actualPontListCount, expectedPontListCount);
 
     const int actualAnalyzesCount = model.columnCount();
-    const int expectedAnalyzesCount = collection.size();
+    const int expectedAnalyzesCount = collection.size() + 1;
 
     QCOMPARE(actualAnalyzesCount, expectedAnalyzesCount);
 
-    const IDList actualNames = model.getHeaders();
-    const IDList expectedNames = nameList;
+    const IDAnalysisList actualNames = model.getHeaders();
+    const IDAnalysisList expectedNames = nameList;
 
     QCOMPARE(actualNames, expectedNames);
 
@@ -84,17 +92,19 @@ void TAnalysisTableModel::TestAddRemove()
     QCOMPARE(actualResult, expectedResult);
 
     AnalysisResults resultModel;
+    QList<ID> idList = idSet.toList();
+
     for(int i = 0; i < model.rowCount(); i++)
     {
         AnalysisResult result;
-        for(int j = 0; j < model.columnCount(); j++)
+        for(int j = 1; j < model.columnCount(); j++)
         {
             result.insert(model.headerData(j).toString(), model.data(model.index(i, j)).toDouble());
         }
 
         if(!result.isEmpty())
         {
-            resultModel.append(result);
+            resultModel.insert(idList[i] , result);
         }
     }
     const AnalysisResults actualResultData = resultModel;

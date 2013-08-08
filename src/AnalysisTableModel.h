@@ -6,10 +6,45 @@
 
 #include "AnalysisCollection.h"
 
+
+
 typedef QList<PointList> SequencePointList;
+
 Q_DECLARE_METATYPE(SequencePointList)
 
-typedef QList<AnalysisResult> AnalysisResults;
+typedef QString ID;
+
+class IDSet : public QSet<ID>
+{
+public:
+    IDSet& insertInc(const ID &id)
+    {
+        if(contains(id))
+        {
+            remove(id);
+        }
+
+        insert(id);
+        return *this;
+    }
+};
+Q_DECLARE_METATYPE(IDSet)
+
+
+class AnalysisResults : public QHash<ID, AnalysisResult>
+{
+public:
+    AnalysisResults& insertInc(const ID &id, const AnalysisResult &analysisResult)
+    {
+        if(contains(id))
+        {
+            remove(id);
+        }
+
+        insert(id, analysisResult);
+        return *this;
+    }
+};
 Q_DECLARE_METATYPE(AnalysisResults)
 
 class AnalysisTableModel : public QAbstractItemModel
@@ -32,7 +67,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation = Qt::Horizontal, int role = Qt::DisplayRole) const;
 
-    IDList getHeaders();
+    IDAnalysisList getHeaders();
     void analyze();
 
     const AnalysisResults& Results();
@@ -47,8 +82,14 @@ public:
     void addPointList(const PointList& pointList);
     void removePointList(const int index);
 
+    const IDSet& getIDs();
+    bool insertID(const ID& id);
+    void insertID(const IDSet& idSet);
+    bool removeID(const ID& id);
+
 private:
     AnalysisResults results_;
+    IDSet idResults_;
     AnalysisCollection collection_;
     SequencePointList seqPointList_;
 

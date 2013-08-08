@@ -65,24 +65,24 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove_data()
 {
     QTest::addColumn<AnalysisList>("analyzes");
     QTest::addColumn<int>("length");
-    QTest::addColumn<IDList>("nameList");
+    QTest::addColumn<IDAnalysisList>("nameList");
 
 
-    QTest::newRow("empty-collection") << AnalysisList() << 0 << IDList();
+    QTest::newRow("empty-collection") << AnalysisList() << 0 << IDAnalysisList();
 
 
     QTest::newRow("stupid-analysis-collection")
             << AnalysisList()
                .insertInc(new StupidAnalysis())
             << 1
-            << (IDList() << "stupid");
+            << (IDAnalysisList() << "stupid");
 
     QTest::newRow("stupid-avarage-analysis-collection-added")
             << AnalysisList()
                 .insertInc(new StupidAnalysis())
                 .insertInc(new AverageAnalysis())
             << 2
-            << (IDList() << "stupid" << "average");
+            << (IDAnalysisList() << "stupid" << "average");
 
     QTest::newRow("all-analysis-collection-added")
             << AnalysisList()
@@ -90,7 +90,7 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove_data()
                 .insertInc(new AverageAnalysis())
                 .insertInc(new AverageIgnoreNullAnalysis())
             << 3
-            << (IDList() << "stupid" << "average" << "average-ignore-null");
+            << (IDAnalysisList() << "stupid" << "average" << "average-ignore-null");
 
 
 }
@@ -99,7 +99,7 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove()
 {
     QFETCH(AnalysisList, analyzes);
     QFETCH(int, length);
-    QFETCH(IDList, nameList);
+    QFETCH(IDAnalysisList, nameList);
 
     AnalysisCollection collection(analyzes);
 
@@ -114,8 +114,8 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove()
 
     QCOMPARE(actualLength, expectedLength);
 
-    const IDList actualNames = collection.getNameList();
-    const IDList expectedNames = nameList;
+    const IDAnalysisList actualNames = collection.getNameList();
+    const IDAnalysisList expectedNames = nameList;
 
     QCOMPARE(actualNames, expectedNames);
 }

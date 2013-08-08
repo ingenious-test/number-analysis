@@ -8,10 +8,10 @@ typedef double Point;
 typedef QList<Point> PointList;
 
 typedef QString IDAnalysis;
-typedef QList<IDAnalysis> IDList;
+typedef QList<IDAnalysis> IDAnalysisList;
 
 Q_DECLARE_METATYPE(PointList)
-Q_DECLARE_METATYPE(IDList)
+Q_DECLARE_METATYPE(IDAnalysisList)
 
 class AbstractAnalysis
 {

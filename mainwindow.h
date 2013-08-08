@@ -8,6 +8,7 @@
 #include "src/AnalysisTableModel.h"
 #include "src/StupidAnalysis.h"
 #include "src/AverageAnalysis.h"
+#include "src/AverageIgnoreNullAnalysis.h"
 
 class MainWindow : public QMainWindow
 {

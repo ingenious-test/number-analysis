@@ -73,7 +73,7 @@ void AnalysisCollection::removeAll()
     }
 }
 
-const IDList AnalysisCollection::getNameList() const
+const IDAnalysisList AnalysisCollection::getNameList() const
 {    
     return analysisTable_.keys();
 }

@@ -17,7 +17,7 @@ public:
 
 private slots:
     void TestAnalyzeAnalysis_data();
-    void TestAnalyzeAnalysis(); //анализируем
+    void TestAnalyzeAnalysis();
 
     void TestAnalyzeAnalysisAddRemove_data();
     void TestAnalyzeAnalysisAddRemove();

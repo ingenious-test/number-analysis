@@ -5,15 +5,23 @@ MainWindow::MainWindow(QWidget *parent)
 {
     analyzesView_ = new QTableView();
     AnalysisList list;
-    list.insertInc(new StupidAnalysis(1.0))
-            .insertInc(new AverageAnalysis);
+    list
+            .insertInc(new StupidAnalysis(1.0))
+            .insertInc(new AverageIgnoreNullAnalysis())
+            .insertInc(new AverageAnalysis)
+            ;
     analyzesModel_ = new AnalysisTableModel(
                 AnalysisCollection(list),
-                (SequencePointList() << (PointList() << 2.0 << 3.0) << (PointList() << 1.0 << 2.0 << 4.0)));
+                (SequencePointList() << (PointList() << 2.0 << 3.0) << (PointList() << 1.0 << 2.0 << 0.0 << 4.0)));
+
+    analyzesModel_->insertID("Первый");
+    analyzesModel_->insertID("Второй");
 
     analyzesModel_->analyze();
 
     analyzesView_->setModel(analyzesModel_);
+    ;
+
 
     setCentralWidget(analyzesView_);
 }
