@@ -1,17 +1,14 @@
 #include <QtGui/QApplication>
 
-
-#ifdef TEST
 #include <iostream>
+
 #include "tests/TAnalysis.h"
 #include "tests/TAnalysisCollection.h"
-#include"tests/TAnalysisTableModel.h"
-#endif
+#include "tests/TAnalysisTableModel.h"
 
-#ifndef TEST
+#include "benchmarks/BAnalysisCollections.h"
+
 #include "mainwindow.h"
-#endif
-
 
 int main(int argc, char *argv[])
 {
@@ -30,6 +27,11 @@ int main(int argc, char *argv[])
 
     TAnalysisTableModel tAnalysisTableModel;
     QTest::qExec(&tAnalysisTableModel);
+#endif
+
+#ifdef STRESS_TEST
+    BAnalysisCollections  bAnalysisCollections(1000000);
+    bAnalysisCollections.run();
 #endif
 
 #ifndef TEST

@@ -52,7 +52,10 @@ bool AnalysisCollection::isAdded(AbstractAnalysis *analysis)
 {
     foreach(AbstractAnalysis* item, analysisList_)
     {
-        if(item->name() == analysis->name()) return true;
+        if(item->name() == analysis->name())
+        {
+            return true;
+        }
     }
 
     return false;
@@ -68,10 +71,15 @@ void AnalysisCollection::addAnalysis(AbstractAnalysis *analysis)
 
 void AnalysisCollection::removeAnalysis(const int i)
 {
-    bool isValid_ = (i > 1) && (i < analysisList_.length());
+    bool isValid_ = (i >= 0) && (i < analysisList_.length());
     if(isValid_)
     {
+        delete analysisList_[i];
         analysisList_.removeAt(i);
+    }
+    else
+    {
+        qWarning("incorrect index");
     }
 }
 

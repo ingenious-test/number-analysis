@@ -11,11 +11,17 @@ TARGET = number-analysis
 CONFIG(app){
     message("bulding app")
     TEMPLATE = app
+    DEFINES += APP
 }
 
 CONFIG(test){
     message("bulding tests")
     DEFINES += TEST
+}
+
+CONFIG(stress-test){
+    message("bulding stress-tests")
+    DEFINES += STRESS_TEST
 }
 
 SOURCES += main.cpp\
@@ -28,7 +34,8 @@ SOURCES += main.cpp\
     tests/TAnalysisCollection.cpp \
     src/AnalysisCollection.cpp \
     tests/TAnalysisTableModel.cpp \
-    src/AnalysisTableModel.cpp
+    src/AnalysisTableModel.cpp \
+    benchmarks/BAnalysisCollections.cpp
 
 HEADERS  += mainwindow.h \
     src/StupidAnalysis.h \
@@ -40,4 +47,5 @@ HEADERS  += mainwindow.h \
     src/AverageIgnoreNullAnalysis.h \
     src/AverageAnalysis.h \
     tests/TAnalysisTableModel.h \
-    src/AnalysisTableModel.h
+    src/AnalysisTableModel.h \
+    benchmarks/BAnalysisCollections.h

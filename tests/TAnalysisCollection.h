@@ -7,6 +7,7 @@
 #include "../src/AnalysisCollection.h"
 #include "../src/StupidAnalysis.h"
 #include "../src/AverageAnalysis.h"
+#include "../src/AverageIgnoreNullAnalysis.h"
 
 class TAnalysisCollection : public QObject
 {
