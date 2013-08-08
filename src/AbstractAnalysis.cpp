@@ -11,12 +11,12 @@ double AbstractAnalysis::listSum(const PointList &list)
 }
 
 
-ID AbstractAnalysis::name()
+IDAnalysis AbstractAnalysis::name()
 {
     return name_;
 }
 
-AbstractAnalysis::AbstractAnalysis(const ID &name) :
+AbstractAnalysis::AbstractAnalysis(const IDAnalysis &name) :
     name_(name)
 {
 

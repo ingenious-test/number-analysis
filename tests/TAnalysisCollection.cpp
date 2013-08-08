@@ -14,22 +14,23 @@ void TAnalysisCollection::TestAnalyzeAnalysis_data()
                                       << PointList()
                                       << AnalysisResult();
 
-    QTest::newRow("stupid-analysis-collection") << (AnalysisList()
-                                                    << new StupidAnalysis(1.0))
+    QTest::newRow("stupid-analysis-collection") << AnalysisList()
+                                                   .insertInc(new StupidAnalysis(1.0))
                                                 << (PointList())
                                                 << (AnalysisResult()
                                                     .insertInc(StupidAnalysis().name(), 1.0));
 
-    QTest::newRow("stupid-average-analysis-collection") << (AnalysisList()
-                                                            << new StupidAnalysis(1.0) << new AverageAnalysis())
+    QTest::newRow("stupid-average-analysis-collection") << AnalysisList()
+                                                           .insertInc(new StupidAnalysis(1.0))
+                                                           .insertInc(new AverageAnalysis())
                                                         << (PointList() << 5.0 << 9.0 << 14.0)
                                                         << (AnalysisResult()
                                                             .insertInc(StupidAnalysis().name(), 1.0)
                                                             .insertInc(AverageAnalysis().name(), (5.0 + 9.0 + 14.0)/3.0));
-    QTest::newRow("all-analysis-collection") << (AnalysisList()
-                                                 << new StupidAnalysis(1.0)
-                                                 << new AverageAnalysis()
-                                                 << new AverageIgnoreNullAnalysis())
+    QTest::newRow("all-analysis-collection") << AnalysisList()
+                                                .insertInc(new StupidAnalysis(1.0))
+                                                .insertInc(new AverageAnalysis())
+                                                .insertInc(new AverageIgnoreNullAnalysis())
                                              << (PointList() << 5.0 << 0.0 << 9.0 << 14.0)
                                              << (AnalysisResult()
                                                  .insertInc(StupidAnalysis().name(), 1.0)
@@ -46,10 +47,12 @@ void TAnalysisCollection::TestAnalyzeAnalysis()
 
     AnalysisCollection collection(analyzes);
 
-    for(int i = 0; i < analyzes.size(); ++i)
+
+    foreach(AbstractAnalysis* item, analyzes.values())
     {
-        delete analyzes[i];
+        delete item;
     }
+    analyzes.clear();
 
     const AnalysisResult actualResult = collection.analyze(list);
     const AnalysisResult expectedResult = result;
@@ -65,26 +68,27 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove_data()
     QTest::addColumn<IDList>("nameList");
 
 
-   QTest::newRow("empty-collection") << AnalysisList() << 0 << IDList();
+    QTest::newRow("empty-collection") << AnalysisList() << 0 << IDList();
 
 
     QTest::newRow("stupid-analysis-collection")
-            << (AnalysisList() << new StupidAnalysis())
+            << AnalysisList()
+               .insertInc(new StupidAnalysis())
             << 1
             << (IDList() << "stupid");
 
     QTest::newRow("stupid-avarage-analysis-collection-added")
-            << (AnalysisList()
-                << new StupidAnalysis()
-                << new AverageAnalysis())
+            << AnalysisList()
+                .insertInc(new StupidAnalysis())
+                .insertInc(new AverageAnalysis())
             << 2
             << (IDList() << "stupid" << "average");
 
-    QTest::newRow("stupid-avarage-analysis-collection-added")
-            << (AnalysisList()
-                << new StupidAnalysis()
-                << new AverageAnalysis()
-                << new AverageIgnoreNullAnalysis())
+    QTest::newRow("all-analysis-collection-added")
+            << AnalysisList()
+                .insertInc(new StupidAnalysis())
+                .insertInc(new AverageAnalysis())
+                .insertInc(new AverageIgnoreNullAnalysis())
             << 3
             << (IDList() << "stupid" << "average" << "average-ignore-null");
 
@@ -99,10 +103,11 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove()
 
     AnalysisCollection collection(analyzes);
 
-    for(int i = 0; i < analyzes.size(); ++i)
+    foreach(AbstractAnalysis* item, analyzes.values())
     {
-        delete analyzes[i];
+        delete item;
     }
+    analyzes.clear();
 
     const int actualLength = collection.size();
     const int expectedLength = length;

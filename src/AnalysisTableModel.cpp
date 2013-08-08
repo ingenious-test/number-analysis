@@ -3,24 +3,21 @@
 
 
 AnalysisTableModel::AnalysisTableModel(QObject *parent) :
-    QAbstractItemModel(parent), collection_(NULL)
+    QAbstractItemModel(parent)
 {
 
 }
 
-AnalysisTableModel::AnalysisTableModel(AnalysisCollection *colletions, const SequencePointList &seq, QObject *parent):
-    QAbstractItemModel(parent)
+AnalysisTableModel::AnalysisTableModel(const AnalysisCollection& colletions, const SequencePointList &seq, QObject *parent):
+    QAbstractItemModel(parent), collection_(colletions)
 {
-    collection_ = colletions;
+
     seqPointList_ = seq;
 }
 
 AnalysisTableModel::~AnalysisTableModel()
 {
-    if(collection_ != NULL)
-    {
-        delete collection_;
-    }
+
 }
 
 QModelIndex AnalysisTableModel::index(int row, int column, const QModelIndex &parent) const
@@ -40,11 +37,7 @@ int AnalysisTableModel::rowCount(const QModelIndex &parent) const
 
 int AnalysisTableModel::columnCount(const QModelIndex &parent) const
 {
-    if(collection_ != NULL)
-    {
-        return collection_->size();
-    }
-    return 0;
+    return collection_.size();
 }
 
 QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
@@ -54,12 +47,7 @@ QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    if(collection_ == NULL)
-    {
-        return QVariant();
-    }
-
-    QStringList list = collection_->getNameList();
+    IDList list = collection_.getNameList();
 
     bool isValidColumn = (index.column() > -1) && (index.column() < list.length());
 
@@ -87,12 +75,7 @@ QVariant AnalysisTableModel::headerData(int section, Qt::Orientation orientation
         return QVariant();
     }
 
-    if(collection_ == NULL)
-    {
-        return QVariant();
-    }
-
-    QStringList list = collection_->getNameList();
+    QStringList list = collection_.getNameList();
 
     bool isValidSection = (section > -1) && (section < list.length());
 
@@ -116,24 +99,17 @@ QVariant AnalysisTableModel::headerData(int section, Qt::Orientation orientation
 
 IDList AnalysisTableModel::getHeaders()
 {
-    if(collection_ != NULL)
-    {
-        return collection_->getNameList();
-    }
-    return IDList();
+    return collection_.getNameList();
 }
 
 void AnalysisTableModel::analyze()
 {
-    if(collection_ != NULL)
+    if(collection_.size() > 0)
     {
-        if(!seqPointList_.isEmpty())
+        results_.clear();
+        foreach(PointList item, seqPointList_)
         {
-            results_.clear();
-            foreach(PointList item, seqPointList_)
-            {
-                results_.append(collection_->analyze(item));
-            }
+            results_.append(collection_.analyze(item));
         }
     }
 }
@@ -143,17 +119,24 @@ const AnalysisResults &AnalysisTableModel::Results()
     return results_;
 }
 
-AnalysisCollection *AnalysisTableModel::analysisCollection()
+const AnalysisCollection &AnalysisTableModel::analysisCollection()
 {
     return collection_;
 }
 
-void AnalysisTableModel::setAnalysisCollection(AnalysisCollection *collection)
+AnalysisCollection &AnalysisTableModel::addAnalysis(AbstractAnalysis *analysis)
 {
-    if(collection != NULL)
-    {
-        collection_ = collection;
-    }
+    return collection_.addAnalysis(analysis);
+}
+
+void AnalysisTableModel::removeAnalysis(const QString &name)
+{
+    removeAnalysis(name);
+}
+
+void AnalysisTableModel::clearAnalyses()
+{
+    collection_.removeAll();
 }
 
 const SequencePointList &AnalysisTableModel::sequencePointList()

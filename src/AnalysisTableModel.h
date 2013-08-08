@@ -18,8 +18,9 @@ class AnalysisTableModel : public QAbstractItemModel
 
 public:
     AnalysisTableModel(QObject *parent = 0);
-    AnalysisTableModel(AnalysisCollection *colletions,
-                       const SequencePointList &seq = SequencePointList(), QObject *parent = 0);
+    AnalysisTableModel(const AnalysisCollection &colletions,
+                       const SequencePointList &seq = SequencePointList(),
+                       QObject *parent = 0);
 
     ~AnalysisTableModel();
 
@@ -29,15 +30,18 @@ public:
     int rowCount(const QModelIndex &parent  = QModelIndex()) const;
     int columnCount(const QModelIndex &parent  = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    QVariant headerData(int section, Qt::Orientation orientation = Qt::Horizontal, int role = Qt::DisplayRole) const;
 
     IDList getHeaders();
     void analyze();
 
     const AnalysisResults& Results();
 
-    AnalysisCollection* analysisCollection();
-    void setAnalysisCollection(AnalysisCollection* collection);
+    const AnalysisCollection& analysisCollection();
+    AnalysisCollection& addAnalysis(AbstractAnalysis *analysis);
+    void removeAnalysis(const QString &name);
+    void clearAnalyses();
+
 
     const SequencePointList &sequencePointList();
     void addPointList(const PointList& pointList);
@@ -45,7 +49,7 @@ public:
 
 private:
     AnalysisResults results_;
-    AnalysisCollection* collection_;
+    AnalysisCollection collection_;
     SequencePointList seqPointList_;
 
 

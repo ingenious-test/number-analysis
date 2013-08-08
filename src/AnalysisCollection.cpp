@@ -8,9 +8,18 @@ AnalysisCollection::AnalysisCollection(AnalysisList analyzes)
 {
     foreach(AbstractAnalysis* item, analyzes)
     {
-        addAnalysis(item);
+        addAnalysis(item->clone());
     }
 }
+
+AnalysisCollection::AnalysisCollection(const AnalysisCollection &collection)
+{
+    foreach(AbstractAnalysis* item, collection.analysisTable_.values())
+    {
+        addAnalysis(item->clone());
+    }
+}
+
 
 AnalysisCollection::~AnalysisCollection()
 {
@@ -64,12 +73,12 @@ void AnalysisCollection::removeAll()
     }
 }
 
-const IDList AnalysisCollection::getNameList()
+const IDList AnalysisCollection::getNameList() const
 {    
     return analysisTable_.keys();
 }
 
-const int AnalysisCollection::size()
+const int AnalysisCollection::size() const
 {
     return analysisTable_.size();
 }

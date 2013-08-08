@@ -7,19 +7,43 @@
 class AnalysisResult : public QHash<QString, double>
 {
 public:
-    AnalysisResult& insertInc(const ID &name, const double &value)
+    AnalysisResult& insertInc(const IDAnalysis &name, const double &value)
     {
+        if(contains(name))
+        {
+            remove(name);
+        }
+
         insert(name, value);
         return *this;
     }
 };
 Q_DECLARE_METATYPE(AnalysisResult)
 
-typedef QList<AbstractAnalysis*> AnalysisList;
+
+class AnalysisList : public QHash<QString, AbstractAnalysis*>
+{
+public:
+    AnalysisList& insertInc(AbstractAnalysis* value)
+    {
+        QString name = value->name();
+
+        if(contains(name))
+        {
+            delete this->value(name);
+            remove(name);
+        }
+
+        insert(name, value);
+        return *this;
+    }
+};
 Q_DECLARE_METATYPE(AnalysisList)
 
 class AnalysisCollection
 {
+    friend class AnalysisTableModel;
+
 public:
     AnalysisCollection();
     AnalysisCollection(AnalysisList analyzes);
@@ -33,15 +57,16 @@ public:
     void removeAnalysis(const QString &name);
     void removeAll();
 
-    const IDList getNameList();
+    const IDList getNameList() const;
 
-    const int size();
+    const int size() const;
 
     AnalysisCollection* clone();
 
 
 private:
-    QHash<QString, AbstractAnalysis*> analysisTable_;
+    AnalysisCollection(const AnalysisCollection& collection);
+    AnalysisList analysisTable_;
 
 
 };
