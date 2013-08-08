@@ -21,6 +21,6 @@ void BAnalysisCollections::run()
 
         collection.removeAnalysis(StupidAnalysis().name());
 
-        qWarning(QString("iteration : " + QString::number(i)).toLocal8Bit());
+        qDebug(QString("iteration : " + QString::number(i)).toLocal8Bit());
     }
 }

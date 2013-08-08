@@ -15,17 +15,6 @@ AnalysisTableModel::AnalysisTableModel(AnalysisCollection *colletions, const Seq
     seqPointList_ = seq;
 }
 
-
-AnalysisTableModel::AnalysisTableModel(const AnalysisTableModel &analysisTableModel):
-    collection_(NULL)
-{
-    if(analysisTableModel.collection_ != NULL)
-    {
-        collection_ = analysisTableModel.collection_->clone();
-    }
-    seqPointList_ = analysisTableModel.seqPointList_;
-}
-
 AnalysisTableModel::~AnalysisTableModel()
 {
     if(collection_ != NULL)

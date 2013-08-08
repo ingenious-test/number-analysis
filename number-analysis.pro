@@ -17,11 +17,11 @@ CONFIG(app){
 CONFIG(test){
     message("bulding tests")
     DEFINES += TEST
-}
 
-CONFIG(stress-test){
-    message("bulding stress-tests")
-    DEFINES += STRESS_TEST
+    CONFIG(stress){
+        message("bulding stress-tests")
+        DEFINES += STRESS
+    }
 }
 
 SOURCES += main.cpp\

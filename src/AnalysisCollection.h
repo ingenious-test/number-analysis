@@ -16,12 +16,12 @@ public:
 Q_DECLARE_METATYPE(AnalysisResult)
 
 typedef QList<AbstractAnalysis*> AnalysisList;
+Q_DECLARE_METATYPE(AnalysisList)
 
 class AnalysisCollection
 {
 public:
     AnalysisCollection();
-    AnalysisCollection(const AnalysisCollection& collection);
     AnalysisCollection(AnalysisList analyzes);
 
     ~AnalysisCollection();
@@ -43,9 +43,7 @@ public:
 private:
     QHash<QString, AbstractAnalysis*> analysisTable_;
 
-   // AnalysisList analysisList_;
 
 };
-Q_DECLARE_METATYPE(AnalysisCollection)
 
 #endif // ANALYSISCOLLECTION_H

@@ -4,14 +4,6 @@ AnalysisCollection::AnalysisCollection()
 {   
 }
 
-AnalysisCollection::AnalysisCollection(const AnalysisCollection &collection)
-{
-    foreach(AbstractAnalysis* item, collection.analysisTable_.values())
-    {
-        addAnalysis(item);
-    }
-}
-
 AnalysisCollection::AnalysisCollection(AnalysisList analyzes)
 {
     foreach(AbstractAnalysis* item, analyzes)

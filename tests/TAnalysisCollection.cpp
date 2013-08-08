@@ -6,30 +6,30 @@ TAnalysisCollection::TAnalysisCollection()
 
 void TAnalysisCollection::TestAnalyzeAnalysis_data()
 {
-    QTest::addColumn<AnalysisCollection>("collection");
+    QTest::addColumn<AnalysisList>("analyzes");
     QTest::addColumn<PointList>("list");
     QTest::addColumn<AnalysisResult>("result");
 
-    QTest::newRow("empty-collection") << AnalysisCollection()
+    QTest::newRow("empty-collection") << AnalysisList()
                                       << PointList()
                                       << AnalysisResult();
 
-    QTest::newRow("stupid-analysis-collection") << AnalysisCollection(AnalysisList()
-                                                                      << new StupidAnalysis(1.0))
+    QTest::newRow("stupid-analysis-collection") << (AnalysisList()
+                                                    << new StupidAnalysis(1.0))
                                                 << (PointList())
                                                 << (AnalysisResult()
                                                     .insertInc(StupidAnalysis().name(), 1.0));
 
-    QTest::newRow("stupid-average-analysis-collection") << AnalysisCollection(AnalysisList()
-                                                                              << new StupidAnalysis(1.0) << new AverageAnalysis())
+    QTest::newRow("stupid-average-analysis-collection") << (AnalysisList()
+                                                            << new StupidAnalysis(1.0) << new AverageAnalysis())
                                                         << (PointList() << 5.0 << 9.0 << 14.0)
                                                         << (AnalysisResult()
                                                             .insertInc(StupidAnalysis().name(), 1.0)
                                                             .insertInc(AverageAnalysis().name(), (5.0 + 9.0 + 14.0)/3.0));
-    QTest::newRow("all-analysis-collection") << AnalysisCollection(AnalysisList()
-                                                                   << new StupidAnalysis(1.0)
-                                                                   << new AverageAnalysis()
-                                                                   << new AverageIgnoreNullAnalysis())
+    QTest::newRow("all-analysis-collection") << (AnalysisList()
+                                                 << new StupidAnalysis(1.0)
+                                                 << new AverageAnalysis()
+                                                 << new AverageIgnoreNullAnalysis())
                                              << (PointList() << 5.0 << 0.0 << 9.0 << 14.0)
                                              << (AnalysisResult()
                                                  .insertInc(StupidAnalysis().name(), 1.0)
@@ -40,71 +40,69 @@ void TAnalysisCollection::TestAnalyzeAnalysis_data()
 
 void TAnalysisCollection::TestAnalyzeAnalysis()
 {
-    QFETCH(AnalysisCollection, collection);
+    QFETCH(AnalysisList, analyzes);
     QFETCH(PointList, list);
     QFETCH(AnalysisResult, result);
+
+    AnalysisCollection collection(analyzes);
+
+    for(int i = 0; i < analyzes.size(); ++i)
+    {
+        delete analyzes[i];
+    }
 
     const AnalysisResult actualResult = collection.analyze(list);
     const AnalysisResult expectedResult = result;
 
     QCOMPARE(actualResult, expectedResult);
+
 }
 
 void TAnalysisCollection::TestAnalyzeAnalysisAddRemove_data()
 {
-    QTest::addColumn<AnalysisCollection>("collection");
+    QTest::addColumn<AnalysisList>("analyzes");
     QTest::addColumn<int>("length");
     QTest::addColumn<IDList>("nameList");
 
 
-    QTest::newRow("empty-collection") << AnalysisCollection() << 0 << IDList();
+   QTest::newRow("empty-collection") << AnalysisList() << 0 << IDList();
 
-    AnalysisCollection test1;
-    StupidAnalysis* stupidAnalysis = new StupidAnalysis;
-    test1.addAnalysis(static_cast<AbstractAnalysis*>(stupidAnalysis));
 
-    QTest::newRow("stupid-analysis-collection-added")
-            << test1
+    QTest::newRow("stupid-analysis-collection")
+            << (AnalysisList() << new StupidAnalysis())
             << 1
             << (IDList() << "stupid");
 
-    test1.removeAll();
-
-    QTest::newRow("stupid-analysis-collection-removed")
-            << test1
-            << 0
-            << IDList();
-
-
-    AverageAnalysis* averageAnalysis = new AverageAnalysis;
-
-    test1.addAnalysis(static_cast<AbstractAnalysis*>(stupidAnalysis));
-    test1.addAnalysis(static_cast<AbstractAnalysis*>(averageAnalysis));
-
-
     QTest::newRow("stupid-avarage-analysis-collection-added")
-            << test1
+            << (AnalysisList()
+                << new StupidAnalysis()
+                << new AverageAnalysis())
             << 2
             << (IDList() << "stupid" << "average");
 
+    QTest::newRow("stupid-avarage-analysis-collection-added")
+            << (AnalysisList()
+                << new StupidAnalysis()
+                << new AverageAnalysis()
+                << new AverageIgnoreNullAnalysis())
+            << 3
+            << (IDList() << "stupid" << "average" << "average-ignore-null");
 
-    test1.removeAll();
-
-    QTest::newRow("stupid-avarage-analysis-collection-removed")
-            << test1
-            << 0
-            << IDList();
-
-    delete stupidAnalysis;
-    delete averageAnalysis;
 
 }
 
 void TAnalysisCollection::TestAnalyzeAnalysisAddRemove()
 {
-    QFETCH(AnalysisCollection, collection);
+    QFETCH(AnalysisList, analyzes);
     QFETCH(int, length);
     QFETCH(IDList, nameList);
+
+    AnalysisCollection collection(analyzes);
+
+    for(int i = 0; i < analyzes.size(); ++i)
+    {
+        delete analyzes[i];
+    }
 
     const int actualLength = collection.size();
     const int expectedLength = length;

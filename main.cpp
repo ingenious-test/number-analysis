@@ -1,7 +1,6 @@
 #include <QtGui/QApplication>
 
-#include <iostream>
-
+#include <QDebug>
 #include "tests/TAnalysis.h"
 #include "tests/TAnalysisCollection.h"
 #include "tests/TAnalysisTableModel.h"
@@ -18,21 +17,23 @@ int main(int argc, char *argv[])
     TAnalysis tAnalysis;
     QTest::qExec(&tAnalysis);
 
-    std::cout << "\r\n";
+    qDebug() << "\r\n";
 
     TAnalysisCollection tAnalysisCollection;
     QTest::qExec(&tAnalysisCollection);
 
-    std::cout << "\r\n";
+    qDebug() << "\r\n";
 
     TAnalysisTableModel tAnalysisTableModel;
     QTest::qExec(&tAnalysisTableModel);
-#endif
 
-#ifdef STRESS_TEST
+#ifdef STRESS
     BAnalysisCollections bAnalysisCollections(1000000);
     bAnalysisCollections.run();
 #endif
+
+#endif
+
 
 #ifndef TEST
     MainWindow w;

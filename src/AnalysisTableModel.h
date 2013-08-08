@@ -7,8 +7,10 @@
 #include "AnalysisCollection.h"
 
 typedef QList<PointList> SequencePointList;
+Q_DECLARE_METATYPE(SequencePointList)
 
 typedef QList<AnalysisResult> AnalysisResults;
+Q_DECLARE_METATYPE(AnalysisResults)
 
 class AnalysisTableModel : public QAbstractItemModel
 {
@@ -18,7 +20,6 @@ public:
     AnalysisTableModel(QObject *parent = 0);
     AnalysisTableModel(AnalysisCollection *colletions,
                        const SequencePointList &seq = SequencePointList(), QObject *parent = 0);
-    AnalysisTableModel(const AnalysisTableModel& analysisTableModel);
 
     ~AnalysisTableModel();
 
@@ -49,10 +50,6 @@ private:
 
 
 
-
 };
-
-Q_DECLARE_METATYPE(AnalysisTableModel)
-Q_DECLARE_METATYPE(AnalysisResults)
 
 #endif // ANALYSISTABLEMODEL_H
