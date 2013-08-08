@@ -16,7 +16,7 @@ void TAnalysisCollection::TestAnalyzeAnalysis_data()
 
     QTest::newRow("stupid-analysis-collection") << AnalysisCollection(AnalysisList()
                                                                       << new StupidAnalysis(1.0))
-                                                << (PointList() << 11.0 << 12.0 << 13.0)
+                                                << (PointList())
                                                 << (AnalysisResult()
                                                     .insertInc(StupidAnalysis().name(), 1.0));
 
@@ -106,7 +106,7 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove()
     QFETCH(int, length);
     QFETCH(IDList, nameList);
 
-    const int actualLength = collection.length();
+    const int actualLength = collection.size();
     const int expectedLength = length;
 
     QCOMPARE(actualLength, expectedLength);

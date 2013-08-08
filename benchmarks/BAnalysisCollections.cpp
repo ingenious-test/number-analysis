@@ -19,7 +19,7 @@ void BAnalysisCollections::run()
 
         collection.analyze(PointList());
 
-        collection.removeAnalysis(0);
+        collection.removeAnalysis(StupidAnalysis().name());
 
         qWarning(QString("iteration : " + QString::number(i)).toLocal8Bit());
     }

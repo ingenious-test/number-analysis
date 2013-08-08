@@ -28,21 +28,22 @@ public:
 
     AnalysisResult analyze(const PointList &list) const;
 
-    bool isAdded(AbstractAnalysis *analysis);
-    void addAnalysis(AbstractAnalysis *analysis);
+    AnalysisCollection& addAnalysis(AbstractAnalysis *analysis);
 
-    void removeAnalysis(const int i);
+    void removeAnalysis(const QString &name);
     void removeAll();
 
     const IDList getNameList();
 
-    const int length();
+    const int size();
 
     AnalysisCollection* clone();
 
 
 private:
-    AnalysisList analysisList_;
+    QHash<QString, AbstractAnalysis*> analysisTable_;
+
+   // AnalysisList analysisList_;
 
 };
 Q_DECLARE_METATYPE(AnalysisCollection)

@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef STRESS_TEST
-    BAnalysisCollections  bAnalysisCollections(1000000);
+    BAnalysisCollections bAnalysisCollections(1000000);
     bAnalysisCollections.run();
 #endif
 

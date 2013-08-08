@@ -1,13 +1,12 @@
 #include "AnalysisCollection.h"
 
 AnalysisCollection::AnalysisCollection()
-{
-    analysisList_.clear();
+{   
 }
 
 AnalysisCollection::AnalysisCollection(const AnalysisCollection &collection)
 {
-    foreach(AbstractAnalysis* item, collection.analysisList_)
+    foreach(AbstractAnalysis* item, collection.analysisTable_.values())
     {
         addAnalysis(item);
     }
@@ -28,19 +27,9 @@ AnalysisCollection::~AnalysisCollection()
 
 AnalysisResult AnalysisCollection::analyze(const PointList &list) const
 {
-    if(list.isEmpty())
-    {
-        return AnalysisResult();
-    }
-
-    if(analysisList_.empty())
-    {
-        return AnalysisResult();
-    }
-
     AnalysisResult analysisResult;
 
-    foreach(AbstractAnalysis* item, analysisList_)
+    foreach(AbstractAnalysis* item, analysisTable_.values())
     {
         analysisResult.insert(item->name(), item->analyze(list));
     }
@@ -48,34 +37,26 @@ AnalysisResult AnalysisCollection::analyze(const PointList &list) const
     return analysisResult;
 }
 
-bool AnalysisCollection::isAdded(AbstractAnalysis *analysis)
+AnalysisCollection& AnalysisCollection::addAnalysis(AbstractAnalysis *analysis)
 {
-    foreach(AbstractAnalysis* item, analysisList_)
+    const QString name = analysis->name();
+
+    if(analysisTable_.contains(name))
     {
-        if(item->name() == analysis->name())
-        {
-            return true;
-        }
+        removeAnalysis(name);
     }
 
-    return false;
+    analysisTable_.insert(name, analysis->clone());
+
+    return *this;
 }
 
-void AnalysisCollection::addAnalysis(AbstractAnalysis *analysis)
+void AnalysisCollection::removeAnalysis(const QString &name)
 {
-    if(!isAdded(analysis))
+    if(analysisTable_.contains(name))
     {
-        analysisList_.append(analysis->clone());
-    }
-}
-
-void AnalysisCollection::removeAnalysis(const int i)
-{
-    bool isValid_ = (i >= 0) && (i < analysisList_.length());
-    if(isValid_)
-    {
-        delete analysisList_[i];
-        analysisList_.removeAt(i);
+        delete analysisTable_[name];
+        analysisTable_.remove(name);
     }
     else
     {
@@ -85,29 +66,20 @@ void AnalysisCollection::removeAnalysis(const int i)
 
 void AnalysisCollection::removeAll()
 {
-    for(int i; i < analysisList_.length(); i++)
+    foreach(const QString &name, analysisTable_.keys())
     {
-        delete analysisList_.at(i);
+        removeAnalysis(name);
     }
-
-    analysisList_.clear();
 }
 
 const IDList AnalysisCollection::getNameList()
-{
-    IDList list;
-
-    foreach(AbstractAnalysis* item, analysisList_)
-    {
-        list.append(item->name());
-    }
-
-    return list;
+{    
+    return analysisTable_.keys();
 }
 
-const int AnalysisCollection::length()
+const int AnalysisCollection::size()
 {
-    return analysisList_.length();
+    return analysisTable_.size();
 }
 
 AnalysisCollection *AnalysisCollection::clone()

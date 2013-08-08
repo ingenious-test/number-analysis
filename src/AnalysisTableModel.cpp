@@ -53,7 +53,7 @@ int AnalysisTableModel::columnCount(const QModelIndex &parent) const
 {
     if(collection_ != NULL)
     {
-        return collection_->length();
+        return collection_->size();
     }
     return 0;
 }
