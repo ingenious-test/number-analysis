@@ -12,17 +12,6 @@ public:
         insert(name, value);
         return *this;
     }
-
-    QStringList getNames()
-    {
-        QStringList list;
-        QHashIterator<QString, double> i(*this);
-        while (i.hasNext()) {
-            i.next();
-            list.append(i.key());
-        }
-        return list;
-    }
 };
 Q_DECLARE_METATYPE(AnalysisResult)
 

@@ -7,6 +7,7 @@
 #include "AnalysisCollection.h"
 
 typedef QList<PointList> SequencePointList;
+
 typedef QList<AnalysisResult> AnalysisResults;
 
 class AnalysisTableModel : public QAbstractItemModel

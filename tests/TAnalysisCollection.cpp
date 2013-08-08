@@ -22,10 +22,10 @@ void TAnalysisCollection::TestAnalyzeAnalysis_data()
 
     QTest::newRow("stupid-average-analysis-collection") << AnalysisCollection(AnalysisList()
                                                                               << new StupidAnalysis(1.0) << new AverageAnalysis())
-                                                << (PointList() << 5.0 << 9.0 << 14.0)
-                                                << (AnalysisResult()
-                                                    .insertInc(StupidAnalysis().name(), 1.0)
-                                                    .insertInc(AverageAnalysis().name(), (5.0 + 9.0 + 14.0)/3.0));
+                                                        << (PointList() << 5.0 << 9.0 << 14.0)
+                                                        << (AnalysisResult()
+                                                            .insertInc(StupidAnalysis().name(), 1.0)
+                                                            .insertInc(AverageAnalysis().name(), (5.0 + 9.0 + 14.0)/3.0));
 }
 
 void TAnalysisCollection::TestAnalyzeAnalysis()
@@ -50,60 +50,43 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove_data()
     QTest::newRow("empty-collection") << AnalysisCollection() << 0 << IDList();
 
     AnalysisCollection test1;
+    StupidAnalysis* stupidAnalysis = new StupidAnalysis;
+    test1.addAnalysis(static_cast<AbstractAnalysis*>(stupidAnalysis));
 
-    for(int i = 0; i < 10; i++)
-    {
-        StupidAnalysis* stupidAnalysis = new StupidAnalysis;
-        test1.addAnalysis(static_cast<AbstractAnalysis*>(stupidAnalysis));
+    QTest::newRow("stupid-analysis-collection-added")
+            << test1
+            << 1
+            << (IDList() << "stupid");
 
-        QTest::newRow(QString("stupid-analysis-collection-added-" + QString::number(i)).toStdString().c_str())
-                << test1
-                << 1
-                << (IDList() << "stupid");
+    test1.removeAll();
 
-        if(i != 9)
-        {
-            test1.removeAll();
-
-            QTest::newRow(QString("stupid-analysis-collection-removed-" + QString::number(i)).toStdString().c_str())
-                    << test1
-                    << 0
-                    << IDList();
-        }
-
-        delete stupidAnalysis;
-    }
+    QTest::newRow("stupid-analysis-collection-removed")
+            << test1
+            << 0
+            << IDList();
 
 
+    AverageAnalysis* averageAnalysis = new AverageAnalysis;
 
-    AnalysisCollection test2;
-    for(int i = 0; i < 10; i++)
-    {
-        StupidAnalysis* stupidAnalysis = new StupidAnalysis;
-        AverageAnalysis* averageAnalysis = new AverageAnalysis;
-
-        test2.addAnalysis(static_cast<AbstractAnalysis*>(stupidAnalysis));
-        test2.addAnalysis(static_cast<AbstractAnalysis*>(averageAnalysis));
+    test1.addAnalysis(static_cast<AbstractAnalysis*>(stupidAnalysis));
+    test1.addAnalysis(static_cast<AbstractAnalysis*>(averageAnalysis));
 
 
-        QTest::newRow(QString("stupid-avarage-analysis-collection-added-" + QString::number(i)).toStdString().c_str())
-                << test2
-                << 2
-                << (IDList() << "stupid" << "average");
+    QTest::newRow("stupid-avarage-analysis-collection-added")
+            << test1
+            << 2
+            << (IDList() << "stupid" << "average");
 
-        if(i != 9)
-        {
-            test2.removeAll();
 
-            QTest::newRow(QString("stupid-avarage-analysis-collection-removed-" + QString::number(i)).toStdString().c_str())
-                    << test2
-                    << 0
-                    << IDList();
-        }
+    test1.removeAll();
 
-        delete stupidAnalysis;
-        delete averageAnalysis;
-    }
+    QTest::newRow("stupid-avarage-analysis-collection-removed")
+            << test1
+            << 0
+            << IDList();
+
+    delete stupidAnalysis;
+    delete averageAnalysis;
 
 }
 
