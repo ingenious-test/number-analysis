@@ -6,14 +6,6 @@
 
 #include "AnalysisCollection.h"
 
-
-
-typedef QList<PointList> SequencePointList;
-
-Q_DECLARE_METATYPE(SequencePointList)
-
-typedef QString ID;
-
 class IDSet : public QSet<ID>
 {
 public:

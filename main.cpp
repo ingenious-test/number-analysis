@@ -6,6 +6,7 @@
 #include "tests/TAnalysis.h"
 #include "tests/TAnalysisCollection.h"
 #include "tests/TAnalysisTableModel.h"
+#include "tests/TItemLsitModel.h"
 
 #include "benchmarks/BAnalysisCollections.h"
 
@@ -32,6 +33,11 @@ int main(int argc, char *argv[])
 
     TAnalysisTableModel tAnalysisTableModel;
     QTest::qExec(&tAnalysisTableModel);
+
+    qDebug() << "\r\n";
+
+    TItemLsitModel tItemLsitModel;
+    QTest::qExec(&tItemLsitModel);
 
 #ifdef STRESS
     BAnalysisCollections bAnalysisCollections(1000000);

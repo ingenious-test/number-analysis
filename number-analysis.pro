@@ -35,7 +35,9 @@ SOURCES += main.cpp\
     src/AnalysisCollection.cpp \
     tests/TAnalysisTableModel.cpp \
     src/AnalysisTableModel.cpp \
-    benchmarks/BAnalysisCollections.cpp
+    benchmarks/BAnalysisCollections.cpp \
+    tests/TItemLsitModel.cpp \
+    src/ItemModelList.cpp
 
 HEADERS  += mainwindow.h \
     src/StupidAnalysis.h \
@@ -48,4 +50,6 @@ HEADERS  += mainwindow.h \
     src/AverageAnalysis.h \
     tests/TAnalysisTableModel.h \
     src/AnalysisTableModel.h \
-    benchmarks/BAnalysisCollections.h
+    benchmarks/BAnalysisCollections.h \
+    tests/TItemLsitModel.h \
+    src/ItemModelList.h

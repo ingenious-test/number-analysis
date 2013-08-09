@@ -12,12 +12,22 @@ MainWindow::MainWindow(QWidget *parent)
             ;
     analyzesModel_ = new AnalysisTableModel(
                 AnalysisCollection(list),
-                (SequencePointList() << (PointList() << 2.0 << 3.0) << (PointList() << 1.0 << 2.0 << 0.0 << 4.0)));
+                SequencePointList()
+                .appendInc("Первый",
+                           PointList()
+                           .appendInc(2.0)
+                           .appendInc(3.0))
+                .appendInc("Второй",
+                           PointList()
+                            .appendInc(1.0)
+                            .appendInc(2.0)
+                            .appendInc(0.0 )
+                            .appendInc(4.0)));
 
     analyzesModel_->insertID("Первый");
     analyzesModel_->insertID("Второй");
 
-    analyzesModel_->analyze();
+    //analyzesModel_->analyze();
 
     analyzesView_->setModel(analyzesModel_);
     ;
@@ -28,5 +38,5 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    
+
 }

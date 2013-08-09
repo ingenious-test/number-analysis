@@ -9,23 +9,26 @@ void TAnalysisTableModel::TestAddRemove_data()
 {
     QTest::addColumn<AnalysisList>("analyzes");
     QTest::addColumn<SequencePointList>("list");
-    QTest::addColumn<IDSet>("idSet");
     QTest::addColumn<IDAnalysisList>("nameList");
     QTest::addColumn< AnalysisResults >("results");
 
     QTest::newRow("null")
             << AnalysisList()
             << SequencePointList()
-            << IDSet()
             << IDAnalysisList()
             << AnalysisResults();
 
 
     QTest::newRow("stupid-collection") << AnalysisList()
                                           .insertInc(new StupidAnalysis(1.0))
-                                       << (SequencePointList()
-                                           << (PointList() << 2.0 << 3.0) << (PointList() << 1.0 << 2.0 << 4.0))
-                                       << IDSet().insertInc("Первый").insertInc("Второй")
+                                       << SequencePointList()
+                                           .appendInc("Первый",
+                                                      PointList()
+                                                      .appendInc(2.0).appendInc(3.0))
+                                           .appendInc("Второй",
+                                                      PointList().appendInc(1.0)
+                                                      .appendInc(2.0)
+                                                      .appendInc(4.0))
                                        << (IDAnalysisList() << "stupid")
                                        << AnalysisResults()
                                           .insertInc("Первый", AnalysisResult().insertInc(StupidAnalysis().name(), 1.0))
@@ -34,9 +37,16 @@ void TAnalysisTableModel::TestAddRemove_data()
     QTest::newRow("stupid-average-analysis-collection") << AnalysisList()
                                                            .insertInc(new StupidAnalysis(1.0))
                                                            .insertInc(new AverageAnalysis())
-                                                        << (SequencePointList()
-                                                            << (PointList() << 2.0 << 3.0) << (PointList() << 1.0 << 2.0 << 4.0))
-                                                        << IDSet().insertInc("Первый").insertInc("Второй")
+                                                        << SequencePointList()
+                                                            .appendInc("Первый",
+                                                                       PointList()
+                                                                       .appendInc(2.0)
+                                                                       .appendInc(3.0))
+                                                           .appendInc("Второй",
+                                                                      PointList()
+                                                                      .appendInc(1.0)
+                                                                      .appendInc(2.0)
+                                                                      .appendInc(4.0))
                                                         << (IDAnalysisList() << "stupid" << "average")
                                                         << AnalysisResults()
                                                            .insertInc("Первый", AnalysisResult()
@@ -52,7 +62,6 @@ void TAnalysisTableModel::TestAddRemove()
 {
     QFETCH(AnalysisList, analyzes);
     QFETCH(SequencePointList, list);
-    QFETCH(IDSet, idSet);
     QFETCH(IDAnalysisList, nameList);
     QFETCH(AnalysisResults, results);
 
@@ -66,7 +75,6 @@ void TAnalysisTableModel::TestAddRemove()
     analyzes.clear();
 
     AnalysisTableModel model(collection, list);
-    model.insertID(idSet);
     model.analyze();
 
 
@@ -92,7 +100,6 @@ void TAnalysisTableModel::TestAddRemove()
     QCOMPARE(actualResult, expectedResult);
 
     AnalysisResults resultModel;
-    QList<ID> idList = idSet.toList();
 
     for(int i = 0; i < model.rowCount(); i++)
     {
@@ -104,7 +111,7 @@ void TAnalysisTableModel::TestAddRemove()
 
         if(!result.isEmpty())
         {
-            resultModel.insert(idList[i] , result);
+            resultModel.insert( model.data(model.index(i, 0)).toString() , result);
         }
     }
     const AnalysisResults actualResultData = resultModel;

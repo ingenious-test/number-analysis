@@ -1,6 +1,4 @@
 #include "AnalysisTableModel.h"
-#include "QStandardItemModel"
-
 
 AnalysisTableModel::AnalysisTableModel(QObject *parent) :
     QAbstractItemModel(parent)
@@ -51,18 +49,17 @@ QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole)
     {
-        if(results_.isEmpty())
-        {
-            return 0;
-        }
-
-        QList<ID> listResults = results_.keys();
+        QList<ID> listResults = idResults_.toList();
         if(index.column() == 0)
         {
             return listResults.at(index.row());
         }
         else
         {
+            if(results_.isEmpty())
+            {
+                return 0;
+            }
             return results_.value(listResults.at(index.row())).value(listAnalysis.at(index.column() - 1),0);
         }
     }
