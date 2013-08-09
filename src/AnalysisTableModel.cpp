@@ -30,7 +30,7 @@ QModelIndex AnalysisTableModel::parent(const QModelIndex &child) const
 
 int AnalysisTableModel::rowCount(const QModelIndex &parent) const
 {
-    return idResults_.size();
+    return seqPointList_.size();
 }
 
 int AnalysisTableModel::columnCount(const QModelIndex &parent) const
@@ -49,7 +49,7 @@ QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole)
     {
-        QList<ID> listResults = idResults_.toList();
+        IDList listResults = getIDs();
         if(index.column() == 0)
         {
             return listResults.at(index.row());
@@ -110,24 +110,10 @@ void AnalysisTableModel::analyze()
     if(collection_.size() > 0)
     {
         results_.clear();
-        if(idResults_.isEmpty())
-        {
-            qWarning() << "Set ID for Results";
-            return ;
-        }
 
-        if(idResults_.size() != seqPointList_.size())
+        for(int i = 0; i < seqPointList_.size(); i++)
         {
-            qWarning() << "ID must be set to all results (need "
-                          + QString::number(seqPointList_.size()) + " ID results. ";
-            qWarning() << "You have only " + QString::number(idResults_.size()) + " ID results. ";
-            return;
-        }
-        QList<ID> idResultsList = idResults_.toList();
-
-        for(int i = 0; i < seqPointList_.length(); i++)
-        {
-            results_.insert(idResultsList[i], collection_.analyze(seqPointList_[i]));
+            results_.insert(seqPointList_[i].id(), collection_.analyze(seqPointList_[i]));
         }
     }
 }
@@ -177,43 +163,14 @@ void AnalysisTableModel::removePointList(const int index)
     }
 }
 
-const IDSet &AnalysisTableModel::getIDs()
+IDList AnalysisTableModel::getIDs() const
 {
-    return this->idResults_;
-}
+    IDList result;
 
-bool AnalysisTableModel::insertID(const ID &id)
-{
-    if(!idResults_.contains(id))
+    foreach(PointList pointList, seqPointList_)
     {
-        idResults_.insert(id);
-        return true;
+        result.append(pointList.id());
     }
-    else
-    {
-        qWarning() << "ID " + id + " exists";
-        return false;
-    }
-}
 
-void AnalysisTableModel::insertID(const IDSet &idSet)
-{
-    foreach(ID id, idSet)
-    {
-        insertID(id);
-    }
-}
-
-bool AnalysisTableModel::removeID(const ID &id)
-{
-    if(idResults_.contains(id))
-    {
-        return idResults_.remove(id);
-    }
-    else
-    {
-        qWarning() << "ID " + id + " not exists";
-        return false;
-    }
-    return false;
+    return result;
 }

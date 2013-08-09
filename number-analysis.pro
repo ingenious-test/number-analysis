@@ -37,7 +37,9 @@ SOURCES += main.cpp\
     src/AnalysisTableModel.cpp \
     benchmarks/BAnalysisCollections.cpp \
     tests/TItemLsitModel.cpp \
-    src/ItemModelList.cpp
+    src/ItemModelList.cpp \
+    src/PointList.cpp \
+    src/SequencePointList.cpp
 
 HEADERS  += mainwindow.h \
     src/StupidAnalysis.h \
@@ -52,4 +54,6 @@ HEADERS  += mainwindow.h \
     src/AnalysisTableModel.h \
     benchmarks/BAnalysisCollections.h \
     tests/TItemLsitModel.h \
-    src/ItemModelList.h
+    src/ItemModelList.h \
+    src/PointList.h \
+    src/SequencePointList.h

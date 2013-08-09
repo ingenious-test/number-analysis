@@ -19,7 +19,7 @@ double AverageAnalysis::analyze(const PointList &values) const
     }
 
     const double sum = AbstractAnalysis::listSum(values);
-    const double result = sum / static_cast<double>(values.length());
+    const double result = sum / static_cast<double>(values.size());
 
     return result;
 }

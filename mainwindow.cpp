@@ -24,10 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
                             .appendInc(0.0 )
                             .appendInc(4.0)));
 
-    analyzesModel_->insertID("Первый");
-    analyzesModel_->insertID("Второй");
 
-    //analyzesModel_->analyze();
+    analyzesModel_->analyze();
 
     analyzesView_->setModel(analyzesModel_);
     ;

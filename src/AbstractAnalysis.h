@@ -2,42 +2,11 @@
 
 #define ABSTRACTANALYSIS_H
 
-#include <QtCore>
-
-typedef QString ID;
-typedef double Point;
-
-class PointList : public QList<Point>
-{
-public:
-    PointList& appendInc(const Point &t)
-    {
-        append(t);
-        return *this;
-    }
-
-    void setID(const ID& id)
-    {
-
-    }
-};
-Q_DECLARE_METATYPE(PointList)
-
-class SequencePointList : public QList<PointList>
-{
-public:
-    SequencePointList& appendInc( ID id, PointList& pointList)
-    {
-        pointList.setID(id);
-        append(pointList);
-        return *this;
-    }
-};
-Q_DECLARE_METATYPE(SequencePointList)
+#include "PointList.h"
+#include "SequencePointList.h"
 
 typedef QString IDAnalysis;
 typedef QList<IDAnalysis> IDAnalysisList;
-
 Q_DECLARE_METATYPE(IDAnalysisList)
 
 class AbstractAnalysis

@@ -6,22 +6,6 @@
 
 #include "AnalysisCollection.h"
 
-class IDSet : public QSet<ID>
-{
-public:
-    IDSet& insertInc(const ID &id)
-    {
-        if(contains(id))
-        {
-            remove(id);
-        }
-
-        insert(id);
-        return *this;
-    }
-};
-Q_DECLARE_METATYPE(IDSet)
-
 
 class AnalysisResults : public QHash<ID, AnalysisResult>
 {
@@ -74,14 +58,10 @@ public:
     void addPointList(const PointList& pointList);
     void removePointList(const int index);
 
-    const IDSet& getIDs();
-    bool insertID(const ID& id);
-    void insertID(const IDSet& idSet);
-    bool removeID(const ID& id);
+    IDList getIDs() const;
 
 private:
     AnalysisResults results_;
-    IDSet idResults_;
     AnalysisCollection collection_;
     SequencePointList seqPointList_;
 

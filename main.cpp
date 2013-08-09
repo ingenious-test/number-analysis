@@ -36,8 +36,8 @@ int main(int argc, char *argv[])
 
     qDebug() << "\r\n";
 
-    TItemLsitModel tItemLsitModel;
-    QTest::qExec(&tItemLsitModel);
+    /*TItemLsitModel tItemLsitModel;
+    QTest::qExec(&tItemLsitModel);*/
 
 #ifdef STRESS
     BAnalysisCollections bAnalysisCollections(1000000);
