@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
 
 #ifndef TEST
-    MainWindow w;
+    Widget w;
     w.show();
 #endif
     

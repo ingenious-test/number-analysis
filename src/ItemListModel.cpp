@@ -1,11 +1,13 @@
 #include "ItemListModel.h"
 
 ItemListModel::ItemListModel(QObject *parent):
-    QAbstractItemModel(parent)
+    QAbstractListModel(parent)
 {
+
 }
 
-ItemListModel::ItemListModel(const SequencePointList &seqPointList, QObject *parent)
+ItemListModel::ItemListModel(const SequencePointList &seqPointList, QObject *parent):
+    QAbstractListModel(parent)
 {
     foreach(PointList pointList, seqPointList)
     {
@@ -30,7 +32,7 @@ int ItemListModel::rowCount(const QModelIndex &parent) const
 
 int ItemListModel::columnCount(const QModelIndex &parent) const
 {
-    return 2;
+    return 1;
 }
 
 QVariant ItemListModel::data(const QModelIndex &index, int role) const
@@ -42,15 +44,9 @@ QVariant ItemListModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole)
     {
-        IDList listResults = sequencePointList_.getIDs();
         if(index.column() == 0)
         {
-            return sequencePointList_.at(index.row()).id();
-        }
-
-        if(index.column() == 1)
-        {
-            return sequencePointList_.at(index.row()).join();
+            return QVariant::fromValue(sequencePointList_[index.row()]);
         }
     }
     else
@@ -59,8 +55,4 @@ QVariant ItemListModel::data(const QModelIndex &index, int role) const
     }
 
     return QVariant();
-}
-
-void ItemListModel::addPointList(const PointList &pointList)
-{
 }

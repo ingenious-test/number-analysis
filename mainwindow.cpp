@@ -1,40 +1,54 @@
 #include "mainwindow.h"
+#include "src/ItemListDelegate.h"
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+Widget::Widget(QWidget *parent)
+    : QWidget(parent)
 {
-    analyzesView_ = new QTableView();
+    QHBoxLayout* mainLayout = new QHBoxLayout;
+
     AnalysisList list;
     list
             .insertInc(new StupidAnalysis(1.0))
             .insertInc(new AverageIgnoreNullAnalysis())
             .insertInc(new AverageAnalysis)
             ;
-    analyzesModel_ = new AnalysisTableModel(
-                AnalysisCollection(list),
-                SequencePointList()
-                .appendInc("Первый",
-                           PointList()
-                           .appendInc(2.0)
-                           .appendInc(3.0))
-                .appendInc("Второй",
-                           PointList()
-                            .appendInc(1.0)
-                            .appendInc(2.0)
-                            .appendInc(0.0 )
-                            .appendInc(4.0)));
 
+    analyzesModel_ = new AnalysisTableModel(list);
 
-    analyzesModel_->analyze();
+    analyzesView_ = new QTableView();
 
     analyzesView_->setModel(analyzesModel_);
-    ;
+
+    seqPointListModel_ = new ItemListModel(
+                SequencePointList()
+                .appendInc("Первая",
+                           PointList()
+                           .appendInc(3.0)
+                           .appendInc(4.0)
+                           .appendInc(5.0)
+                           )
+                .appendInc("Вторая",
+                           PointList()
+                           .appendInc(8.0)
+                           .appendInc(4.0)
+                           .appendInc(19.0)
+                           .appendInc(13.0)
+                           )
+            );
+
+    seqPointListView_ = new QListView();
+    seqPointListView_->setItemDelegate(new ItemListDelegate());
+    seqPointListView_->setFixedWidth(300);
+    seqPointListView_->setModel(seqPointListModel_);
+
+    mainLayout->addWidget(seqPointListView_);
+    mainLayout->addWidget(analyzesView_);
 
 
-    setCentralWidget(analyzesView_);
+    setLayout(mainLayout);
 }
 
-MainWindow::~MainWindow()
+Widget::~Widget()
 {
 
 }

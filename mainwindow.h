@@ -1,26 +1,31 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui/QMainWindow>
 #include <QtGui/QTableView>
+#include <QtGui/QListView>
 #include <QtGui/QLayout>
 
 #include "src/AnalysisTableModel.h"
+#include "src/ItemListModel.h"
 #include "src/StupidAnalysis.h"
 #include "src/AverageAnalysis.h"
 #include "src/AverageIgnoreNullAnalysis.h"
 
-class MainWindow : public QMainWindow
+class Widget : public QWidget
 {
     Q_OBJECT
     
 public:
-    MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    Widget(QWidget *parent = 0);
+    ~Widget();
 
 private:
     QTableView* analyzesView_;
     AnalysisTableModel* analyzesModel_;
+
+    QListView* seqPointListView_;
+    ItemListModel* seqPointListModel_;
+
 
 };
 

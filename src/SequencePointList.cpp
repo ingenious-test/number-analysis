@@ -17,7 +17,7 @@ void SequencePointList::append(ID id, const PointList &pointList)
     append(PointList(id,pointList));
 }
 
-void SequencePointList::append(const PointList &pointList)
+void SequencePointList::append(const PointList& pointList)
 {
     if(pointList.isSetID())
     {

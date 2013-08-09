@@ -2,7 +2,7 @@
 
 #define ITEMLISTMODEL_H
 
-#include <QAbstractItemModel>
+#include <QAbstractListModel>
 
 #include "AbstractAnalysis.h"
 
@@ -10,7 +10,7 @@ typedef QString ID;
 
 typedef QList<ID> IDList;
 
-class ItemListModel : public QAbstractItemModel
+class ItemListModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
@@ -24,10 +24,10 @@ public:
     int columnCount(const QModelIndex &parent  = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-    void addPointList(const PointList& pointList);
 
  private:
     SequencePointList sequencePointList_;
+
 };
 
 #endif // ITEMLISTMODEL_H

@@ -39,7 +39,8 @@ SOURCES += main.cpp\
     tests/TItemListModel.cpp \
     src/ItemListModel.cpp \
     src/PointList.cpp \
-    src/SequencePointList.cpp
+    src/SequencePointList.cpp \
+    src/ItemListDelegate.cpp
 
 HEADERS  += mainwindow.h \
     src/StupidAnalysis.h \
@@ -56,4 +57,5 @@ HEADERS  += mainwindow.h \
     tests/TItemListModel.h \
     src/ItemListModel.h \
     src/PointList.h \
-    src/SequencePointList.h
+    src/SequencePointList.h \
+    src/ItemListDelegate.h

@@ -55,37 +55,16 @@ void TItemListModel::TestAddRemove()
 {
     QFETCH(SequencePointList, list);
 
-    IDList idList = list.getIDs();
-
     ItemListModel model(list);
 
-    IDList idFromModel;
-    QStringList dataFromModel;
+    SequencePointList dataFromModel;
     for(int i = 0; i < model.rowCount(); i++)
     {
-        ID modelID
-                = model.data(model.index(i, 0)).toString();
-        QString modelData
-                = model.data(model.index(i, 1)).toString();
-
-        if(!modelData.isEmpty())
-        {
-            dataFromModel.append(modelData);
-        }
-        if(!modelID.isEmpty())
-        {
-            idFromModel.append(modelID);
-        }
+        dataFromModel.append(qvariant_cast<PointList>(model.data(model.index(i, 0))));
     }
 
-    const QStringList actualIDs = idFromModel;
-    const QStringList expectedIDs = idList;
-
-    QCOMPARE(actualIDs, expectedIDs);
-
-
-    const QStringList actualData = dataFromModel;
-    const QStringList expectedData = list.join();
+    const SequencePointList actualData = dataFromModel;
+    const SequencePointList expectedData = list;
 
     QCOMPARE(actualData, expectedData);
 }
