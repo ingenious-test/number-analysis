@@ -10,7 +10,7 @@
 
 #include "benchmarks/BAnalysisCollections.h"
 
-#include "mainwindow.h"
+#include "Widget.h"
 
 int main(int argc, char *argv[])
 {

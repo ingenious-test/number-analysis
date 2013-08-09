@@ -5,6 +5,7 @@
 #include <QtCore>
 
 typedef QString ID;
+typedef QHash<ID, int> IDHash;
 typedef QList<ID> IDList;
 typedef double Point;
 

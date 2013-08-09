@@ -10,9 +10,10 @@
 
 class ItemListDelegate : public QStyledItemDelegate
 {
+    Q_OBJECT
+
 public:
     ItemListDelegate();
-
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 

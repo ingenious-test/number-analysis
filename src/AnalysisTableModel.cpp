@@ -115,6 +115,8 @@ void AnalysisTableModel::analyze()
         {
             results_.insert(seqPointList_[i].id(), collection_.analyze(seqPointList_[i]));
         }
+
+        reset();
     }
 }
 
@@ -128,12 +130,71 @@ const AnalysisCollection &AnalysisTableModel::analysisCollection()
     return collection_;
 }
 
-AnalysisCollection &AnalysisTableModel::addAnalysis(AbstractAnalysis *analysis)
+AnalysisTableModel &AnalysisTableModel::addAnalysis(AbstractAnalysis *analysis)
 {
-    return collection_.addAnalysis(analysis);
+    collection_.addAnalysis(analysis);
+    reset();
+    return *this;
 }
 
 void AnalysisTableModel::removeAnalysis(const QString &name)
 {
     removeAnalysis(name);
+    reset();
+}
+
+void AnalysisTableModel::addPointList(const PointList &pointList)
+{
+    if(pointList.isSetID())
+    {
+        int index = containsPointList(pointList.id());
+        if(index > -1)
+        {
+            removePointList(index);
+            qWarning() << pointList.id() + " at " + QString::number(index) + " are replaced";
+        }
+
+        seqPointList_.append(pointList);
+        idHash_.insert(pointList.id(), seqPointList_.size() - 1);
+
+        reset();
+    }
+    else
+    {
+        qWarning() << "ID is not set";
+    }
+}
+
+void AnalysisTableModel::removePointList(const ID &id)
+{
+    int index = containsPointList(id);
+    if(index > -1)
+    {
+        removePointList(index);
+    }
+}
+
+void AnalysisTableModel::removePointList(const int index)
+{
+    bool isValidIndex = (index > -1 && index) < (seqPointList_.size());
+    if(isValidIndex)
+    {
+        idHash_.remove(seqPointList_[index].id());
+        seqPointList_.removeAt(index);
+        reset();
+    }
+}
+
+int AnalysisTableModel::containsPointList(const ID& id)
+{
+    if(idHash_.contains(id))
+    {
+        return idHash_[id];
+    }
+    return -1;
+}
+
+int AnalysisTableModel::containsPointList(const PointList &pointList)
+{
+    return containsPointList(pointList.id());
 }

@@ -1,7 +1,7 @@
 #include "ItemListDelegate.h"
 
 ItemListDelegate::ItemListDelegate():
-    pointsSep_(" : ")
+    QStyledItemDelegate(), pointsSep_(" : ")
 {
 }
 
@@ -36,3 +36,5 @@ void ItemListDelegate::setPointsSep(const QString &pointsSep)
 {
     pointsSep_ = pointsSep;
 }
+
+

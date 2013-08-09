@@ -49,15 +49,22 @@ public:
     const AnalysisResults& Results();
 
     const AnalysisCollection& analysisCollection();
-    AnalysisCollection& addAnalysis(AbstractAnalysis *analysis);
+    AnalysisTableModel &addAnalysis(AbstractAnalysis *analysis);
     void removeAnalysis(const QString &name);
+
+    void addPointList(const PointList& pointList);
+    void removePointList(const ID& id);
+    void removePointList(const int index);
+
+    int containsPointList(const ID &id);
+    int containsPointList(const PointList& pointList);
 
 
 private:
     AnalysisResults results_;
     AnalysisCollection collection_;
     SequencePointList seqPointList_;
-
+    IDHash idHash_;
 
 
 };

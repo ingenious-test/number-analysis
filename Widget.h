@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef WIDGET_H
+#define WIDGET_H
 
 #include <QtGui/QTableView>
 #include <QtGui/QListView>
@@ -26,7 +26,10 @@ private:
     QListView* seqPointListView_;
     ItemListModel* seqPointListModel_;
 
+private slots:
+    void	pointsListDoubleCLicked(QModelIndex index);
+
 
 };
 
-#endif // MAINWINDOW_H
+#endif // WIDGET_H

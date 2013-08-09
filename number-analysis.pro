@@ -25,7 +25,7 @@ CONFIG(test){
 }
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
+        Widget.cpp \
     src/StupidAnalysis.cpp \
     src/AverageAnalysis.cpp \
     tests/TAnalysis.cpp \
@@ -42,7 +42,7 @@ SOURCES += main.cpp\
     src/SequencePointList.cpp \
     src/ItemListDelegate.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += Widget.h \
     src/StupidAnalysis.h \
     tests/TAnalysis.h \
     src/AbstractAnalysis.h \
