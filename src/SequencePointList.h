@@ -14,6 +14,10 @@ public:
 
     int containsID(const ID& id);
 
+    QStringList join(const QString c = QString(" : ")) const;
+
+    IDList getIDs() const;
+
 };
 Q_DECLARE_METATYPE(SequencePointList)
 

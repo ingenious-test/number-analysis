@@ -51,14 +51,7 @@ public:
     const AnalysisCollection& analysisCollection();
     AnalysisCollection& addAnalysis(AbstractAnalysis *analysis);
     void removeAnalysis(const QString &name);
-    void clearAnalyses();
 
-
-    const SequencePointList &sequencePointList();
-    void addPointList(const PointList& pointList);
-    void removePointList(const int index);
-
-    IDList getIDs() const;
 
 private:
     AnalysisResults results_;

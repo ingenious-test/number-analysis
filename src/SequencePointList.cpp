@@ -43,3 +43,27 @@ int SequencePointList::containsID(const ID& id)
 
     return -1;
 }
+
+QStringList SequencePointList::join(const QString c) const
+{
+    QStringList result;
+
+    foreach(PointList pointList, *this)
+    {
+        result += pointList.join(c);
+
+    }
+    return result;
+}
+
+IDList SequencePointList::getIDs() const
+{
+    IDList result;
+
+    foreach(PointList pointList, *this)
+    {
+        result.append(pointList.id());
+    }
+
+    return result;
+}

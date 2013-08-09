@@ -36,8 +36,8 @@ SOURCES += main.cpp\
     tests/TAnalysisTableModel.cpp \
     src/AnalysisTableModel.cpp \
     benchmarks/BAnalysisCollections.cpp \
-    tests/TItemLsitModel.cpp \
-    src/ItemModelList.cpp \
+    tests/TItemListModel.cpp \
+    src/ItemListModel.cpp \
     src/PointList.cpp \
     src/SequencePointList.cpp
 
@@ -53,7 +53,7 @@ HEADERS  += mainwindow.h \
     tests/TAnalysisTableModel.h \
     src/AnalysisTableModel.h \
     benchmarks/BAnalysisCollections.h \
-    tests/TItemLsitModel.h \
-    src/ItemModelList.h \
+    tests/TItemListModel.h \
+    src/ItemListModel.h \
     src/PointList.h \
     src/SequencePointList.h

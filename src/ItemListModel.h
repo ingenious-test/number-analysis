@@ -1,6 +1,6 @@
-#ifndef ITEMMODELLIST_H
+#ifndef ITEMLISTMODEL_H
 
-#define ITEMMODELLIST_H
+#define ITEMLISTMODEL_H
 
 #include <QAbstractItemModel>
 
@@ -10,11 +10,12 @@ typedef QString ID;
 
 typedef QList<ID> IDList;
 
-class ItemModelList : public QAbstractItemModel
+class ItemListModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    ItemModelList(QObject *parent = 0);
+    ItemListModel(QObject *parent = 0);
+    ItemListModel(const SequencePointList &seqPointList, QObject *parent = 0);
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &child) const;
@@ -24,6 +25,9 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     void addPointList(const PointList& pointList);
+
+ private:
+    SequencePointList sequencePointList_;
 };
 
-#endif // ITEMMODELLIST_H
+#endif // ITEMLISTMODEL_H

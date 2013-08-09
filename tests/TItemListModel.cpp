@@ -1,11 +1,11 @@
-#include "TItemLsitModel.h"
+#include "TItemListModel.h"
 
-TItemLsitModel::TItemLsitModel(QObject *parent) :
+TItemListModel::TItemListModel(QObject *parent) :
     QObject(parent)
 {
 }
 
-void TItemLsitModel::TestAddRemove_data()
+void TItemListModel::TestAddRemove_data()
 {
     QTest::addColumn<SequencePointList>("list");
 
@@ -51,35 +51,41 @@ void TItemLsitModel::TestAddRemove_data()
                                                  .appendInc(7.7));
 }
 
-void TItemLsitModel::TestAddRemove()
+void TItemListModel::TestAddRemove()
 {
     QFETCH(SequencePointList, list);
 
-    ItemModelList model;
+    IDList idList = list.getIDs();
 
-    for(int i = 0; i < list.size(); i++)
-    {
-        model.addPointList(list[i]);
-    }
+    ItemListModel model(list);
 
-    SequencePointList modelData;
+    IDList idFromModel;
+    QStringList dataFromModel;
     for(int i = 0; i < model.rowCount(); i++)
     {
-        PointList modelRow;
-        for(int j = 1; j < model.columnCount(); j++)
-        {
-             modelRow.append(model.data(model.index(i, j)).toDouble());
-        }
+        ID modelID
+                = model.data(model.index(i, 0)).toString();
+        QString modelData
+                = model.data(model.index(i, 1)).toString();
 
-        if(!modelRow.isEmpty())
+        if(!modelData.isEmpty())
         {
-            modelRow.setID(model.data(model.index(i, 0)).toString());
-            modelData.append(modelRow);
+            dataFromModel.append(modelData);
+        }
+        if(!modelID.isEmpty())
+        {
+            idFromModel.append(modelID);
         }
     }
 
-    const SequencePointList actualResult = modelData;
-    const SequencePointList expectedResult = list;
+    const QStringList actualIDs = idFromModel;
+    const QStringList expectedIDs = idList;
 
-    QCOMPARE(actualResult, expectedResult);
+    QCOMPARE(actualIDs, expectedIDs);
+
+
+    const QStringList actualData = dataFromModel;
+    const QStringList expectedData = list.join();
+
+    QCOMPARE(actualData, expectedData);
 }

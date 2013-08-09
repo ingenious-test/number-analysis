@@ -49,7 +49,7 @@ QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole)
     {
-        IDList listResults = getIDs();
+        IDList listResults = seqPointList_.getIDs();
         if(index.column() == 0)
         {
             return listResults.at(index.row());
@@ -136,41 +136,4 @@ AnalysisCollection &AnalysisTableModel::addAnalysis(AbstractAnalysis *analysis)
 void AnalysisTableModel::removeAnalysis(const QString &name)
 {
     removeAnalysis(name);
-}
-
-void AnalysisTableModel::clearAnalyses()
-{
-    collection_.removeAll();
-}
-
-const SequencePointList &AnalysisTableModel::sequencePointList()
-{
-    return seqPointList_;
-}
-
-void AnalysisTableModel::addPointList(const PointList &pointList)
-{
-    seqPointList_.append(pointList);
-}
-
-void AnalysisTableModel::removePointList(const int index)
-{
-    bool isValidIndex = (index > -1) && (index < seqPointList_.length());
-
-    if(isValidIndex)
-    {
-        seqPointList_.removeAt(index);
-    }
-}
-
-IDList AnalysisTableModel::getIDs() const
-{
-    IDList result;
-
-    foreach(PointList pointList, seqPointList_)
-    {
-        result.append(pointList.id());
-    }
-
-    return result;
 }

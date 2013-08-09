@@ -19,6 +19,8 @@ public:
     const ID& id() const;
     bool isSetID() const;
 
+    QString join(const QString c = QString(" : ")) const;
+
 private:
     ID id_;
 };

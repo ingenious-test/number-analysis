@@ -35,3 +35,17 @@ bool PointList::isSetID() const
 {
     return !id_.isEmpty();
 }
+
+QString PointList::join(const QString c) const
+{
+    QString result;
+
+    QListIterator<Point> i(*this);
+
+    while(i.hasNext())
+    {
+        result += QString::number(i.next());
+        if(i.hasNext()) result += c;
+    }
+    return result;
+}
