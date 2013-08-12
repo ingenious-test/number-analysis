@@ -15,6 +15,4 @@ public:
     AverageIgnoreNullAnalysis* clone();
 };
 
-Q_DECLARE_METATYPE(AverageIgnoreNullAnalysis*)
-
 #endif // AVERAGEIGNORENULLANALYSIS_H

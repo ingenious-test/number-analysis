@@ -19,6 +19,4 @@ private:
     Point value_;
 };
 
-Q_DECLARE_METATYPE(StupidAnalysis*)
-
 #endif // STUPIDANALYSIS_H

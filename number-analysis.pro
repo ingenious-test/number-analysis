@@ -40,7 +40,8 @@ SOURCES += main.cpp\
     src/ItemListModel.cpp \
     src/PointList.cpp \
     src/SequencePointList.cpp \
-    src/ItemListDelegate.cpp
+    src/ItemListDelegate.cpp \
+    src/StandardDeviationAnalysis.cpp
 
 HEADERS  += Widget.h \
     src/StupidAnalysis.h \
@@ -58,4 +59,5 @@ HEADERS  += Widget.h \
     src/ItemListModel.h \
     src/PointList.h \
     src/SequencePointList.h \
-    src/ItemListDelegate.h
+    src/ItemListDelegate.h \
+    src/StandardDeviationAnalysis.h

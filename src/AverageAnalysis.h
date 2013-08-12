@@ -15,6 +15,4 @@ public:
     AverageAnalysis* clone();
 };
 
-Q_DECLARE_METATYPE(AverageAnalysis*)
-
 #endif // AVERAGEANALYSIS_H

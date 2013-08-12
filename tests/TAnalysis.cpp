@@ -48,7 +48,7 @@ void TAnalysis::TestListSum_data()
 void TAnalysis::TestListSum()
 {
     QFETCH(PointList, list);
-    QFETCH(double, sum);
+    QFETCH(Point, sum);
 
     FUZZY_COMPARE(AbstractAnalysis::listSum(list), sum);
 }
@@ -66,7 +66,7 @@ void TAnalysis::TestStupidAnalysis_data()
 void TAnalysis::TestStupidAnalysis()
 {
     QFETCH(Point, value);
-    QFETCH(double, result);
+    QFETCH(Point, result);
 
     StupidAnalysis analysis(value);
 
@@ -135,7 +135,7 @@ void TAnalysis::TestAverageAnalysis_data()
 void TAnalysis::TestAverageAnalysis()
 {
     QFETCH(PointList, values);
-    QFETCH(double, result);
+    QFETCH(Point, result);
 
     AverageAnalysis analysis;
 
@@ -209,9 +209,58 @@ void TAnalysis::TestAverageIgnoreNullAnalysis_data()
 void TAnalysis::TestAverageIgnoreNullAnalysis()
 {
     QFETCH(PointList, values);
-    QFETCH(double, result);
+    QFETCH(Point, result);
 
     AverageIgnoreNullAnalysis analysis;
+
+    const double actualResult = analysis.analyze(values);
+    const double expectedResult = result;
+
+    FUZZY_COMPARE(actualResult, expectedResult);
+}
+
+void TAnalysis::TestStandardDeviation_data()
+{
+    QTest::addColumn< PointList >("values");
+    QTest::addColumn<Point>("result");
+
+    QTest::newRow("empty") << PointList() << 0.0;
+
+    QTest::newRow("one-value") << PointList().appendInc(23.0) << 0.0;
+
+    QTest::newRow("two-values") << PointList()
+                                   .appendInc( -3.0)
+                                   .appendInc(12.0)
+                                << 10.607; // Значения с сайта калькулятора http://www.wolframalpha.com/
+
+    QTest::newRow("three-values") << PointList()
+                                     .appendInc( 0.0)
+                                     .appendInc(4.0)
+                                     .appendInc(7.0)
+                                  << 3.5119; // Значения с сайта калькулятора http://www.wolframalpha.com/
+
+    QTest::newRow("three-values") << PointList()
+                                     .appendInc( 60.0)
+                                     .appendInc(77.0)
+                                     .appendInc(34.0)
+                                     .appendInc(98.0)
+                                     << 27.072; //Значения с сайта калькулятора http://www.wolframalpha.com/
+
+    QTest::newRow("four-values") << PointList()
+                                     .appendInc(-20.6)
+                                     .appendInc(-17.2)
+                                     .appendInc(-21.0)
+                                     .appendInc(-42.1)
+                                     .appendInc(-18.5)
+                                     << 10.3028;    //Значения с сайта калькулятора http://www.wolframalpha.com/
+}
+
+void TAnalysis::TestStandardDeviation()
+{
+    QFETCH(PointList, values);
+    QFETCH(Point, result);
+
+    StandardDeviationAnalysis analysis;
 
     const double actualResult = analysis.analyze(values);
     const double expectedResult = result;

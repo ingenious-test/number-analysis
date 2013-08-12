@@ -6,6 +6,7 @@
 #include "../src/StupidAnalysis.h"
 #include "../src/AverageAnalysis.h"
 #include "../src/AverageIgnoreNullAnalysis.h"
+#include "../src/StandardDeviationAnalysis.h"
 
 #include "TestingUtilities.h"
 
@@ -31,6 +32,8 @@ private slots:
     void TestAverageIgnoreNullAnalysis_data();
     void TestAverageIgnoreNullAnalysis();
 
+    void TestStandardDeviation_data();
+    void TestStandardDeviation();
 };
 
 #endif // TANALYSIS_H
