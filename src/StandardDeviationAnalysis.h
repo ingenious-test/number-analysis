@@ -3,6 +3,7 @@
 #define STANDARDDEVIATIONANALYSIS_H
 
 #include "AbstractAnalysis.h"
+#include "AverageAnalysis.h"
 
 class StandardDeviationAnalysis : public AbstractAnalysis
 {

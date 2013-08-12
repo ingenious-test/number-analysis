@@ -12,7 +12,29 @@ AbstractAnalysis("standard-deviation")
 
 double StandardDeviationAnalysis::analyze(const PointList &values) const
 {
-    return 0.0;
+    if(values.isEmpty())
+    {
+        return 0.0;
+    }
+
+    if(values.size() == 1)
+    {
+        return 0.0;
+    }
+
+    AverageAnalysis averageAnalysis;
+    double average = averageAnalysis.analyze(values);
+
+    double sum = 0;
+    foreach(Point value, values)
+    {
+        sum += qPow(value - average, 2.0);
+    }
+
+    double result = sum / (values.count() - 1.0);
+    result = qSqrt(result);
+
+    return result;
 }
 
 StandardDeviationAnalysis *StandardDeviationAnalysis::clone()

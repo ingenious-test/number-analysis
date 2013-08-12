@@ -231,20 +231,20 @@ void TAnalysis::TestStandardDeviation_data()
     QTest::newRow("two-values") << PointList()
                                    .appendInc( -3.0)
                                    .appendInc(12.0)
-                                << 10.607; // Значения с сайта калькулятора http://www.wolframalpha.com/
+                                << 15.0/qSqrt(2.0); // Значения с сайта калькулятора http://www.wolframalpha.com/
 
     QTest::newRow("three-values") << PointList()
                                      .appendInc( 0.0)
                                      .appendInc(4.0)
                                      .appendInc(7.0)
-                                  << 3.5119; // Значения с сайта калькулятора http://www.wolframalpha.com/
+                                  << qSqrt(37.0 / 3.0); // Значения с сайта калькулятора http://www.wolframalpha.com/
 
     QTest::newRow("three-values") << PointList()
                                      .appendInc( 60.0)
                                      .appendInc(77.0)
                                      .appendInc(34.0)
                                      .appendInc(98.0)
-                                     << 27.072; //Значения с сайта калькулятора http://www.wolframalpha.com/
+                                     << qSqrt(8795.0 / 3.0) / 2.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
 
     QTest::newRow("four-values") << PointList()
                                      .appendInc(-20.6)
