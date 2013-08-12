@@ -14,7 +14,7 @@ AnalysisCollection::AnalysisCollection(AnalysisList analyzes)
 
 AnalysisCollection::AnalysisCollection(const AnalysisCollection &collection)
 {
-    foreach(AbstractAnalysis* item, collection.analysisTable_.values())
+    foreach(AbstractAnalysis* item, collection.analysisTable_)
     {
         addAnalysis(item->clone());
     }
@@ -23,41 +23,60 @@ AnalysisCollection::AnalysisCollection(const AnalysisCollection &collection)
 
 AnalysisCollection::~AnalysisCollection()
 {
-    removeAll();
+    removeAllAnalysis();
 }
 
 AnalysisResult AnalysisCollection::analyze(const PointList &list) const
 {
     AnalysisResult analysisResult;
 
-    foreach(AbstractAnalysis* item, analysisTable_.values())
+    foreach(AbstractAnalysis* item, analysisTable_)
     {
-        analysisResult.insert(item->name(), item->analyze(list));
+        analysisResult.insert(item->id(), item->analyze(list));
     }
 
     return analysisResult;
 }
 
-AnalysisCollection& AnalysisCollection::addAnalysis(AbstractAnalysis *analysis)
+void AnalysisCollection::addAnalysis(AbstractAnalysis *analysis)
 {
-    const QString name = analysis->name();
-
-    if(analysisTable_.contains(name))
+    if(!analysis->isValid())
     {
-        removeAnalysis(name);
+        qWarning() << "Not valid analysis";
+        return ;
     }
 
-    analysisTable_.insert(name, analysis->clone());
+    int index = indexOfAnalysis(analysis->id());
 
-    return *this;
+    if(index > -1)
+    {
+        qWarning() << QString("Analysis %1 already exists").arg(analysis->id());
+        return ;
+    }
+
+    analysisTable_.append(analysis->clone());
 }
 
-void AnalysisCollection::removeAnalysis(const QString &name)
+int AnalysisCollection::indexOfAnalysis(const IDAnalysis &idAnalysis)
 {
-    if(analysisTable_.contains(name))
+    for(int i = 0; i < analysisTable_.size(); i++)
     {
-        delete analysisTable_[name];
-        analysisTable_.remove(name);
+        if(analysisTable_.at(i)->id() == idAnalysis)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+
+void AnalysisCollection::removeAnalysis(const int index)
+{
+    bool isValidIndex = (index > -1) && (index < analysisTable_.size());
+    if(isValidIndex)
+    {
+        delete analysisTable_[index];
+        analysisTable_.removeAt(index);
     }
     else
     {
@@ -65,17 +84,24 @@ void AnalysisCollection::removeAnalysis(const QString &name)
     }
 }
 
-void AnalysisCollection::removeAll()
+void AnalysisCollection::removeAllAnalysis()
 {
-    foreach(const QString &name, analysisTable_.keys())
+    for(int i = (analysisTable_.size() - 1); i >= 0 ; i--)
     {
-        removeAnalysis(name);
+        removeAnalysis(i);
     }
 }
 
 const IDAnalysisList AnalysisCollection::getNameList() const
 {    
-    return analysisTable_.keys();
+    IDAnalysisList list;
+
+    foreach (AbstractAnalysis* analysis, analysisTable_)
+    {
+        list.append(analysis->id());
+    }
+
+    return list;
 }
 
 const int AnalysisCollection::size() const

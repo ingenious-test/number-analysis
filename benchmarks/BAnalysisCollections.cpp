@@ -19,8 +19,6 @@ void BAnalysisCollections::run()
 
         collection.analyze(PointList());
 
-        collection.removeAnalysis(StupidAnalysis().name());
-
         qDebug(QString("iteration : " + QString::number(i)).toLocal8Bit());
     }
 }

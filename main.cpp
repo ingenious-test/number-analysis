@@ -10,7 +10,7 @@
 
 #include "benchmarks/BAnalysisCollections.h"
 
-#include "Widget.h"
+#include "AnalysisWindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -48,8 +48,8 @@ int main(int argc, char *argv[])
 
 
 #ifndef TEST
-    Widget w;
-    w.show();
+    AnalysisWindow analysisWindow;
+    analysisWindow.show();
 #endif
     
     return a.exec();

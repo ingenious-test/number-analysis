@@ -8,7 +8,7 @@ TAnalysis::TAnalysis()
 void TAnalysis::TestAbstractAnalysis_data()
 {
     QTest::addColumn<AbstractAnalysis*>("analysis");
-    QTest::addColumn<QString>("name");
+    QTest::addColumn<IDAnalysis>("analysisID");
 
     QTest::newRow("average") << static_cast<AbstractAnalysis*>(new AverageAnalysis) << "average";
     QTest::newRow("average-with-ignore-null")
@@ -20,9 +20,9 @@ void TAnalysis::TestAbstractAnalysis_data()
 void TAnalysis::TestAbstractAnalysis()
 {
     QFETCH(AbstractAnalysis*, analysis);
-    QFETCH(QString, name);
+    QFETCH(IDAnalysis, analysisID);
 
-    QCOMPARE(analysis->name(), name);
+    QCOMPARE(analysis->id(), analysisID);
 
     delete analysis;
 }
@@ -35,20 +35,20 @@ void TAnalysis::TestListSum_data()
     QTest::newRow("empty-list") << PointList()
                                 << 0.0;
 
-    QTest::newRow("single-element") << PointList().appendInc(1.0)
+    QTest::newRow("single-element") << (PointList() << 1.0)
                                     << 1.0;
 
-    QTest::newRow("two-elements") << PointList().appendInc(1.0).appendInc(1.0)
+    QTest::newRow("two-elements") << (PointList() << 1.0 << 1.0)
                                   << 2.0;
 
-    QTest::newRow("negative-element") << PointList().appendInc(1.0).appendInc(-1.0)
+    QTest::newRow("negative-element") << (PointList() << 1.0 << -1.0)
                                       << 0.0;
 }
 
 void TAnalysis::TestListSum()
 {
     QFETCH(PointList, list);
-    QFETCH(Point, sum);
+    QFETCH(double, sum);
 
     FUZZY_COMPARE(AbstractAnalysis::listSum(list), sum);
 }
@@ -66,7 +66,7 @@ void TAnalysis::TestStupidAnalysis_data()
 void TAnalysis::TestStupidAnalysis()
 {
     QFETCH(Point, value);
-    QFETCH(Point, result);
+    QFETCH(double, result);
 
     StupidAnalysis analysis(value);
 
@@ -83,50 +83,32 @@ void TAnalysis::TestAverageAnalysis_data()
 
     QTest::newRow("empty") << PointList() << 0.0;
 
-    QTest::newRow("one-value") << PointList()
-                                  .appendInc(23.0)
+    QTest::newRow("one-value") << (PointList() << 23.0)
                                << 23.0;
 
-    QTest::newRow("one-doubled-value") << PointList()
-                                          .appendInc(3.5)
+    QTest::newRow("one-doubled-value") << (PointList()<< 3.5)
                                        << 3.5;
 
-    QTest::newRow("one-negative-value") << PointList()
-                                           .appendInc(-3.0)
+    QTest::newRow("one-negative-value") << (PointList() << -3.0)
                                         << -3.0;
 
 
-    QTest::newRow("two-value") << PointList()
-                                  .appendInc(11.0)
-                                  .appendInc(44.0)
+    QTest::newRow("two-value") << (PointList() << 11.0 << 44.0)
                                << (11.0 + 44.0) / 2.0;
 
-    QTest::newRow("two-doubled-value") << PointList()
-                                          .appendInc(12.3)
-                                          .appendInc(4.5)
+    QTest::newRow("two-doubled-value") << (PointList() << 12.3 << 4.5)
                                        << (12.3 + 4.5) / 2.0;
 
-    QTest::newRow("two-negative-value") << PointList()
-                                           .appendInc(-1.0)
-                                           .appendInc(4.0)
+    QTest::newRow("two-negative-value") << (PointList() << -1.0 << 4.0)
                                         << (-1.0 + 4.0) / 2.0;
 
-    QTest::newRow("three-value") << PointList()
-                                    .appendInc(4.0)
-                                    .appendInc(19.0)
-                                    .appendInc(51.0)
+    QTest::newRow("three-value") << (PointList() << 4.0 << 19.0 <<51.0)
                                  << (4.0 + 19.0 + 51.0) / 3.0;
 
-    QTest::newRow("three-doubled-value") << PointList()
-                                            .appendInc(4.5)
-                                            .appendInc(19.3)
-                                            .appendInc(13.2)
+    QTest::newRow("three-doubled-value") << (PointList() << 4.5 << 19.3 << 13.2)
                                          << (4.5 + 19.3 + 13.2) / 3.0;
 
-    QTest::newRow("three-negative-value") << PointList()
-                                             .appendInc(-4.0)
-                                             .appendInc(1.0)
-                                             .appendInc(5.0)
+    QTest::newRow("three-negative-value") << (PointList() << -4.0 << 1.0 << 5.0)
                                           << (-4.0 + 1.0 + 5.0) / 3.0;
 
 
@@ -135,7 +117,7 @@ void TAnalysis::TestAverageAnalysis_data()
 void TAnalysis::TestAverageAnalysis()
 {
     QFETCH(PointList, values);
-    QFETCH(Point, result);
+    QFETCH(double, result);
 
     AverageAnalysis analysis;
 
@@ -149,67 +131,70 @@ void TAnalysis::TestAverageAnalysis()
 void TAnalysis::TestAverageIgnoreNullAnalysis_data()
 {
     QTest::addColumn< PointList >("values");
-    QTest::addColumn<Point>("result");
+    QTest::addColumn<double>("result");
 
     QTest::newRow("empty") << PointList() << 0.0;
-    QTest::newRow("one-value") << PointList().appendInc(23.0) << 23.0;
-    QTest::newRow("one-doubled-value") << PointList().appendInc(3.5) << 3.5;
-    QTest::newRow("one-negative-value") << PointList().appendInc( -3.0) << -3.0;
+    QTest::newRow("one-value") << (PointList() << 23.0) << 23.0;
+    QTest::newRow("one-doubled-value") << (PointList() << 3.5) << 3.5;
+    QTest::newRow("one-negative-value") << (PointList() << -3.0) << -3.0;
 
 
-    QTest::newRow("two-value") << PointList()
-                                  .appendInc(11.0)
-                                  .appendInc(44.0)
+    QTest::newRow("two-value") << (PointList()
+                                   << 11.0
+                                   << 44.0)
                                << (11.0 + 44.0) / 2.0;
-    QTest::newRow("two-doubled-value") << PointList()
-                                          .appendInc(12.3)
-                                          .appendInc(4.5)
+    QTest::newRow("two-doubled-value") << (PointList()
+                                           << 12.3
+                                           << 4.5)
                                        << (12.3 + 4.5) / 2.0;
 
-    QTest::newRow("two-negative-value") << PointList()
-                                           .appendInc(-1.0)
-                                           .appendInc(4.0)
+    QTest::newRow("two-negative-value") << (PointList()
+                                            << -1.0
+                                            << 4.0)
                                         << (-1.0 + 4.0) / 2.0;
 
-    QTest::newRow("three-value") << PointList().appendInc(4.0)
-                                    .appendInc(19.0)
-                                    .appendInc(51.0)
+    QTest::newRow("three-value") << (PointList()
+                                     << 4.0
+                                     << 19.0
+                                     << 51.0)
                                  << (4.0 + 19.0 + 51.0) / 3.0;
-    QTest::newRow("three-doubled-value") << PointList().appendInc(4.5)
-                                            .appendInc(19.3)
-                                            .appendInc(13.2)
+    QTest::newRow("three-doubled-value") << (PointList()
+                                             << 4.5
+                                             << 19.3
+                                             << 13.2)
                                          << (4.5 + 19.3 + 13.2) / 3.0;
-    QTest::newRow("three-negative-value") << PointList().appendInc(-4.0)
-                                             .appendInc(1.0)
-                                             .appendInc(5.0)
+    QTest::newRow("three-negative-value") << (PointList()
+                                              << -4.0
+                                              << 1.0
+                                              << 5.0)
                                           << (-4.0 + 1.0 + 5.0) / 3.0;
 
-    QTest::newRow("three-with-null-value") << PointList()
-                                              .appendInc(-4.0)
-                                              .appendInc(0.0)
-                                              .appendInc(5.0)
+    QTest::newRow("three-with-null-value") << (PointList()
+                                               << -4.0
+                                               << 0.0
+                                               << 5.0)
                                            << (-4.0 + 5.0) / 2.0;
 
-    QTest::newRow("four-with-null-value") << PointList()
-                                             .appendInc(5.0)
-                                             .appendInc(0.0)
-                                             .appendInc(10.0)
-                                             .appendInc(0.0)
+    QTest::newRow("four-with-null-value") << (PointList()
+                                              << 5.0
+                                              << 0.0
+                                              << 10.0
+                                              <<0.0)
                                           << (5.0 + 10.0) / 2.0;
 
-    QTest::newRow("five-with-null-value") << PointList()
-                                             .appendInc(15.0)
-                                             .appendInc(0.0)
-                                             .appendInc(9.0)
-                                             .appendInc(0.0)
-                                             .appendInc(4.0)
+    QTest::newRow("five-with-null-value") << (PointList()
+                                              << 15.0
+                                              << 0.0
+                                              << 9.0
+                                              << 0.0
+                                              << 4.0)
                                           << (15.0 + 9.0 + 4.0) / 3.0;
 }
 
 void TAnalysis::TestAverageIgnoreNullAnalysis()
 {
     QFETCH(PointList, values);
-    QFETCH(Point, result);
+    QFETCH(double, result);
 
     AverageIgnoreNullAnalysis analysis;
 
@@ -222,43 +207,34 @@ void TAnalysis::TestAverageIgnoreNullAnalysis()
 void TAnalysis::TestStandardDeviation_data()
 {
     QTest::addColumn< PointList >("values");
-    QTest::addColumn<Point>("result");
+    QTest::addColumn<double>("result");
 
     QTest::newRow("empty") << PointList() << 0.0;
 
-    QTest::newRow("one-value") << PointList().appendInc(23.0) << 0.0;
+    QTest::newRow("one-value") << (PointList() << 23.0) << 0.0;
 
-    QTest::newRow("two-values") << PointList()
-                                   .appendInc( -3.0)
-                                   .appendInc(12.0)
+    QTest::newRow("two-values") << (PointList() << -3.0 << 12.0)
                                 << 15.0/qSqrt(2.0); // Значения с сайта калькулятора http://www.wolframalpha.com/
 
-    QTest::newRow("three-values") << PointList()
-                                     .appendInc( 0.0)
-                                     .appendInc(4.0)
-                                     .appendInc(7.0)
+    QTest::newRow("three-values") << (PointList() << 0.0 << 4.0 << 7.0)
                                   << qSqrt(37.0 / 3.0); // Значения с сайта калькулятора http://www.wolframalpha.com/
 
-    QTest::newRow("three-values") << PointList()
-                                     .appendInc( 60.0)
-                                     .appendInc(77.0)
-                                     .appendInc(34.0)
-                                     .appendInc(98.0)
-                                     << qSqrt(8795.0 / 3.0) / 2.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
+    QTest::newRow("three-values") << (PointList() << 60.0 << 77.0 << 34.0 << 98.0)
+                                  << qSqrt(8795.0 / 3.0) / 2.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
 
-    QTest::newRow("four-values") << PointList()
-                                     .appendInc(-20.6)
-                                     .appendInc(-17.2)
-                                     .appendInc(-21.0)
-                                     .appendInc(-42.1)
-                                     .appendInc(-18.5)
-                                     << 10.3028;    //Значения с сайта калькулятора http://www.wolframalpha.com/
+    QTest::newRow("four-values") << (PointList()
+                                     << -20.6
+                                     << -17.2
+                                     << -21.0
+                                     << -42.1
+                                     << -18.5)
+                                 << 10.3028;    //Значения с сайта калькулятора http://www.wolframalpha.com/
 }
 
 void TAnalysis::TestStandardDeviation()
 {
     QFETCH(PointList, values);
-    QFETCH(Point, result);
+    QFETCH(double, result);
 
     StandardDeviationAnalysis analysis;
 

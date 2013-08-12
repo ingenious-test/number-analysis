@@ -25,7 +25,7 @@ CONFIG(test){
 }
 
 SOURCES += main.cpp\
-        Widget.cpp \
+        AnalysisWindow.cpp \
     src/StupidAnalysis.cpp \
     src/AverageAnalysis.cpp \
     tests/TAnalysis.cpp \
@@ -38,12 +38,10 @@ SOURCES += main.cpp\
     benchmarks/BAnalysisCollections.cpp \
     tests/TItemListModel.cpp \
     src/ItemListModel.cpp \
-    src/PointList.cpp \
-    src/SequencePointList.cpp \
-    src/ItemListDelegate.cpp \
-    src/StandardDeviationAnalysis.cpp
+    src/StandardDeviationAnalysis.cpp \
+    src/ItemListView.cpp
 
-HEADERS  += Widget.h \
+HEADERS  += AnalysisWindow.h \
     src/StupidAnalysis.h \
     tests/TAnalysis.h \
     src/AbstractAnalysis.h \
@@ -57,7 +55,5 @@ HEADERS  += Widget.h \
     benchmarks/BAnalysisCollections.h \
     tests/TItemListModel.h \
     src/ItemListModel.h \
-    src/PointList.h \
-    src/SequencePointList.h \
-    src/ItemListDelegate.h \
-    src/StandardDeviationAnalysis.h
+    src/StandardDeviationAnalysis.h \
+    src/ItemListView.h

@@ -1,5 +1,11 @@
 #include "AbstractAnalysis.h"
 
+AbstractAnalysis::AbstractAnalysis(const IDAnalysis &id) :
+    id_(id)
+{
+
+}
+
 double AbstractAnalysis::listSum(const PointList &list)
 {
     double sum = 0.0;
@@ -10,14 +16,13 @@ double AbstractAnalysis::listSum(const PointList &list)
     return sum;
 }
 
-
-IDAnalysis AbstractAnalysis::name()
+bool AbstractAnalysis::isValid()
 {
-    return name_;
+    return !id_.isEmpty();
 }
 
-AbstractAnalysis::AbstractAnalysis(const IDAnalysis &name) :
-    name_(name)
-{
 
+IDAnalysis AbstractAnalysis::id()
+{
+    return id_;
 }

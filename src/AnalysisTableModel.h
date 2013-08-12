@@ -30,7 +30,6 @@ class AnalysisTableModel : public QAbstractItemModel
 public:
     AnalysisTableModel(QObject *parent = 0);
     AnalysisTableModel(const AnalysisCollection &colletions,
-                       const SequencePointList &seq = SequencePointList(),
                        QObject *parent = 0);
 
     ~AnalysisTableModel();
@@ -49,22 +48,19 @@ public:
     const AnalysisResults& Results();
 
     const AnalysisCollection& analysisCollection();
-    AnalysisTableModel &addAnalysis(AbstractAnalysis *analysis);
-    void removeAnalysis(const QString &name);
+    void addAnalysis(AbstractAnalysis *analysis);
+    void removeAnalysis(const QString &id);
 
-    void addPointList(const PointList& pointList);
-    void removePointList(const ID& id);
-    void removePointList(const int index);
+    void appendPointList(const ID& id);
+    void appendPointList(const IDList& idList);
+    bool containsPointList(const ID& id);
 
-    int containsPointList(const ID &id);
-    int containsPointList(const PointList& pointList);
 
 
 private:
     AnalysisResults results_;
     AnalysisCollection collection_;
-    SequencePointList seqPointList_;
-    IDHash idHash_;
+    IDList idList_;
 
 
 };

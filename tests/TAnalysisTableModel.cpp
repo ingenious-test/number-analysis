@@ -8,114 +8,87 @@ TAnalysisTableModel::TAnalysisTableModel()
 void TAnalysisTableModel::TestAddRemove_data()
 {
     QTest::addColumn<AnalysisList>("analyzes");
-    QTest::addColumn<SequencePointList>("list");
-    QTest::addColumn<IDAnalysisList>("nameList");
-    QTest::addColumn< AnalysisResults >("results");
+    QTest::addColumn<IDList>("pointList");
+    QTest::addColumn<IDList>("resultPointList");
+    QTest::addColumn<IDAnalysisList>("analyzesList");
 
-    QTest::newRow("null")
-            << AnalysisList()
-            << SequencePointList()
-            << IDAnalysisList()
-            << AnalysisResults();
+    QTest::newRow("empty") << AnalysisList() << IDList() << IDList()  << IDAnalysisList();
 
+    QTest::newRow("one") << (AnalysisList()
+                             << new StupidAnalysis(1.0)
+                             << new AverageAnalysis())
+                         << (IDList() << "First")
+                         << (IDList() << "First")
+                         << (IDAnalysisList() <<StupidAnalysis().id() << AverageAnalysis().id());
 
-    QTest::newRow("stupid-collection") << AnalysisList()
-                                          .insertInc(new StupidAnalysis(1.0))
-                                       << SequencePointList()
-                                           .appendInc("Первый",
-                                                      PointList()
-                                                      .appendInc(2.0).appendInc(3.0))
-                                           .appendInc("Второй",
-                                                      PointList().appendInc(1.0)
-                                                      .appendInc(2.0)
-                                                      .appendInc(4.0))
-                                       << (IDAnalysisList() << "stupid")
-                                       << AnalysisResults()
-                                          .insertInc("Первый", AnalysisResult().insertInc(StupidAnalysis().name(), 1.0))
-                                          .insertInc("Второй", AnalysisResult().insertInc(StupidAnalysis().name(), 1.0));
+    QTest::newRow("two") << (AnalysisList()
+                             << new StupidAnalysis(1.0)
+                             << new AverageAnalysis())
+                         << (IDList() << "First" << "Second")
+                         << (IDList() << "First" << "Second")
+                         << (IDAnalysisList() <<StupidAnalysis().id() << AverageAnalysis().id());
 
-    QTest::newRow("stupid-average-analysis-collection") << AnalysisList()
-                                                           .insertInc(new StupidAnalysis(1.0))
-                                                           .insertInc(new AverageAnalysis())
-                                                        << SequencePointList()
-                                                            .appendInc("Первый",
-                                                                       PointList()
-                                                                       .appendInc(2.0)
-                                                                       .appendInc(3.0))
-                                                           .appendInc("Второй",
-                                                                      PointList()
-                                                                      .appendInc(1.0)
-                                                                      .appendInc(2.0)
-                                                                      .appendInc(4.0))
-                                                        << (IDAnalysisList() << "stupid" << "average")
-                                                        << AnalysisResults()
-                                                           .insertInc("Первый", AnalysisResult()
-                                                                      .insertInc(StupidAnalysis().name(), 1.0)
-                                                                      .insertInc(AverageAnalysis().name(), (2.0 + 3.0) / 2.0))
-                                                           .insertInc("Второй", AnalysisResult()
-                                                                      .insertInc(StupidAnalysis().name(), 1.0)
-                                                                      .insertInc(AverageAnalysis().name(), (1.0 + 2.0 + 4.0) / 3.0));
+    QTest::newRow("three") << (AnalysisList()
+                               << new StupidAnalysis(1.0)
+                               << new AverageAnalysis())
+                           << (IDList() << "First" << "Second" << "Third")
+                           << (IDList() << "First" << "Second" << "Third")
+                           << (IDAnalysisList() << StupidAnalysis().id() << AverageAnalysis().id());
+
+    QTest::newRow("four-with-empty") << (AnalysisList()
+                                         << new StupidAnalysis(1.0)
+                                         << new AverageAnalysis())
+                                     << (IDList() << "First" << "" << "Second" << "Third")
+                                     << (IDList() << "First" << "Second" << "Third")
+                                     << (IDAnalysisList() << StupidAnalysis().id() << AverageAnalysis().id());
+
+    QTest::newRow("four-with-repeat") << (AnalysisList()
+                                          << new StupidAnalysis(1.0)
+                                          << new AverageAnalysis())
+                                      << (IDList() << "First" << "First" << "Second" << "Third")
+                                      << (IDList() << "First" << "Second" << "Third")
+                                      << (IDAnalysisList() << StupidAnalysis().id() << AverageAnalysis().id());
 
 }
 
 void TAnalysisTableModel::TestAddRemove()
 {
     QFETCH(AnalysisList, analyzes);
-    QFETCH(SequencePointList, list);
-    QFETCH(IDAnalysisList, nameList);
-    QFETCH(AnalysisResults, results);
+    QFETCH(IDList, pointList);
+    QFETCH(IDList, resultPointList);
+    QFETCH(IDAnalysisList, analyzesList);
 
+    AnalysisTableModel model;
+    model.appendPointList(pointList);
 
-    AnalysisCollection collection(analyzes);
-
-    foreach(AbstractAnalysis* item, analyzes.values())
+    foreach(AbstractAnalysis* analysis, analyzes)
     {
-        delete item;
+        model.addAnalysis(analysis);
+        delete analysis;
     }
+
     analyzes.clear();
 
-    AnalysisTableModel model(collection, list);
-    model.analyze();
-
-
-    const int actualPontListCount = model.rowCount();
-    const int expectedPontListCount = list.size();
-
-    QCOMPARE(actualPontListCount, expectedPontListCount);
-
-    const int actualAnalyzesCount = model.columnCount();
-    const int expectedAnalyzesCount = collection.size() + 1;
-
-    QCOMPARE(actualAnalyzesCount, expectedAnalyzesCount);
-
-    const IDAnalysisList actualNames = model.getHeaders();
-    const IDAnalysisList expectedNames = nameList;
-
-    QCOMPARE(actualNames, expectedNames);
-
-
-    const AnalysisResults actualResult = model.Results();
-    const AnalysisResults expectedResult = results;
-
-    QCOMPARE(actualResult, expectedResult);
-
-    AnalysisResults resultModel;
-
+    IDList idFromModel;
     for(int i = 0; i < model.rowCount(); i++)
     {
-        AnalysisResult result;
-        for(int j = 1; j < model.columnCount(); j++)
-        {
-            result.insert(model.headerData(j).toString(), model.data(model.index(i, j)).toDouble());
-        }
-
-        if(!result.isEmpty())
-        {
-            resultModel.insert( model.data(model.index(i, 0)).toString() , result);
-        }
+        idFromModel.append(model.index(i, 0).data().toString());
     }
-    const AnalysisResults actualResultData = resultModel;
-    const AnalysisResults expectedResultData = results;
 
-    QCOMPARE(actualResultData, expectedResultData);
+    const IDList actualPointSet = idFromModel;
+    const IDList expectedPointSet = resultPointList;
+
+    QCOMPARE(actualPointSet, expectedPointSet);
+
+    IDAnalysisList analyzesFromModel;
+    for(int i = 1; i < model.columnCount(); i++)
+    {
+        analyzesFromModel.append(model.headerData(i).toString());
+    }
+
+
+    const IDAnalysisList actualAnalysisList = analyzesFromModel;
+    const IDAnalysisList expectedAnalysisList = analyzesList;
+
+    QCOMPARE(actualAnalysisList, expectedAnalysisList);
 }

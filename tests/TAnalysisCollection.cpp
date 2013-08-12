@@ -14,35 +14,34 @@ void TAnalysisCollection::TestAnalyzeAnalysis_data()
                                       << PointList()
                                       << AnalysisResult();
 
-    QTest::newRow("stupid-analysis-collection") << AnalysisList()
-                                                   .insertInc(new StupidAnalysis(1.0))
+    QTest::newRow("stupid-analysis-collection") << (AnalysisList() << new StupidAnalysis(1.0))
                                                 << (PointList())
                                                 << (AnalysisResult()
-                                                    .insertInc(StupidAnalysis().name(), 1.0));
+                                                    .insertInc(StupidAnalysis().id(), 1.0));
 
-    QTest::newRow("stupid-average-analysis-collection") << AnalysisList()
-                                                           .insertInc(new StupidAnalysis(1.0))
-                                                           .insertInc(new AverageAnalysis())
-                                                        << PointList()
-                                                            .appendInc(5.0)
-                                                            .appendInc(9.0)
-                                                            .appendInc(14.0)
+    QTest::newRow("stupid-average-analysis-collection") << (AnalysisList()
+                                                            << new StupidAnalysis(1.0)
+                                                            << new AverageAnalysis())
+                                                        << (PointList()
+                                                            << 5.0
+                                                            << 9.0
+                                                            << 14.0)
                                                         << (AnalysisResult()
-                                                            .insertInc(StupidAnalysis().name(), 1.0)
-                                                            .insertInc(AverageAnalysis().name(), (5.0 + 9.0 + 14.0)/3.0));
-    QTest::newRow("all-analysis-collection") << AnalysisList()
-                                                .insertInc(new StupidAnalysis(1.0))
-                                                .insertInc(new AverageAnalysis())
-                                                .insertInc(new AverageIgnoreNullAnalysis())
-                                             << PointList()
-                                                 .appendInc(5.0)
-                                                 .appendInc(0.0)
-                                                 .appendInc(9.0)
-                                                 .appendInc(14.0)
+                                                            .insertInc(StupidAnalysis().id(), 1.0)
+                                                            .insertInc(AverageAnalysis().id(), (5.0 + 9.0 + 14.0)/3.0));
+    QTest::newRow("all-analysis-collection") << (AnalysisList()
+                                                 << new StupidAnalysis(1.0)
+                                                 << new AverageAnalysis()
+                                                 << new AverageIgnoreNullAnalysis())
+                                             << (PointList()
+                                                 << 5.0
+                                                 << 0.0
+                                                 << 9.0
+                                                 << 14.0)
                                              << (AnalysisResult()
-                                                 .insertInc(StupidAnalysis().name(), 1.0)
-                                                 .insertInc(AverageAnalysis().name(), (5.0 + 0.0 + 9.0 + 14.0) / 4.0)
-                                                 .insertInc(AverageIgnoreNullAnalysis().name(), (5.0 + 9.0 + 14.0) / 3.0));
+                                                 .insertInc(StupidAnalysis().id(), 1.0)
+                                                 .insertInc(AverageAnalysis().id(), (5.0 + 0.0 + 9.0 + 14.0) / 4.0)
+                                                 .insertInc(AverageIgnoreNullAnalysis().id(), (5.0 + 9.0 + 14.0) / 3.0));
 
 }
 
@@ -55,7 +54,7 @@ void TAnalysisCollection::TestAnalyzeAnalysis()
     AnalysisCollection collection(analyzes);
 
 
-    foreach(AbstractAnalysis* item, analyzes.values())
+    foreach(AbstractAnalysis* item, analyzes)
     {
         delete item;
     }
@@ -79,23 +78,23 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove_data()
 
 
     QTest::newRow("stupid-analysis-collection")
-            << AnalysisList()
-               .insertInc(new StupidAnalysis())
+            << (AnalysisList()
+                << new StupidAnalysis())
             << 1
             << (IDAnalysisList() << "stupid");
 
     QTest::newRow("stupid-avarage-analysis-collection-added")
-            << AnalysisList()
-                .insertInc(new StupidAnalysis())
-                .insertInc(new AverageAnalysis())
+            << (AnalysisList()
+                << new StupidAnalysis()
+                << new AverageAnalysis())
             << 2
             << (IDAnalysisList() << "stupid" << "average");
 
     QTest::newRow("all-analysis-collection-added")
-            << AnalysisList()
-                .insertInc(new StupidAnalysis())
-                .insertInc(new AverageAnalysis())
-                .insertInc(new AverageIgnoreNullAnalysis())
+            << (AnalysisList()
+                << new StupidAnalysis()
+                << new AverageAnalysis()
+                << new AverageIgnoreNullAnalysis())
             << 3
             << (IDAnalysisList() << "stupid" << "average" << "average-ignore-null");
 
@@ -110,7 +109,7 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove()
 
     AnalysisCollection collection(analyzes);
 
-    foreach(AbstractAnalysis* item, analyzes.values())
+    foreach(AbstractAnalysis* item, analyzes)
     {
         delete item;
     }

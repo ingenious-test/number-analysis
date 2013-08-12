@@ -7,64 +7,43 @@ TItemListModel::TItemListModel(QObject *parent) :
 
 void TItemListModel::TestAddRemove_data()
 {
-    QTest::addColumn<SequencePointList>("list");
+    QTest::addColumn<IDList>("list");
+    QTest::addColumn<IDList>("result");
 
+    QTest::newRow("empty") << IDList() << IDList();
 
-    QTest::newRow("empty") << SequencePointList();
+    QTest::newRow("one-pointlist") << (IDList() << "Первый")
+                                   << (IDList() << "Первый");
 
-    QTest::newRow("one-pointlist") << SequencePointList()
-                                      .appendInc("Первый",
-                                                 PointList()
-                                                 .appendInc(1.0)
-                                                 .appendInc(2.4)
-                                                 .appendInc(5.6));
+    QTest::newRow("two-pointlist") << (IDList() << "Первый" << "Второй")
+                                   << (IDList() << "Первый" << "Второй");
 
-    QTest::newRow("two-pointlist") << SequencePointList()
-                                      .appendInc("Первый",
-                                                 PointList()
-                                                 .appendInc(2.0)
-                                                 .appendInc(5.1)
-                                                 .appendInc(3.2))
-                                      .appendInc("Второй",
-                                                 PointList()
-                                                 .appendInc(3.4)
-                                                 .appendInc(1.2)
-                                                 .appendInc(9.6)
-                                                 .appendInc(2.2));
+    QTest::newRow("two-pointlist") << (IDList() << "Первый" << "Второй" << "Третий")
+                                   << (IDList() << "Первый" << "Второй" << "Третий");
 
-    QTest::newRow("two-pointlist") << SequencePointList()
-                                      .appendInc("Первый",
-                                                 PointList()
-                                                 .appendInc(4.5)
-                                                 .appendInc(12.4)
-                                                 .appendInc(0.6))
-                                      .appendInc("Второй",
-                                                 PointList()
-                                                 .appendInc(2.4)
-                                                 .appendInc(3.2)
-                                                 .appendInc(7.6)
-                                                 .appendInc(2.2))
-                                      .appendInc("Третий",
-                                                 PointList()
-                                                 .appendInc(1.4)
-                                                 .appendInc(3.4)
-                                                 .appendInc(7.7));
+    QTest::newRow("four-pointlist-with-empty") << (IDList() << "Первый" << "Второй" << "" << "Третий")
+                                               << (IDList() << "Первый" << "Второй" << "Третий");
+
+    QTest::newRow("four-pointlist-with-repeat") << (IDList() << "Первый" << "Второй" << "Третий" << "Первый")
+                                                   << (IDList() << "Первый" << "Второй" << "Третий");
 }
 
 void TItemListModel::TestAddRemove()
 {
-    QFETCH(SequencePointList, list);
+    QFETCH(IDList, list);
+    QFETCH(IDList, result);
 
-    ItemListModel model(list);
+    ItemListModel model;
+    model.appendPointList(list);
 
-    SequencePointList dataFromModel;
+    IDList idList;
     for(int i = 0; i < model.rowCount(); i++)
     {
-        dataFromModel.append(qvariant_cast<PointList>(model.data(model.index(i, 0))));
+        idList.append(model.index(i,0).data().toString());
     }
 
-    const SequencePointList actualData = dataFromModel;
-    const SequencePointList expectedData = list;
+    const IDList actualData = idList;
+    const IDList expectedData = result;
 
     QCOMPARE(actualData, expectedData);
 }

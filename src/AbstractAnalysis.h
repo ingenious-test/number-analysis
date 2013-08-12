@@ -2,12 +2,21 @@
 
 #define ABSTRACTANALYSIS_H
 
-#include "PointList.h"
-#include "SequencePointList.h"
+#include <QtCore>
 
 typedef QString IDAnalysis;
 typedef QList<IDAnalysis> IDAnalysisList;
-Q_DECLARE_METATYPE(IDAnalysisList)
+
+typedef QString ID;
+typedef QList<ID> IDList;
+Q_DECLARE_METATYPE(IDList)
+
+typedef double Point;
+typedef QList<Point> PointList;
+Q_DECLARE_METATYPE(PointList)
+typedef QList<PointList> SequencePointList;
+Q_DECLARE_METATYPE(SequencePointList)
+
 
 class AbstractAnalysis
 {
@@ -21,13 +30,15 @@ public:
     virtual double analyze(const PointList &list) const = 0;
     virtual AbstractAnalysis* clone() = 0;
 
-    IDAnalysis name();
+    virtual bool isValid();
+
+    IDAnalysis id();
 
 protected:
-    AbstractAnalysis(const IDAnalysis &name);
+    AbstractAnalysis(const IDAnalysis &id);
 
 private:
-    IDAnalysis name_;
+    IDAnalysis id_;
 };
 
 Q_DECLARE_METATYPE(AbstractAnalysis*)

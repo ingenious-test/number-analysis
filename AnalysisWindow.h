@@ -2,8 +2,9 @@
 #define WIDGET_H
 
 #include <QtGui/QTableView>
-#include <QtGui/QListView>
 #include <QtGui/QLayout>
+
+#include "src/ItemListView.h"
 
 #include "src/AnalysisTableModel.h"
 #include "src/ItemListModel.h"
@@ -11,23 +12,23 @@
 #include "src/AverageAnalysis.h"
 #include "src/AverageIgnoreNullAnalysis.h"
 
-class Widget : public QWidget
+class AnalysisWindow : public QWidget
 {
     Q_OBJECT
     
 public:
-    Widget(QWidget *parent = 0);
-    ~Widget();
+    AnalysisWindow(QWidget *parent = 0);
+    ~AnalysisWindow();
 
 private:
     QTableView* analyzesView_;
     AnalysisTableModel* analyzesModel_;
 
-    QListView* seqPointListView_;
+    ItemListView* seqPointListView_;
     ItemListModel* seqPointListModel_;
 
 private slots:
-    void	pointsListDoubleCLicked(QModelIndex index);
+    void addItem(const ID &item);
 
 
 };

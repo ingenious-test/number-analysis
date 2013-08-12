@@ -15,7 +15,7 @@ class ItemListModel : public QAbstractListModel
     Q_OBJECT
 public:
     ItemListModel(QObject *parent = 0);
-    ItemListModel(const SequencePointList &seqPointList, QObject *parent = 0);
+    ItemListModel(const IDList &idList, QObject *parent = 0);
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &child) const;
@@ -24,9 +24,13 @@ public:
     int columnCount(const QModelIndex &parent  = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
+    void appendPointList(const ID& id);
+    void appendPointList(const IDList &idList);
+
+
 
  private:
-    SequencePointList sequencePointList_;
+    IDList idList_;
 
 };
 

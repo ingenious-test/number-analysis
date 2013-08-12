@@ -4,7 +4,7 @@
 
 #include "AbstractAnalysis.h"
 
-class AnalysisResult : public QHash<QString, double>
+class AnalysisResult : public QHash<IDAnalysis, double>
 {
 public:
     AnalysisResult& insertInc(const IDAnalysis &name, const double &value)
@@ -21,23 +21,7 @@ public:
 Q_DECLARE_METATYPE(AnalysisResult)
 
 
-class AnalysisList : public QHash<QString, AbstractAnalysis*>
-{
-public:
-    AnalysisList& insertInc(AbstractAnalysis* analysis)
-    {
-        QString name = analysis->name();
-
-        if(contains(name))
-        {
-            remove(name);
-            qWarning() << "Analysis " + name + " is replaced";
-        }
-
-        insert(name, analysis);
-        return *this;
-    }
-};
+typedef QList<AbstractAnalysis*> AnalysisList;
 Q_DECLARE_METATYPE(AnalysisList)
 
 class AnalysisCollection
@@ -52,10 +36,10 @@ public:
 
     AnalysisResult analyze(const PointList &list) const;
 
-    AnalysisCollection& addAnalysis(AbstractAnalysis *analysis);
-
-    void removeAnalysis(const QString &name);
-    void removeAll();
+    void addAnalysis(AbstractAnalysis *analysis);
+    int indexOfAnalysis(const IDAnalysis& idAnalysis);
+    void removeAnalysis(const int index);
+    void removeAllAnalysis();
 
     const IDAnalysisList getNameList() const;
 
