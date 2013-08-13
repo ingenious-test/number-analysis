@@ -22,6 +22,16 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
 #ifdef TEST
+    const QString currentDir = QDir::currentPath();
+    const QString testingFilesDir = currentDir + "\\testingFiles\\";
+
+    if(!QDir().exists(testingFilesDir))
+    {
+        QDir().mkdir(testingFilesDir);
+    }
+
+    QDir::setCurrent(testingFilesDir);
+
     TAnalysis tAnalysis;
     QTest::qExec(&tAnalysis);
 
@@ -44,6 +54,8 @@ int main(int argc, char *argv[])
 
     TSqlPointListReader tSqlPointListReader;
     QTest::qExec(&tSqlPointListReader);
+
+    QDir::setCurrent(currentDir);
 
 #ifdef STRESS
     BAnalysisCollections bAnalysisCollections(1000000);

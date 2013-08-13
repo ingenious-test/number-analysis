@@ -10,13 +10,15 @@
 class SqlPointListInterface
 {
 public:
-    SqlPointListInterface(const QString &dataBaseName);
+    SqlPointListInterface(const QString &dataBaseName, const QString &tableName);
 
     virtual ~SqlPointListInterface();
 
     QString dataBaseName() const;
     QSqlDatabase dataBase() const;
+    QString tableName() const;
 
+protected:
     bool execQuery(QSqlQuery &query, const QString& queryStr);
 
 
@@ -25,6 +27,7 @@ private:
     const QString dataBaseName_;
 
     const QString connectionName_;
+    const QString tableName_;
 };
 
 #endif // SQLPOINTLISTINTERFACE_H

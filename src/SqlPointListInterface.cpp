@@ -1,8 +1,9 @@
 #include "SqlPointListInterface.h"
 
-SqlPointListInterface::SqlPointListInterface(const QString &dataBaseName) :
+SqlPointListInterface::SqlPointListInterface(const QString &dataBaseName, const QString& tableName) :
     dataBaseName_(dataBaseName),
-    connectionName_("connection")
+    connectionName_("connection"),
+    tableName_(tableName)
 {
     if(QSqlDatabase::contains(connectionName_))
     {
@@ -23,7 +24,9 @@ SqlPointListInterface::SqlPointListInterface(const QString &dataBaseName) :
     QSqlQuery query(dataBase_);
     bool querySuccess = false;
 
-    querySuccess = execQuery(query, "CREATE TABLE IF NOT EXISTS tableName (id, num, value, PRIMARY KEY(id, num))");
+    querySuccess = execQuery(query, "CREATE TABLE IF NOT EXISTS "
+                             + tableName_ +
+                             " (id, num, value, PRIMARY KEY(id, num))");
 }
 
 SqlPointListInterface::~SqlPointListInterface()
@@ -39,6 +42,11 @@ QString SqlPointListInterface::dataBaseName() const
 QSqlDatabase SqlPointListInterface::dataBase() const
 {
     return dataBase_;
+}
+
+QString SqlPointListInterface::tableName() const
+{
+    return tableName_;
 }
 
 bool SqlPointListInterface::execQuery(QSqlQuery &query, const QString& queryStr)

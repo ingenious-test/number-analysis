@@ -1,7 +1,7 @@
 #include "SqlPointListWriter.h"
 
-SqlPointListWriter::SqlPointListWriter(const QString &dataBaseName) :
-    SqlPointListInterface(dataBaseName)
+SqlPointListWriter::SqlPointListWriter(const QString &dataBaseName, const QString &tableName) :
+    SqlPointListInterface(dataBaseName, tableName)
 {   
 }
 
@@ -10,7 +10,7 @@ void SqlPointListWriter::write(const ID &item, const PointList &points)
     QSqlQuery query(dataBase());
     bool querySuccess = false;
 
-    querySuccess = query.prepare("INSERT OR ABORT INTO tableName VALUES(:id, :num, :value)");
+    querySuccess = query.prepare("INSERT OR ABORT INTO " + tableName() + " VALUES(:id, :num, :value)");
 
     if(!querySuccess)
     {

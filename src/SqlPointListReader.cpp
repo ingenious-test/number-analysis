@@ -1,7 +1,7 @@
 #include "SqlPointListReader.h"
 
-SqlPointListReader::SqlPointListReader(const QString &dataBaseName) :    
-    SqlPointListInterface(dataBaseName)
+SqlPointListReader::SqlPointListReader(const QString &dataBaseName, const QString& tableName) :
+    SqlPointListInterface(dataBaseName, tableName)
 {
 }
 
@@ -12,7 +12,7 @@ PointList SqlPointListReader::read(const ID &item)
 
     QSqlQuery query(dataBase());
 
-    query.prepare("SELECT value FROM tableName WHERE id = :id");
+    query.prepare("SELECT value FROM " + tableName() + " WHERE id = :id");
     if(query.lastError().text() != " ")
     {
         qWarning() << "prepare select points" << query.lastError().text();
@@ -44,7 +44,7 @@ IDList SqlPointListReader::readAllItems()
     QSqlQuery query(dataBase());
     bool querySuccess = false;
 
-    querySuccess = execQuery(query, "SELECT DISTINCT id FROM tableName");
+    querySuccess = execQuery(query, "SELECT DISTINCT id FROM " + tableName() + "");
 
     if(!querySuccess)
     {

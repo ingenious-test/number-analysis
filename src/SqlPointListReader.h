@@ -10,7 +10,7 @@ class SqlPointListReader :
         public SqlPointListInterface
 {
 public:
-    SqlPointListReader(const QString &dataBaseName);
+    SqlPointListReader(const QString &dataBaseName, const QString &tableName);
 
     virtual PointList read(const ID &item);
     virtual IDList readAllItems();

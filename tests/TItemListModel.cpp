@@ -90,6 +90,7 @@ void TItemListModel::TestAddRemoveSql()
     QFETCH(IDList, result);
 
     const QString dataBaseName = QString(QTest::currentDataTag()) + "TestAddRemoveSql.db";
+    const QString tableName = "Points";
 
     if(QFile::exists(dataBaseName))
     {
@@ -99,7 +100,7 @@ void TItemListModel::TestAddRemoveSql()
         }
     }
 
-    SqlPointListWriter writer(dataBaseName);
+    SqlPointListWriter writer(dataBaseName, tableName);
     {
         int index = 0;
         foreach(const ID& item, list)
@@ -109,7 +110,7 @@ void TItemListModel::TestAddRemoveSql()
         }
     }
 
-    SqlPointListReader reader(dataBaseName);
+    SqlPointListReader reader(dataBaseName, tableName);
 
     ItemListModel model(&reader);
 
