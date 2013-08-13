@@ -4,6 +4,8 @@ TSqlPointListReader::TSqlPointListReader()
 {
 }
 
+/// warn исправить положение закрывающих скобок
+
 void TSqlPointListReader::TestWriteRead_data()
 {
     QTest::addColumn<IDList>("items");
@@ -181,31 +183,22 @@ void TSqlPointListReader::TestWriteRead_data()
             << (IDList()
                 << ID("id1")
                 << ID("id1")
-                << ID("id2")
-                )
+                << ID("id2"))
             << (SequencePointList()
                 << (PointList()
-                    << Point(1.0)
-                    )
+                    << Point(1.0))
                 << (PointList()
-                    << Point(2.0)
-                    )
+                    << Point(2.0))
                 << (PointList()
-                    << Point(2.5)
-                    )
-                )
+                    << Point(2.5)))
             << (IDList()
                 << ID("id1")
-                << ID("id2")
-                )
+                << ID("id2"))
             << (SequencePointList()
                 << (PointList()
-                    << Point(1.0)
-                    )
+                    << Point(1.0))
                 << (PointList()
-                    << Point(2.5)
-                    )
-                );
+                    << Point(2.5)));
 
     QTest::newRow("two-doubled-duplicate-items-with-one-point")
             << (IDList()
@@ -250,6 +243,24 @@ void TSqlPointListReader::TestWriteRead_data()
                     )
                 );
 
+    QTest::newRow("two-doubled-duplicate-items-with-one-or-two-points1")
+            << (IDList() << ID("id1") << ID("id1"))
+            << (SequencePointList()
+                << (PointList() << Point(1.3) << Point(-1.0))
+                << (PointList() << Point(6.7)))
+            << (IDList() << ID("id1"))
+            << (SequencePointList()
+                << (PointList() << Point(1.3) << Point(-1.0)));
+
+    QTest::newRow("two-doubled-duplicate-items-with-one-or-two-points2")
+            << (IDList() << ID("id1") << ID("id1"))
+            << (SequencePointList()
+                << (PointList() << Point(1.3))
+                << (PointList() << Point(6.7) << Point(-1.0)))
+            << (IDList() << ID("id1"))
+            << (SequencePointList()
+                << (PointList() << Point(1.3)));
+
 }
 
 void TSqlPointListReader::TestWriteRead()
@@ -272,12 +283,12 @@ void TSqlPointListReader::TestWriteRead()
     SqlPointListWriter writer(dataBaseName);
     {
         int index = 0;
-        foreach (const ID& item, items) {
+        foreach (const ID& item, items)
+        {
             writer.write(item, points[index]);
             index++;
         }
     }
-
 
     QVERIFY(QFile::exists(dataBaseName));
 
@@ -297,5 +308,9 @@ void TSqlPointListReader::TestWriteRead()
     const SequencePointList actualPoints = seqFromDataBase;
     const SequencePointList expectedPoints = allPoints;
 
-    QCOMPARE(actualPoints, expectedPoints);
+    QVERIFY2(actualPoints == expectedPoints,
+             QString("\nactual:\n"
+                     + sequencePointListToString(actualPoints)
+                     + "expected:\n"
+                     + sequencePointListToString(expectedPoints)).toLocal8Bit());
 }

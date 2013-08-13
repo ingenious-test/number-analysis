@@ -2,23 +2,18 @@
 
 #define SQLPOINTLISTREADER_H
 
-#include <QSqlQuery>
-#include <QSqlError>
-
+#include "SqlPointListInterface.h"
 #include "AbstractPointListReader.h"
 
-class SqlPointListReader : public AbstractPointListReader
+class SqlPointListReader :
+        public AbstractPointListReader,
+        public SqlPointListInterface
 {
 public:
     SqlPointListReader(const QString &dataBaseName);
 
     virtual PointList read(const ID &item);
     virtual IDList readAllItems();
-
-private:
-    QString dataBaseName_;
-
-    bool execQuery(QSqlQuery &query, const QString &queryStr);
 };
 
 #endif // SQLPOINTLISTREADER_H

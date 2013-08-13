@@ -46,7 +46,8 @@ SOURCES += main.cpp\
     src/AbstractPointListReader.cpp \
     src/SqlPointListReader.cpp \
     tests/TSqlPointListReader.cpp \
-    src/SqlPointListWriter.cpp
+    src/SqlPointListWriter.cpp \
+    src/SqlPointListInterface.cpp
 
 HEADERS  += AnalysisWindow.h \
     src/StupidAnalysis.h \
@@ -68,4 +69,5 @@ HEADERS  += AnalysisWindow.h \
     src/AbstractPointListReader.h \
     src/SqlPointListReader.h \
     tests/TSqlPointListReader.h \
-    src/SqlPointListWriter.h
+    src/SqlPointListWriter.h \
+    src/SqlPointListInterface.h
