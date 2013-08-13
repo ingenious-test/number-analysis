@@ -8,9 +8,9 @@ MocPointListReader::MocPointListReader(const IDList &items)
     }
 }
 
-PointList MocPointListReader::read(const ID &id)
+PointList MocPointListReader::read(const ID &item)
 {
-    return table_.value(id, PointList());
+    return table_.value(item, PointList());
 }
 
 IDList MocPointListReader::readAllItems()

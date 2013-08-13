@@ -5,7 +5,9 @@
 #-------------------------------------------------
 
 QT       += core gui
-QT += testlib
+QT       += sql
+QT       += testlib
+
 TARGET = number-analysis
 
 CONFIG(app){

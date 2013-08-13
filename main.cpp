@@ -40,6 +40,8 @@ int main(int argc, char *argv[])
     TItemListModel tItemListModel;
     QTest::qExec(&tItemListModel);
 
+    qDebug() << "\r\n";
+
     TSqlPointListReader tSqlPointListReader;
     QTest::qExec(&tSqlPointListReader);
 
