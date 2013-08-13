@@ -7,6 +7,7 @@
 #include "tests/TAnalysisCollection.h"
 #include "tests/TAnalysisTableModel.h"
 #include "tests/TItemListModel.h"
+#include "tests/TSqlPointListReader.h"
 
 #include "benchmarks/BAnalysisCollections.h"
 
@@ -38,6 +39,9 @@ int main(int argc, char *argv[])
 
     TItemListModel tItemListModel;
     QTest::qExec(&tItemListModel);
+
+    TSqlPointListReader tSqlPointListReader;
+    QTest::qExec(&tSqlPointListReader);
 
 #ifdef STRESS
     BAnalysisCollections bAnalysisCollections(1000000);

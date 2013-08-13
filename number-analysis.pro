@@ -41,7 +41,10 @@ SOURCES += main.cpp\
     src/StandardDeviationAnalysis.cpp \
     src/ItemListView.cpp \
     mocs/MocPointListReader.cpp \
-    src/AbstractPointListReader.cpp
+    src/AbstractPointListReader.cpp \
+    src/SqlPointListReader.cpp \
+    tests/TSqlPointListReader.cpp \
+    src/SqlPointListWriter.cpp
 
 HEADERS  += AnalysisWindow.h \
     src/StupidAnalysis.h \
@@ -60,4 +63,7 @@ HEADERS  += AnalysisWindow.h \
     src/StandardDeviationAnalysis.h \
     src/ItemListView.h \
     mocs/MocPointListReader.h \
-    src/AbstractPointListReader.h
+    src/AbstractPointListReader.h \
+    src/SqlPointListReader.h \
+    tests/TSqlPointListReader.h \
+    src/SqlPointListWriter.h
