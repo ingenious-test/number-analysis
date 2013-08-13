@@ -1,7 +1,8 @@
 #include "AnalysisWindow.h"
 
 AnalysisWindow::AnalysisWindow(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+      reader_(new MocPointListReader(IDList() << ID("id1")))
 {
     QHBoxLayout* mainLayout = new QHBoxLayout;
 
@@ -16,7 +17,7 @@ AnalysisWindow::AnalysisWindow(QWidget *parent)
 
     analyzesView_->setModel(analyzesModel_);
 
-    seqPointListModel_ = new ItemListModel();
+    seqPointListModel_ = new ItemListModel(reader_);
 
     seqPointListView_ = new ItemListView();
     seqPointListView_->setFixedWidth(300);

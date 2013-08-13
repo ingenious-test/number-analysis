@@ -105,7 +105,7 @@ IDAnalysisList AnalysisTableModel::getHeaders()
 
 void AnalysisTableModel::analyze(const ID &id)
 {
-    MocPointListReader reader;
+    MocPointListReader reader(IDList() << ID("2"));
 
     PointList points = reader.read(id);
 

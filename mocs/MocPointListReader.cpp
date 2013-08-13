@@ -1,10 +1,11 @@
 #include "MocPointListReader.h"
 
-MocPointListReader::MocPointListReader()
+MocPointListReader::MocPointListReader(const IDList &items)
 {
-    table_.insert(ID("id1"), PointList() << Point(1.0) << Point(2.0));
-    table_.insert(ID("id2"), PointList() << Point(42.0) << Point(128.0));
-    table_.insert(ID("id3"), PointList() << Point(13.0) << Point(33.0));
+    foreach(const ID &item, items)
+    {
+        table_.insert(item, PointList());
+    }
 }
 
 PointList MocPointListReader::read(const ID &id)

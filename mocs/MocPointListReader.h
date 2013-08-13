@@ -7,7 +7,7 @@
 class MocPointListReader : public AbstractPointListReader
 {
 public:
-    MocPointListReader();
+    MocPointListReader(const IDList &items);
 
     PointList read(const ID &id);
     IDList readAllItems();

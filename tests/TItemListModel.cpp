@@ -12,20 +12,26 @@ void TItemListModel::TestAddRemove_data()
 
     QTest::newRow("empty") << IDList() << IDList();
 
-    QTest::newRow("one-pointlist") << (IDList() << "Первый")
-                                   << (IDList() << "Первый");
+    QTest::newRow("one-pointlist") << (IDList() << "id1")
+                                   << (IDList() << "id1");
 
-    QTest::newRow("two-pointlist") << (IDList() << "Первый" << "Второй")
-                                   << (IDList() << "Первый" << "Второй");
+    QTest::newRow("two-pointlist1") << (IDList() << "id1" << "id2")
+                                    << (IDList() << "id1" << "id2");
 
-    QTest::newRow("two-pointlist") << (IDList() << "Первый" << "Второй" << "Третий")
-                                   << (IDList() << "Первый" << "Второй" << "Третий");
+    QTest::newRow("three-pointlist") << (IDList() << "id1" << "id2" << "id3")
+                                     << (IDList() << "id1" << "id2" << "id3");
 
-    QTest::newRow("four-pointlist-with-empty") << (IDList() << "Первый" << "Второй" << "" << "Третий")
-                                               << (IDList() << "Первый" << "Второй" << "Третий");
+    QTest::newRow("four-pointlist-with-empty") << (IDList() << "id1" << "id2" << "" << "id3")
+                                               << (IDList() << "" << "id1" << "id2" << "id3");
 
-    QTest::newRow("four-pointlist-with-repeat") << (IDList() << "Первый" << "Второй" << "Третий" << "Первый")
-                                                   << (IDList() << "Первый" << "Второй" << "Третий");
+    QTest::newRow("four-pointlist-with-repeat") << (IDList() << "id1" << "id2" << "id3" << "id1")
+                                                << (IDList() << "id1" << "id2" << "id3");
+
+    QTest::newRow("utf-8-id") << (IDList() << "Айди-Один")
+                              << (IDList() << "Айди-Один");
+
+    QTest::newRow("utf-8-ids") << (IDList() << "Айди-Один" << "Айди-Два")
+                               << (IDList() << "Айди-Один" << "Айди-Два");
 }
 
 void TItemListModel::TestAddRemove()
@@ -33,8 +39,9 @@ void TItemListModel::TestAddRemove()
     QFETCH(IDList, list);
     QFETCH(IDList, result);
 
-    ItemListModel model;
-    model.appendPointList(list);
+    MocPointListReader reader(list);
+
+    ItemListModel model(&reader);
 
     IDList idList;
     for(int i = 0; i < model.rowCount(); i++)

@@ -16,7 +16,8 @@ class ItemListModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    ItemListModel(QObject *parent = 0);
+    ItemListModel(AbstractPointListReader *reader,
+                  QObject *parent = 0);
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &child) const;
@@ -33,6 +34,7 @@ protected:
 
  private:
     IDList items_;
+    AbstractPointListReader *reader_;
 
 };
 

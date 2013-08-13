@@ -27,10 +27,10 @@ private:
     ItemListView* seqPointListView_;
     ItemListModel* seqPointListModel_;
 
+    AbstractPointListReader *reader_;
+
 private slots:
     void addItem(const ID &item);
-
-
 };
 
 #endif // WIDGET_H

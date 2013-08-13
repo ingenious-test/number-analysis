@@ -61,9 +61,7 @@ protected slots:
 private:
     AnalysisResults results_;
     AnalysisCollection collection_;
-    IDList idList_;
-
-
+    IDList idList_;  
 };
 
 #endif // ANALYSISTABLEMODEL_H

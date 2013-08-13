@@ -1,11 +1,11 @@
 #include "ItemListModel.h"
 
-ItemListModel::ItemListModel(QObject *parent):
-    QAbstractListModel(parent)
+ItemListModel::ItemListModel(AbstractPointListReader *reader,
+                             QObject *parent):
+    QAbstractListModel(parent),
+    reader_(reader)
 {
-    MocPointListReader reader;
-
-    items_ = reader.readAllItems();
+    items_ = reader_->readAllItems();
 }
 
 ItemListModel::ItemListModel(const IDList &idList, QObject *parent):
