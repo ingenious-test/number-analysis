@@ -12,32 +12,34 @@ void SqlPointListWriter::write(const ID &item, const PointList &points)
         dataBase.setDatabaseName(dataBaseName_);
         if (!dataBase.open())
         {
-            qWarning() << "can't open database " << dataBaseName_;
+            error(QString("can't open database " + dataBaseName_));
             return;
         }
         QSqlQuery query(dataBase);
+        bool querySuccess = false;
 
-        query.prepare("CREATE TABLE tableName (id, num, value)");
+        querySuccess = query.prepare("CREATE TABLE tableName (id, num, value)");
 
-        if(query.lastError().text() != " ")
+        if(!querySuccess)
         {
-            qWarning() << "prepare create table" << query.lastError().text();
+            qWarning() ;
+            error(QString("prepare create table " + query.lastError().text()));
             return;
         }
 
-        query.exec();
+        querySuccess = query.exec();
 
-        if(query.lastError().text() != " ")
+        if(!querySuccess)
         {
-            qWarning() << "exec create table" << query.lastError().text();
+            error(QString("exec create table " + query.lastError().text()));
             return;
         }
 
-        query.prepare("INSERT INTO tableName VALUES(:id, :num, :value)");
+        querySuccess = query.prepare("INSERT INTO tableName VALUES(:id, :num, :value)");
 
-        if(query.lastError().text() != " ")
+        if(!querySuccess)
         {
-            qWarning() << "prepare insert" << query.lastError().text();
+            error(QString("prepare insert" + query.lastError().text()));
             return;
         }
 
@@ -47,15 +49,20 @@ void SqlPointListWriter::write(const ID &item, const PointList &points)
             query.bindValue(":num", num);
             query.bindValue(":value", points.at(num));
 
-            query.exec();
+            querySuccess = query.exec();
 
-            if(query.lastError().text() != " ")
+            if(!querySuccess)
             {
-                qWarning() << "exec insert table" << query.lastError().text();
+                error(QString("exec insert table" + query.lastError().text()));
                 return;
             }
         }
     }
 
     QSqlDatabase::removeDatabase("connection");
+}
+
+void SqlPointListWriter::error(const QString &errorString)
+{
+    qWarning() << errorString;
 }

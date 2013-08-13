@@ -57,25 +57,27 @@ IDList SqlPointListReader::readAllItems()
         dataBase.setDatabaseName(dataBaseName_);
         if (!dataBase.open())
         {
-            qWarning() << "can't open database " << dataBaseName_;
+            error(QString("can't open database " + dataBaseName_));
             return IDList();
         }
 
         QSqlQuery query(dataBase);
+        bool querySuccess = false;
 
-        query.prepare("SELECT DISTINCT id FROM tableName");
+        querySuccess = query.prepare("SELECT DISTINCT id FROM tableName");
 
-        if(query.lastError().text() != " ")
+        if(!querySuccess)
         {
-            qWarning() << "prepare select id" << query.lastError().text();
+            error(QString("prepare select id" + query.lastError().text()));
             return IDList();
         }
 
-        query.exec();
+        querySuccess = query.exec();
 
-        if(query.lastError().text() != " ")
+
+        if(!querySuccess)
         {
-            qWarning() << "exec select id" << query.lastError().text();
+            error(QString("exec select id" + query.lastError().text()));
             return IDList();
         }
 
@@ -90,4 +92,9 @@ IDList SqlPointListReader::readAllItems()
     QSqlDatabase::removeDatabase("connection");
 
     return allItems;
+}
+
+void SqlPointListReader::error(const QString &errorString)
+{
+    qWarning() << errorString;
 }

@@ -16,6 +16,8 @@ public:
 
 private:
     const QString dataBaseName_;
+
+    void error(const QString& errorString);
 };
 
 #endif // SQLPOINTLISTWRITER_H
