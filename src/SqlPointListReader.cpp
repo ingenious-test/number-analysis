@@ -57,28 +57,18 @@ IDList SqlPointListReader::readAllItems()
         dataBase.setDatabaseName(dataBaseName_);
         if (!dataBase.open())
         {
-            error(QString("can't open database " + dataBaseName_));
+            qWarning() << "can't open database " << dataBaseName_;
             return IDList();
         }
 
         QSqlQuery query(dataBase);
         bool querySuccess = false;
 
-        querySuccess = query.prepare("SELECT DISTINCT id FROM tableName");
+        querySuccess = execQuery(query, "SELECT DISTINCT id FROM tableName");
 
         if(!querySuccess)
         {
-            error(QString("prepare select id" + query.lastError().text()));
-            return IDList();
-        }
-
-        querySuccess = query.exec();
-
-
-        if(!querySuccess)
-        {
-            error(QString("exec select id" + query.lastError().text()));
-            return IDList();
+            return IDList();;
         }
 
         while(query.next())
@@ -94,7 +84,27 @@ IDList SqlPointListReader::readAllItems()
     return allItems;
 }
 
-void SqlPointListReader::error(const QString &errorString)
+bool SqlPointListReader::execQuery(QSqlQuery &query, const QString& queryStr)
 {
-    qWarning() << errorString;
+    QString errorStr;
+    bool preraredSuccess = query.prepare(queryStr);
+    if(preraredSuccess)
+    {
+        bool execSuccess = query.exec();
+        if(execSuccess)
+        {
+            return true;
+        }
+        else{
+            errorStr = "exec";
+        }
+
+    }
+    else
+    {
+        errorStr = "prepared";
+    }
+
+    qWarning() << errorStr << queryStr << query.lastError().text();
+    return false;
 }

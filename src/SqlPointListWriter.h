@@ -17,7 +17,7 @@ public:
 private:
     const QString dataBaseName_;
 
-    void error(const QString& errorString);
+    bool execQuery(QSqlQuery &query, const QString& queryStr);
 };
 
 #endif // SQLPOINTLISTWRITER_H

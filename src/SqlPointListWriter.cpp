@@ -12,26 +12,16 @@ void SqlPointListWriter::write(const ID &item, const PointList &points)
         dataBase.setDatabaseName(dataBaseName_);
         if (!dataBase.open())
         {
-            error(QString("can't open database " + dataBaseName_));
+            qWarning() << "can't open database " << dataBaseName_;
             return;
         }
         QSqlQuery query(dataBase);
         bool querySuccess = false;
 
-        querySuccess = query.prepare("CREATE TABLE tableName (id, num, value)");
+        querySuccess = execQuery(query,"CREATE TABLE tableName (id, num, value)");
 
         if(!querySuccess)
         {
-            qWarning() ;
-            error(QString("prepare create table " + query.lastError().text()));
-            return;
-        }
-
-        querySuccess = query.exec();
-
-        if(!querySuccess)
-        {
-            error(QString("exec create table " + query.lastError().text()));
             return;
         }
 
@@ -39,7 +29,6 @@ void SqlPointListWriter::write(const ID &item, const PointList &points)
 
         if(!querySuccess)
         {
-            error(QString("prepare insert" + query.lastError().text()));
             return;
         }
 
@@ -53,7 +42,7 @@ void SqlPointListWriter::write(const ID &item, const PointList &points)
 
             if(!querySuccess)
             {
-                error(QString("exec insert table" + query.lastError().text()));
+                qWarning() << "exec insert table" << query.lastError().text();
                 return;
             }
         }
@@ -62,7 +51,27 @@ void SqlPointListWriter::write(const ID &item, const PointList &points)
     QSqlDatabase::removeDatabase("connection");
 }
 
-void SqlPointListWriter::error(const QString &errorString)
+bool SqlPointListWriter::execQuery(QSqlQuery &query, const QString& queryStr)
 {
-    qWarning() << errorString;
+    QString errorStr;
+    bool preraredSuccess = query.prepare(queryStr);
+    if(preraredSuccess)
+    {
+        bool execSuccess = query.exec();
+        if(execSuccess)
+        {
+            return true;
+        }
+        else{
+            errorStr = "exec";
+        }
+
+    }
+    else
+    {
+        errorStr = "prepared";
+    }
+
+    qWarning() << errorStr << queryStr << query.lastError().text();
+    return false;
 }
