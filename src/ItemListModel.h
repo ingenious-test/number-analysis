@@ -4,6 +4,8 @@
 
 #include <QAbstractListModel>
 
+#include "../mocs/MocPointListReader.h"
+
 #include "AbstractAnalysis.h"
 
 typedef QString ID;
@@ -15,7 +17,6 @@ class ItemListModel : public QAbstractListModel
     Q_OBJECT
 public:
     ItemListModel(QObject *parent = 0);
-    ItemListModel(const IDList &idList, QObject *parent = 0);
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &child) const;
@@ -27,10 +28,11 @@ public:
     void appendPointList(const ID& id);
     void appendPointList(const IDList &idList);
 
-
+protected:
+    ItemListModel(const IDList &idList, QObject *parent = 0);
 
  private:
-    IDList idList_;
+    IDList items_;
 
 };
 

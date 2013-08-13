@@ -4,8 +4,9 @@
 
 #include <QAbstractItemModel>
 
-#include "AnalysisCollection.h"
+#include "../mocs/MocPointListReader.h"
 
+#include "AnalysisCollection.h"
 
 class AnalysisResults : public QHash<ID, AnalysisResult>
 {
@@ -43,7 +44,6 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation = Qt::Horizontal, int role = Qt::DisplayRole) const;
 
     IDAnalysisList getHeaders();
-    void analyze();
 
     const AnalysisResults& Results();
 
@@ -55,7 +55,8 @@ public:
     void appendPointList(const IDList& idList);
     bool containsPointList(const ID& id);
 
-
+protected slots:
+    void analyze(const ID &id);
 
 private:
     AnalysisResults results_;

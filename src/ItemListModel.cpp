@@ -3,13 +3,15 @@
 ItemListModel::ItemListModel(QObject *parent):
     QAbstractListModel(parent)
 {
+    MocPointListReader reader;
 
+    items_ = reader.readAllItems();
 }
 
 ItemListModel::ItemListModel(const IDList &idList, QObject *parent):
     QAbstractListModel(parent)
 {
-   appendPointList(idList);
+    appendPointList(idList);
 }
 
 QModelIndex ItemListModel::index(int row, int column, const QModelIndex &parent) const
@@ -24,7 +26,7 @@ QModelIndex ItemListModel::parent(const QModelIndex &child) const
 
 int ItemListModel::rowCount(const QModelIndex &parent) const
 {
-    return idList_.size();
+    return items_.size();
 }
 
 int ItemListModel::columnCount(const QModelIndex &parent) const
@@ -43,7 +45,7 @@ QVariant ItemListModel::data(const QModelIndex &index, int role) const
     {
         if(index.column() == 0)
         {
-            return idList_[index.row()];
+            return items_[index.row()];
         }
     }
     else
@@ -62,9 +64,9 @@ void ItemListModel::appendPointList(const ID &id)
         return;
     }
 
-    if(!idList_.contains(id))
+    if(!items_.contains(id))
     {
-        idList_.append(id);
+        items_.append(id);
     }
     else
     {

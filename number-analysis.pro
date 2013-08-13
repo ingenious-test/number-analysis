@@ -39,7 +39,9 @@ SOURCES += main.cpp\
     tests/TItemListModel.cpp \
     src/ItemListModel.cpp \
     src/StandardDeviationAnalysis.cpp \
-    src/ItemListView.cpp
+    src/ItemListView.cpp \
+    mocs/MocPointListReader.cpp \
+    src/AbstractPointListReader.cpp
 
 HEADERS  += AnalysisWindow.h \
     src/StupidAnalysis.h \
@@ -56,4 +58,6 @@ HEADERS  += AnalysisWindow.h \
     tests/TItemListModel.h \
     src/ItemListModel.h \
     src/StandardDeviationAnalysis.h \
-    src/ItemListView.h
+    src/ItemListView.h \
+    mocs/MocPointListReader.h \
+    src/AbstractPointListReader.h

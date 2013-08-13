@@ -103,9 +103,13 @@ IDAnalysisList AnalysisTableModel::getHeaders()
     return collection_.getNameList();
 }
 
-void AnalysisTableModel::analyze()
+void AnalysisTableModel::analyze(const ID &id)
 {
+    MocPointListReader reader;
 
+    PointList points = reader.read(id);
+
+    qWarning() << points;
 }
 
 const AnalysisResults &AnalysisTableModel::Results()
@@ -131,7 +135,7 @@ void AnalysisTableModel::removeAnalysis(const QString &id)
 }
 
 void AnalysisTableModel::appendPointList(const ID &id)
-{
+{ 
     if(id.isEmpty())
     {
         qWarning() << "ID not set";
@@ -141,6 +145,7 @@ void AnalysisTableModel::appendPointList(const ID &id)
     if(!idList_.contains(id))
     {
         idList_.append(id);
+        analyze(id);
         reset();
     }
     else

@@ -16,9 +16,7 @@ AnalysisWindow::AnalysisWindow(QWidget *parent)
 
     analyzesView_->setModel(analyzesModel_);
 
-    seqPointListModel_ = new ItemListModel(
-                (IDList() << "Первый" << "Второй")
-                );
+    seqPointListModel_ = new ItemListModel();
 
     seqPointListView_ = new ItemListView();
     seqPointListView_->setFixedWidth(300);
