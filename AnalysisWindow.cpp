@@ -2,8 +2,13 @@
 
 AnalysisWindow::AnalysisWindow(QWidget *parent)
     : QWidget(parent),
-      reader_(new MocPointListReader(IDList() << ID("id1")))
+      reader_(new SqlPointListReader("database.db"))
 {
+    SqlPointListWriter writer("database.db");
+    writer.write(ID("id1"), PointList() << 1.0 << 2.0);
+    writer.write(ID("id2"), PointList() << -1.0 << 0.0001);
+    writer.write(ID("ид3"), PointList() << 0.0 << 42.0 << 0.0);
+
     QHBoxLayout* mainLayout = new QHBoxLayout;
 
     AnalysisList list;

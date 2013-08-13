@@ -260,7 +260,6 @@ void TSqlPointListReader::TestWriteRead_data()
             << (IDList() << ID("id1"))
             << (SequencePointList()
                 << (PointList() << Point(1.3)));
-
 }
 
 void TSqlPointListReader::TestWriteRead()
@@ -283,7 +282,7 @@ void TSqlPointListReader::TestWriteRead()
     SqlPointListWriter writer(dataBaseName);
     {
         int index = 0;
-        foreach (const ID& item, items)
+        foreach(const ID& item, items)
         {
             writer.write(item, points[index]);
             index++;

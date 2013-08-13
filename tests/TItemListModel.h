@@ -5,6 +5,8 @@
 #include <QTest>
 
 #include "../src/ItemListModel.h"
+#include "../src/SqlPointListReader.h"
+#include "../src/SqlPointListWriter.h"
 
 class TItemListModel : public QObject
 {
@@ -14,9 +16,11 @@ public:
     TItemListModel(QObject *parent = 0);
 
 private slots:
-    void TestAddRemove_data();
-    void TestAddRemove();
-    
+    void TestAddRemoveMoc_data();
+    void TestAddRemoveMoc();
+
+    void TestAddRemoveSql_data();
+    void TestAddRemoveSql();
 };
 
 #endif // TITEMLISTMODEL_H

@@ -11,6 +11,8 @@
 #include "src/StupidAnalysis.h"
 #include "src/AverageAnalysis.h"
 #include "src/AverageIgnoreNullAnalysis.h"
+#include "src/SqlPointListReader.h"
+#include "src/SqlPointListWriter.h"
 
 class AnalysisWindow : public QWidget
 {

@@ -52,7 +52,6 @@ int main(int argc, char *argv[])
 
 #endif
 
-
 #ifndef TEST
     AnalysisWindow analysisWindow;
     analysisWindow.show();
