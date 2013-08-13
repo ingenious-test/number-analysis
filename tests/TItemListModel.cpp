@@ -43,13 +43,13 @@ void TItemListModel::TestAddRemoveMoc()
 
     ItemListModel model(&reader);
 
-    IDList idList;
+    IDList items;
     for(int i = 0; i < model.rowCount(); i++)
     {
-        idList.append(model.index(i, 0).data().toString());
+        items.append(model.index(i, 0).data().toString());
     }
 
-    const IDList actualData = idList;
+    const IDList actualData = items;
     const IDList expectedData = result;
 
     QCOMPARE(actualData, expectedData);
@@ -114,13 +114,13 @@ void TItemListModel::TestAddRemoveSql()
 
     ItemListModel model(&reader);
 
-    IDList idList;
+    IDList items;
     for(int i = 0; i < model.rowCount(); i++)
     {
-        idList.append(model.index(i, 0).data().toString());
+        items.append(model.index(i, 0).data().toString());
     }
 
-    const IDList actualData = idList;
+    const IDList actualData = items;
     const IDList expectedData = result;
 
     QCOMPARE(actualData, expectedData);

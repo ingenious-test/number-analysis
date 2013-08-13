@@ -16,7 +16,7 @@ AnalysisWindow::AnalysisWindow(QWidget *parent)
          << new AverageIgnoreNullAnalysis()
          << new AverageAnalysis;
 
-    analyzesModel_ = new AnalysisTableModel(list);
+    analyzesModel_ = new AnalysisTableModel(reader_, list);
 
     analyzesView_ = new QTableView();
 

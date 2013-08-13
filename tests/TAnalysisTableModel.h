@@ -16,9 +16,10 @@ class TAnalysisTableModel : public QObject
 public:
     TAnalysisTableModel();
 
+
 private slots:
-    void TestAddRemove_data();
-    void TestAddRemove();
+    void TestAddRemoveMoc_data();
+    void TestAddRemoveMoc();
 };
 
 #endif // TANALYSISTABLEMODEL_H

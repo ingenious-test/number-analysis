@@ -8,10 +8,10 @@ ItemListModel::ItemListModel(AbstractPointListReader *reader,
     items_ = reader_->readAllItems();
 }
 
-ItemListModel::ItemListModel(const IDList &idList, QObject *parent):
+ItemListModel::ItemListModel(const IDList &items, QObject *parent):
     QAbstractListModel(parent)
 {
-    appendPointList(idList);
+    appendPointList(items);
 }
 
 QModelIndex ItemListModel::index(int row, int column, const QModelIndex &parent) const
@@ -75,9 +75,9 @@ void ItemListModel::appendPointList(const ID &id)
 
 }
 
-void ItemListModel::appendPointList(const IDList &idList)
+void ItemListModel::appendPointList(const IDList &items)
 {
-    foreach(const ID& id, idList)
+    foreach(const ID& id, items)
     {
         appendPointList(id);
     }

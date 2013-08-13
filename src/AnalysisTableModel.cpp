@@ -1,13 +1,11 @@
 #include "AnalysisTableModel.h"
 
-AnalysisTableModel::AnalysisTableModel(QObject *parent) :
-    QAbstractItemModel(parent)
-{
 
-}
 
-AnalysisTableModel::AnalysisTableModel(const AnalysisCollection& colletions, QObject *parent):
-    QAbstractItemModel(parent), collection_(colletions)
+AnalysisTableModel::AnalysisTableModel(AbstractPointListReader *reader, const AnalysisCollection &colletions, QObject *parent):
+    QAbstractItemModel(parent),
+    collection_(colletions),
+    reader_(reader)
 {
 
 }
@@ -29,7 +27,7 @@ QModelIndex AnalysisTableModel::parent(const QModelIndex &child) const
 
 int AnalysisTableModel::rowCount(const QModelIndex &parent) const
 {
-    return idList_.size();
+    return items_.size();
 }
 
 int AnalysisTableModel::columnCount(const QModelIndex &parent) const
@@ -50,7 +48,7 @@ QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
     {
         if(index.column() == 0)
         {
-            return idList_.at(index.row());
+            return items_.at(index.row());
         }
         else
         {
@@ -58,7 +56,7 @@ QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
             {
                 return 0;
             }
-            return results_.value(listAnalysis.at(index.row())).value(idList_.at(index.column() - 1),0);
+            return results_.value(listAnalysis.at(index.row())).value(items_.at(index.column() - 1),0);
         }
     }
     else
@@ -142,9 +140,9 @@ void AnalysisTableModel::appendPointList(const ID &id)
         return;
     }
 
-    if(!idList_.contains(id))
+    if(!items_.contains(id))
     {
-        idList_.append(id);
+        items_.append(id);
         analyze(id);
         reset();
     }
@@ -154,9 +152,9 @@ void AnalysisTableModel::appendPointList(const ID &id)
     }
 }
 
-void AnalysisTableModel::appendPointList(const IDList &idList)
+void AnalysisTableModel::appendPointList(const IDList &items)
 {
-    foreach(ID id, idList)
+    foreach(ID id, items)
     {
         appendPointList(id);
     }
@@ -164,5 +162,5 @@ void AnalysisTableModel::appendPointList(const IDList &idList)
 
 bool AnalysisTableModel::containsPointList(const ID &id)
 {
-    return idList_.contains(id);
+    return items_.contains(id);
 }

@@ -5,7 +5,7 @@ TAnalysisTableModel::TAnalysisTableModel()
 
 }
 
-void TAnalysisTableModel::TestAddRemove_data()
+void TAnalysisTableModel::TestAddRemoveMoc_data()
 {
     QTest::addColumn<AnalysisList>("analyzes");
     QTest::addColumn<IDList>("pointList");
@@ -51,14 +51,16 @@ void TAnalysisTableModel::TestAddRemove_data()
 
 }
 
-void TAnalysisTableModel::TestAddRemove()
+void TAnalysisTableModel::TestAddRemoveMoc()
 {
     QFETCH(AnalysisList, analyzes);
     QFETCH(IDList, pointList);
     QFETCH(IDList, resultPointList);
     QFETCH(IDAnalysisList, analyzesList);
 
-    AnalysisTableModel model;
+    MocPointListReader reader(resultPointList);
+
+    AnalysisTableModel model(&reader);
     model.appendPointList(pointList);
 
     foreach(AbstractAnalysis* analysis, analyzes)

@@ -29,8 +29,8 @@ class AnalysisTableModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-    AnalysisTableModel(QObject *parent = 0);
-    AnalysisTableModel(const AnalysisCollection &colletions,
+    AnalysisTableModel(AbstractPointListReader *reader,
+                       const AnalysisCollection &colletions = AnalysisCollection(),
                        QObject *parent = 0);
 
     ~AnalysisTableModel();
@@ -52,7 +52,7 @@ public:
     void removeAnalysis(const QString &id);
 
     void appendPointList(const ID& id);
-    void appendPointList(const IDList& idList);
+    void appendPointList(const IDList& items);
     bool containsPointList(const ID& id);
 
 protected slots:
@@ -61,7 +61,8 @@ protected slots:
 private:
     AnalysisResults results_;
     AnalysisCollection collection_;
-    IDList idList_;  
+    IDList items_;
+    AbstractPointListReader *reader_;
 };
 
 #endif // ANALYSISTABLEMODEL_H

@@ -27,10 +27,10 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     void appendPointList(const ID& id);
-    void appendPointList(const IDList &idList);
+    void appendPointList(const IDList &items);
 
 protected:
-    ItemListModel(const IDList &idList, QObject *parent = 0);
+    ItemListModel(const IDList &items, QObject *parent = 0);
 
  private:
     IDList items_;
