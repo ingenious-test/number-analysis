@@ -29,6 +29,7 @@ SqlPointListInterface::SqlPointListInterface(const QString &dataBaseName, const 
                              + tableName_ +
                              " (id, num, value, PRIMARY KEY(id, num))");
     query.finish();
+    query.clear();
 }
 
 SqlPointListInterface::~SqlPointListInterface()

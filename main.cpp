@@ -65,13 +65,14 @@ int main(int argc, char *argv[])
 
     qDebug() << "\r\n";
 
-    BSqlPointListInterface bSqlPointListInterface(10);
+    BSqlPointListInterface bSqlPointListInterface(0);
     bSqlPointListInterface.run();
 
     qDebug() << "\r\n";
 
-    BSqlPointListReadWrite bSqlPointListReadWrite(10);
-    bSqlPointListReadWrite.run();
+    BSqlPointListReadWrite bSqlPointListReadWrite(10000);
+    //bSqlPointListReadWrite.runWrite();
+    bSqlPointListReadWrite.runRead();
 #endif  
 
     QDir::setCurrent(currentDir);

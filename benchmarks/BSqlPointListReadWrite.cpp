@@ -1,17 +1,57 @@
 #include "BSqlPointListReadWrite.h"
 
-BSqlPointListReadWrite::BSqlPointListReadWrite(const int nRuns):
-    nRuns_(nRuns)
+BSqlPointListReadWrite::BSqlPointListReadWrite(const int pointsCount):
+    pointsCount_(pointsCount)
 {
 }
 
-void BSqlPointListReadWrite::run()
+void BSqlPointListReadWrite::runRead()
 {
-    for(int i = 0; i < nRuns_; ++i)
-    {
-        qDebug() << "iteration : " << i << " / " << nRuns_;
-        QString dataBaseName = QString("test%1.db").arg(i);
-        QString tableName = QString("table%1").arg(i);
+
+        qDebug() << "Read";
+        QString dataBaseName = "test.db";
+        QString tableName = "testtable";
+
+        if(!QFile::exists(dataBaseName))
+        {
+
+                qWarning() << "can't find " << dataBaseName << ". first need runWrite()";
+                return;
+        }
+
+        SqlPointListReader* reader = new SqlPointListReader(dataBaseName, tableName);
+
+        SequencePointList seqList;
+        for(int j = 0; j < pointsCount_; j++)
+        {
+            PointList pointList;
+
+            QTime readTime;
+            readTime.start();
+            pointList = reader->read(QString("id%1").arg(j));
+            qDebug() << "read pointlist"
+                     << QString("id%1").arg(j)
+                     << " with "
+                     << pointList.size()
+                     << " points "
+                     << readTime.elapsed() / 1000.0
+                     << "seconds";
+
+            seqList.append(pointList);
+        }
+
+        delete reader;
+
+
+        SqlPointListInterface::removeConnection();
+}
+
+void BSqlPointListReadWrite::runWrite()
+{
+
+        qDebug() << "Write";
+        QString dataBaseName = "test.db";
+        QString tableName = "testtable";
 
         if(QFile::exists(dataBaseName))
         {
@@ -25,7 +65,7 @@ void BSqlPointListReadWrite::run()
         SqlPointListWriter* writer = new SqlPointListWriter(dataBaseName, tableName);
 
         qsrand(QTime(0,0).secsTo(QTime::currentTime()));
-        for(int j = 0; j < 5; j++)
+        for(int j = 0; j < pointsCount_; j++)
         {
             const int pointsCount = (qrand() % (500) + 1);
             PointList pointList;
@@ -47,37 +87,7 @@ void BSqlPointListReadWrite::run()
                      << "seconds";
         }
 
-        AbstractPointListReader* reader = new SqlPointListReader(dataBaseName, tableName);
-
-        SequencePointList seqList;
-        for(int j = 0; j < 5; j++)
-        {
-            PointList pointList;
-
-            qDebug() << "read "
-                        + QString("id%1").arg(j)
-                        + " with " + QString::number(seqList.last().size())
-                        + " points";
-
-            QTime readTime;
-            readTime.start();
-            pointList = reader->read(QString("id%1").arg(j));
-            qDebug() << "read pointlist"
-                     << QString("id%1").arg(j)
-                     << " with "
-                     << pointList.size()
-                     << " points "
-                     << readTime.elapsed() / 1000.0
-                     << "seconds";
-
-            seqList.append(pointList);
-        }
-
-
         delete writer;
-        delete reader;
-
 
         SqlPointListInterface::removeConnection();
-    }
 }

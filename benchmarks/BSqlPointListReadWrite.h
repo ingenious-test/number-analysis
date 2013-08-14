@@ -8,12 +8,13 @@
 class BSqlPointListReadWrite
 {
 public:
-    BSqlPointListReadWrite(const int nRuns_);
+    BSqlPointListReadWrite(const int pointsCount);
 
-    void run();
+    void runRead();
+    void runWrite();
 
 private:
-    int nRuns_;
+    int pointsCount_;
 };
 
 #endif // BSQLPOINTLISTREADWRITE_H

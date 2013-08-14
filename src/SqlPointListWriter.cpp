@@ -17,6 +17,7 @@ void SqlPointListWriter::write(const ID &item, const PointList &points)
         return;
     }
 
+    dataBase().transaction();
     for(int num = 0; num < points.length(); ++num)
     {
         query.bindValue(":id", item);
@@ -28,7 +29,11 @@ void SqlPointListWriter::write(const ID &item, const PointList &points)
         if(!querySuccess)
         {
             qWarning() << "exec insert table" << query.lastError().text();
+            dataBase().commit();
             return;
         }
     }
+     dataBase().commit();
+     query.finish();
+     query.clear();
 }
