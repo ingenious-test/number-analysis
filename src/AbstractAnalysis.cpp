@@ -6,16 +6,20 @@ QString sequencePointListToString(const SequencePointList &spl)
 
     foreach(const PointList &pl, spl)
     {
-        QStringList pointsRepresentation;
-        foreach(const Point &p, pl)
-        {
-            pointsRepresentation << QString::number(p);
-        }
-
-        stringRepresentation += "(" + pointsRepresentation.join(",") + ")\n";
+        stringRepresentation += "(" + pointListToString(pl) + ")\n";
     }
 
     return stringRepresentation;
+}
+
+QString pointListToString(const PointList &pl)
+{
+    QStringList pointsRepresentation;
+    foreach(const Point &p, pl)
+    {
+        pointsRepresentation << QString::number(p);
+    }
+    return pointsRepresentation.join(",");
 }
 
 AbstractAnalysis::AbstractAnalysis(const IDAnalysis &id) :

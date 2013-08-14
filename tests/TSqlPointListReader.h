@@ -6,6 +6,7 @@
 
 #include "../src/SqlPointListReader.h"
 #include "../src/SqlPointListWriter.h"
+#include "TestingUtilities.h"
 
 class TSqlPointListReader : public QObject
 {

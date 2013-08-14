@@ -18,6 +18,7 @@ typedef QList<PointList> SequencePointList;
 Q_DECLARE_METATYPE(SequencePointList)
 
 extern QString sequencePointListToString(const SequencePointList &spl);
+extern QString pointListToString(const PointList &pl);
 
 class AbstractAnalysis
 {
