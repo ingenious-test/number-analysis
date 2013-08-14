@@ -6,3 +6,7 @@ AbstractPointListReader::AbstractPointListReader()
 {
 
 }
+
+AbstractPointListReader::~AbstractPointListReader()
+{
+}

@@ -9,6 +9,8 @@ class AbstractPointListReader
 public:
     AbstractPointListReader();
 
+    virtual ~AbstractPointListReader();
+
     virtual PointList read(const ID &item) = 0;
     virtual IDList readAllItems() = 0;
 };

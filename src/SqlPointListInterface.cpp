@@ -1,13 +1,14 @@
 #include "SqlPointListInterface.h"
 
+const QString SqlPointListInterface::connectionName("connection");
+
 SqlPointListInterface::SqlPointListInterface(const QString &dataBaseName, const QString& tableName) :
     dataBaseName_(dataBaseName),
-    connectionName_("connection"),
     tableName_(tableName)
 {
-    if(QSqlDatabase::contains(connectionName_))
+    if(QSqlDatabase::contains(connectionName))
     {
-        dataBase_ = QSqlDatabase::database(connectionName_);
+        dataBase_ = QSqlDatabase::database(connectionName);
     }
     else
     {
@@ -27,11 +28,12 @@ SqlPointListInterface::SqlPointListInterface(const QString &dataBaseName, const 
     querySuccess = execQuery(query, "CREATE TABLE IF NOT EXISTS "
                              + tableName_ +
                              " (id, num, value, PRIMARY KEY(id, num))");
+    query.finish();
 }
 
 SqlPointListInterface::~SqlPointListInterface()
 {
-    //  QSqlDatabase::removeDatabase("connection");
+
 }
 
 QString SqlPointListInterface::dataBaseName() const
@@ -70,6 +72,16 @@ bool SqlPointListInterface::execQuery(QSqlQuery &query, const QString& queryStr)
         errorStr = "prepared";
     }
 
+
     qWarning() << errorStr << queryStr << query.lastError().text();
     return false;
+}
+
+void SqlPointListInterface::removeConnection()
+{
+    if(QSqlDatabase::contains(connectionName))
+    {
+
+        QSqlDatabase::removeDatabase(connectionName);
+    }
 }

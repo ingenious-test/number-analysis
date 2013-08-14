@@ -40,6 +40,10 @@ AnalysisWindow::AnalysisWindow(QWidget *parent)
 AnalysisWindow::~AnalysisWindow()
 {
     disconnect(seqPointListView_, SIGNAL(itemActivated(ID)), this, SLOT(addItem(ID)));
+
+    delete reader_;
+
+    SqlPointListInterface::removeConnection();
 }
 
 void AnalysisWindow::addItem(const ID &item)

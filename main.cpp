@@ -10,6 +10,7 @@
 #include "tests/TSqlPointListReader.h"
 
 #include "benchmarks/BAnalysisCollections.h"
+#include "benchmarks/BSqlPointListInterface.h"
 
 #include "AnalysisWindow.h"
 
@@ -55,13 +56,19 @@ int main(int argc, char *argv[])
     TSqlPointListReader tSqlPointListReader;
     QTest::qExec(&tSqlPointListReader);
 
-    QDir::setCurrent(currentDir);
+#ifdef STRESS 
+    qDebug() << "\r\n";
 
-#ifdef STRESS
-    BAnalysisCollections bAnalysisCollections(1000000);
+    BAnalysisCollections bAnalysisCollections(0);
     bAnalysisCollections.run();
-#endif
 
+    qDebug() << "\r\n";
+
+    BSqlPointListInterface bSqlPointListInterface(1000000);
+    bSqlPointListInterface.run();
+#endif  
+
+    QDir::setCurrent(currentDir);
 #endif
 
 #ifndef TEST

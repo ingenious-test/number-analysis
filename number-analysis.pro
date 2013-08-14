@@ -47,7 +47,8 @@ SOURCES += main.cpp\
     src/SqlPointListReader.cpp \
     tests/TSqlPointListReader.cpp \
     src/SqlPointListWriter.cpp \
-    src/SqlPointListInterface.cpp
+    src/SqlPointListInterface.cpp \
+    benchmarks/BSqlPointListInterface.cpp
 
 HEADERS  += AnalysisWindow.h \
     src/StupidAnalysis.h \
@@ -70,4 +71,5 @@ HEADERS  += AnalysisWindow.h \
     src/SqlPointListReader.h \
     tests/TSqlPointListReader.h \
     src/SqlPointListWriter.h \
-    src/SqlPointListInterface.h
+    src/SqlPointListInterface.h \
+    benchmarks/BSqlPointListInterface.h
