@@ -31,7 +31,7 @@ void TItemListModel::TestAddRemoveMoc_data()
                               << (IDList() << "Айди-Один");
 
     QTest::newRow("utf-8-ids") << (IDList() << "Айди-Один" << "Айди-Два")
-                               << (IDList() << "Айди-Один" << "Айди-Два");
+                               << (IDList() << "Айди-Два" << "Айди-Один");
 }
 
 void TItemListModel::TestAddRemoveMoc()

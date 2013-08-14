@@ -11,6 +11,7 @@
 
 #include "benchmarks/BAnalysisCollections.h"
 #include "benchmarks/BSqlPointListInterface.h"
+#include "benchmarks/BSqlPointListReadWrite.h"
 
 #include "AnalysisWindow.h"
 
@@ -64,8 +65,13 @@ int main(int argc, char *argv[])
 
     qDebug() << "\r\n";
 
-    BSqlPointListInterface bSqlPointListInterface(1000000);
+    BSqlPointListInterface bSqlPointListInterface(10);
     bSqlPointListInterface.run();
+
+    qDebug() << "\r\n";
+
+    BSqlPointListReadWrite bSqlPointListReadWrite(10);
+    bSqlPointListReadWrite.run();
 #endif  
 
     QDir::setCurrent(currentDir);

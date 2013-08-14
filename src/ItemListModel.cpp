@@ -58,7 +58,7 @@ QVariant ItemListModel::data(const QModelIndex &index, int role) const
 
 bool ItemListModel::appendPointList(const ID &id, bool needSort)
 {
-    if(id.isEmpty())
+    if(id.isNull())
     {
         qWarning() << "ID not set";
         return false;
