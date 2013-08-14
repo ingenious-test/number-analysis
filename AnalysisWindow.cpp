@@ -5,9 +5,12 @@ AnalysisWindow::AnalysisWindow(QWidget *parent)
       reader_(new SqlPointListReader("database.db", "points"))
 {
     SqlPointListWriter writer("database.db", "points");
-    writer.write(ID("id1"), PointList() << 1.0 << 2.0);
-    writer.write(ID("id2"), PointList() << -1.0 << 0.0001);
+    writer.write(ID("id2"), PointList() << 1.0 << 2.0);
+    writer.write(ID("id1"), PointList() << -1.0 << 0.0001);
     writer.write(ID("ид3"), PointList() << 0.0 << 42.0 << 0.0);
+    writer.write(ID("ид2"), PointList() << 0.0 << 42.0 << 0.0);
+    writer.write(ID("ид1"), PointList() << 0.0 << 42.0 << 0.0);
+    writer.write(ID("ид0"), PointList() << 0.0 << 42.0 << 0.0);
 
     QHBoxLayout* mainLayout = new QHBoxLayout;
 

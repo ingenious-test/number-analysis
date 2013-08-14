@@ -5,7 +5,7 @@ ItemListModel::ItemListModel(AbstractPointListReader *reader,
     QAbstractListModel(parent),
     reader_(reader)
 {
-    items_ = reader_->readAllItems();
+    appendPointList(reader_->readAllItems());
 }
 
 ItemListModel::ItemListModel(const IDList &items, QObject *parent):
@@ -56,29 +56,52 @@ QVariant ItemListModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-void ItemListModel::appendPointList(const ID &id)
+bool ItemListModel::appendPointList(const ID &id, bool needSort)
 {
     if(id.isEmpty())
     {
         qWarning() << "ID not set";
-        return;
+        return false;
     }
 
     if(!items_.contains(id))
     {
         items_.append(id);
+        if(needSort)
+        {
+            qSort(items_);
+        }
+
+        return true;
     }
     else
     {
         qWarning() << QString("ItemListModel contains ID: %1").arg(id);
+        return false;
     }
-
+    return false;
 }
 
 void ItemListModel::appendPointList(const IDList &items)
 {
+    bool needSort = false;
+    bool isAdded = false;
+
     foreach(const ID& id, items)
     {
-        appendPointList(id);
+        isAdded = appendPointList(id, false);
+
+        if(isAdded)
+        {
+            if(!needSort)
+            {
+                needSort = true;
+            }
+        }
+    }
+
+    if(needSort)
+    {
+       qSort(items_) ;
     }
 }

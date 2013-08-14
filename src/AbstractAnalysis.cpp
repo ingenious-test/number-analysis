@@ -1,5 +1,23 @@
 #include "AbstractAnalysis.h"
 
+QString sequencePointListToString(const SequencePointList &spl)
+{
+    QString stringRepresentation;
+
+    foreach(const PointList &pl, spl)
+    {
+        QStringList pointsRepresentation;
+        foreach(const Point &p, pl)
+        {
+            pointsRepresentation << QString::number(p);
+        }
+
+        stringRepresentation += "(" + pointsRepresentation.join(",") + ")\n";
+    }
+
+    return stringRepresentation;
+}
+
 AbstractAnalysis::AbstractAnalysis(const IDAnalysis &id) :
     id_(id)
 {
