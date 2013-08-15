@@ -18,7 +18,7 @@ void TPointListGenerator::TestGenerator_data()
                              << 1
                              << 2);
 
-    QTest::newRow("five") << 2
+    QTest::newRow("five") << 5
                          << (PointList()
                              << 1
                              << 2
