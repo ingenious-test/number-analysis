@@ -19,6 +19,6 @@ void BAnalysisCollections::run()
 
         collection.analyze(PointList());
 
-        qDebug() << QString("iteration : " + QString::number(i)).toLocal8Bit();
+        qWarning() << QString("iteration : " + QString::number(i)).toLocal8Bit();
     }
 }

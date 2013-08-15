@@ -28,9 +28,10 @@ class AnalysisTableModel : public QAbstractItemModel
 {
     Q_OBJECT
 
+    friend class TAnalysisTableModel;
+
 public:
     AnalysisTableModel(AbstractPointListReader *reader,
-                       const AnalysisCollection &colletions = AnalysisCollection(),
                        QObject *parent = 0);
 
     ~AnalysisTableModel();
@@ -43,20 +44,20 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation = Qt::Horizontal, int role = Qt::DisplayRole) const;
 
-    IDAnalysisList getHeaders();
+    IDAnalysisList getHeaders() const;
 
-    const AnalysisResults& Results();
+    const AnalysisResults& Results() const;
 
-    const AnalysisCollection& analysisCollection();
     void addAnalysis(AbstractAnalysis *analysis);
     void removeAnalysis(const QString &id);
 
     void appendPointList(const ID& id);
     void appendPointList(const IDList& items);
-    bool containsPointList(const ID& id);
+    bool containsPointList(const ID& id) const;
 
 protected slots:
-    void analyze(const ID &id);
+    void analyzeAll();
+    void analyze(const ID& item);
 
 private:
     AnalysisResults results_;

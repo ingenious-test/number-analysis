@@ -41,7 +41,7 @@ public:
     void removeAnalysis(const int index);
     void removeAllAnalysis();
 
-    const IDAnalysisList getNameList() const;
+    const IDAnalysisList getIDList() const;
 
     const int size() const;
 

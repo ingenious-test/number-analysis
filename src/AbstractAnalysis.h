@@ -32,9 +32,9 @@ public:
     virtual double analyze(const PointList &list) const = 0;
     virtual AbstractAnalysis* clone() = 0;
 
-    virtual bool isValid();
+    virtual bool isValid() const;
 
-    IDAnalysis id();
+    IDAnalysis id() const;
 
 protected:
     AbstractAnalysis(const IDAnalysis &id);

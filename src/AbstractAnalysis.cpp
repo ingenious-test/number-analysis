@@ -38,13 +38,13 @@ double AbstractAnalysis::listSum(const PointList &list)
     return sum;
 }
 
-bool AbstractAnalysis::isValid()
+bool AbstractAnalysis::isValid() const
 {
     return !id_.isEmpty();
 }
 
 
-IDAnalysis AbstractAnalysis::id()
+IDAnalysis AbstractAnalysis::id() const
 {
     return id_;
 }

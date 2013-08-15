@@ -8,7 +8,7 @@ ItemListView::ItemListView(QWidget *parent):
 
 ItemListView::~ItemListView()
 {
-    disconnect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(doubleClicked(QModelIndex)));
+
 }
 
 void ItemListView::doubleClicked(const QModelIndex &index)

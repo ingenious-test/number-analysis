@@ -14,12 +14,18 @@ AnalysisWindow::AnalysisWindow(QWidget *parent)
 
     QHBoxLayout* mainLayout = new QHBoxLayout;
 
-    AnalysisList list;
-    list << new StupidAnalysis(1.0)
+    AnalysisList analyzes;
+    analyzes << new StupidAnalysis(1.0)
          << new AverageIgnoreNullAnalysis()
          << new AverageAnalysis;
 
-    analyzesModel_ = new AnalysisTableModel(reader_, list);
+    analyzesModel_ = new AnalysisTableModel(reader_);
+
+    foreach(AbstractAnalysis* analysis, analyzes)
+    {
+        analyzesModel_->addAnalysis(analysis);
+        delete analysis;
+    }
 
     analyzesView_ = new QTableView();
 
@@ -42,10 +48,7 @@ AnalysisWindow::AnalysisWindow(QWidget *parent)
 
 AnalysisWindow::~AnalysisWindow()
 {
-    disconnect(seqPointListView_, SIGNAL(itemActivated(ID)), this, SLOT(addItem(ID)));
-
     delete reader_;
-
     SqlPointListInterface::removeConnection();
 }
 

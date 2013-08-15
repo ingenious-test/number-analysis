@@ -92,7 +92,7 @@ void AnalysisCollection::removeAllAnalysis()
     }
 }
 
-const IDAnalysisList AnalysisCollection::getNameList() const
+const IDAnalysisList AnalysisCollection::getIDList() const
 {    
     IDAnalysisList list;
 

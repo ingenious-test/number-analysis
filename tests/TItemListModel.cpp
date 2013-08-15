@@ -32,6 +32,15 @@ void TItemListModel::TestAddRemoveMoc_data()
 
     QTest::newRow("utf-8-ids") << (IDList() << "Айди-Один" << "Айди-Два")
                                << (IDList() << "Айди-Два" << "Айди-Один");
+
+    QTest::newRow("five-none-sort") << (IDList() << "id5" << "id3" << "id4" << "id1" << "id2")
+                                    << (IDList() << "id1" << "id2" << "id3" << "id4" << "id5");
+
+    QTest::newRow("six-none-sort") << (IDList() << "id3" << "id1" << "id4" << "id2" << "id6" << "id5")
+                                   << (IDList() << "id1" << "id2" << "id3" << "id4" << "id5" << "id6");
+
+    QTest::newRow("seven-none-sort") << (IDList() << "id6" << "id4" << "id2" << "id1" << "id3" << "id7" << "id5")
+                                    << (IDList() << "id1" << "id2" << "id3" << "id4" << "id5" << "id6" << "id7");
 }
 
 void TItemListModel::TestAddRemoveMoc()

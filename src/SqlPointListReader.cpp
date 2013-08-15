@@ -35,7 +35,6 @@ PointList SqlPointListReader::read(const ID &item)
     }
 
     query.finish();
-    query.clear();
 
     return points;
 }
@@ -62,7 +61,6 @@ IDList SqlPointListReader::readAllItems()
     }
 
     query.finish();
-    query.clear();
 
     return allItems;
 }

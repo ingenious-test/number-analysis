@@ -8,60 +8,103 @@ TAnalysisTableModel::TAnalysisTableModel()
 void TAnalysisTableModel::TestAddRemoveMoc_data()
 {
     QTest::addColumn<AnalysisList>("analyzes");
-    QTest::addColumn<IDList>("pointList");
-    QTest::addColumn<IDList>("resultPointList");
-    QTest::addColumn<IDAnalysisList>("analyzesList");
+    QTest::addColumn<IDList>("pointsIDs");
+    QTest::addColumn<IDList>("resultPointsIDs");
+    QTest::addColumn<IDAnalysisList>("analyzesID");
+    QTest::addColumn<AnalysisResults>("analyzesResult");
 
-    QTest::newRow("empty") << AnalysisList() << IDList() << IDList()  << IDAnalysisList();
+
+    QTest::newRow("empty") << AnalysisList() << IDList() << IDList()  << IDAnalysisList() << AnalysisResults();
 
     QTest::newRow("one") << (AnalysisList()
                              << new StupidAnalysis(1.0)
                              << new AverageAnalysis())
                          << (IDList() << "First")
                          << (IDList() << "First")
-                         << (IDAnalysisList() <<StupidAnalysis().id() << AverageAnalysis().id());
+                         << (IDAnalysisList() <<StupidAnalysis().id() << AverageAnalysis().id())
+                         << AnalysisResults().insertInc("First",
+                                                        AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                                        .insertInc(AverageAnalysis().id(), 0.0));
 
     QTest::newRow("two") << (AnalysisList()
                              << new StupidAnalysis(1.0)
                              << new AverageAnalysis())
                          << (IDList() << "First" << "Second")
                          << (IDList() << "First" << "Second")
-                         << (IDAnalysisList() <<StupidAnalysis().id() << AverageAnalysis().id());
+                         << (IDAnalysisList() <<StupidAnalysis().id() << AverageAnalysis().id())
+                         << AnalysisResults().insertInc("First",
+                                                        AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                                        .insertInc(AverageAnalysis().id(), 0.0))
+                            .insertInc("Second",
+                                       AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                       .insertInc(AverageAnalysis().id(), 0.0));
 
     QTest::newRow("three") << (AnalysisList()
                                << new StupidAnalysis(1.0)
                                << new AverageAnalysis())
                            << (IDList() << "First" << "Second" << "Third")
                            << (IDList() << "First" << "Second" << "Third")
-                           << (IDAnalysisList() << StupidAnalysis().id() << AverageAnalysis().id());
+                           << (IDAnalysisList() << StupidAnalysis().id() << AverageAnalysis().id())
+                           <<  AnalysisResults()
+                               .insertInc("First",
+                                          AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                          .insertInc(AverageAnalysis().id(), 0.0))
+                               .insertInc("Second",
+                                          AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                          .insertInc(AverageAnalysis().id(), 0.0))
+                               .insertInc("Third",
+                                          AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                          .insertInc(AverageAnalysis().id(), 0.0));
 
     QTest::newRow("four-with-empty") << (AnalysisList()
                                          << new StupidAnalysis(1.0)
                                          << new AverageAnalysis())
                                      << (IDList() << "First" << "" << "Second" << "Third")
                                      << (IDList() << "First" << "Second" << "Third")
-                                     << (IDAnalysisList() << StupidAnalysis().id() << AverageAnalysis().id());
+                                     << (IDAnalysisList() << StupidAnalysis().id() << AverageAnalysis().id())
+                                     <<  AnalysisResults()
+                                         .insertInc("First",
+                                                    AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                                    .insertInc(AverageAnalysis().id(), 0.0))
+                                         .insertInc("Second",
+                                                    AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                                    .insertInc(AverageAnalysis().id(), 0.0))
+                                         .insertInc("Third",
+                                                    AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                                    .insertInc(AverageAnalysis().id(), 0.0)); ;
 
     QTest::newRow("four-with-repeat") << (AnalysisList()
                                           << new StupidAnalysis(1.0)
                                           << new AverageAnalysis())
                                       << (IDList() << "First" << "First" << "Second" << "Third")
                                       << (IDList() << "First" << "Second" << "Third")
-                                      << (IDAnalysisList() << StupidAnalysis().id() << AverageAnalysis().id());
+                                      << (IDAnalysisList() << StupidAnalysis().id() << AverageAnalysis().id())
+                                      <<  AnalysisResults()
+                                          .insertInc("First",
+                                                     AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                                     .insertInc(AverageAnalysis().id(), 0.0))
+                                          .insertInc("Second",
+                                                     AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                                     .insertInc(AverageAnalysis().id(), 0.0))
+                                          .insertInc("Third",
+                                                     AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                                     .insertInc(AverageAnalysis().id(), 0.0)); ;
 
 }
 
 void TAnalysisTableModel::TestAddRemoveMoc()
 {
     QFETCH(AnalysisList, analyzes);
-    QFETCH(IDList, pointList);
-    QFETCH(IDList, resultPointList);
-    QFETCH(IDAnalysisList, analyzesList);
+    QFETCH(IDList, pointsIDs);
+    QFETCH(IDList, resultPointsIDs);
+    QFETCH(IDAnalysisList, analyzesID);
+    QFETCH(AnalysisResults, analyzesResult);
 
-    MocPointListReader reader(resultPointList);
+    MocPointListReader reader(pointsIDs);
 
     AnalysisTableModel model(&reader);
-    model.appendPointList(pointList);
+    model.appendPointList(pointsIDs);
+
 
     foreach(AbstractAnalysis* analysis, analyzes)
     {
@@ -69,28 +112,34 @@ void TAnalysisTableModel::TestAddRemoveMoc()
         delete analysis;
     }
 
+    model.analyzeAll();
+
     analyzes.clear();
 
-    IDList idFromModel;
+    IDList idsFromModel;
     for(int i = 0; i < model.rowCount(); i++)
     {
-        idFromModel.append(model.index(i, 0).data().toString());
+        idsFromModel.append(model.index(i, 0).data().toString());
     }
 
-    const IDList actualPointSet = idFromModel;
-    const IDList expectedPointSet = resultPointList;
+    const IDList actualPointsID = idsFromModel;
+    const IDList expectedPointsID = resultPointsIDs;
 
-    QCOMPARE(actualPointSet, expectedPointSet);
+    QCOMPARE(actualPointsID, expectedPointsID);
 
-    IDAnalysisList analyzesFromModel;
+    IDAnalysisList analyzesIDsFromModel;
     for(int i = 1; i < model.columnCount(); i++)
     {
-        analyzesFromModel.append(model.headerData(i).toString());
+        analyzesIDsFromModel.append(model.headerData(i).toString());
     }
 
+    const IDAnalysisList actualAnalyzes = analyzesIDsFromModel;
+    const IDAnalysisList expectedAnalyzes= analyzesID;
 
-    const IDAnalysisList actualAnalysisList = analyzesFromModel;
-    const IDAnalysisList expectedAnalysisList = analyzesList;
+    QCOMPARE(actualAnalyzes, expectedAnalyzes);
 
-    QCOMPARE(actualAnalysisList, expectedAnalysisList);
+    const AnalysisResults actualAnalysisResults = model.Results();
+    const AnalysisResults expectedAnalysisResults= analyzesResult;
+
+    QCOMPARE(actualAnalysisResults, expectedAnalysisResults);
 }

@@ -56,7 +56,7 @@ QVariant ItemListModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool ItemListModel::appendPointList(const ID &id, bool needSort)
+bool ItemListModel::appendPointList(const ID &id)
 {
     if(id.isNull())
     {
@@ -67,10 +67,7 @@ bool ItemListModel::appendPointList(const ID &id, bool needSort)
     if(!items_.contains(id))
     {
         items_.append(id);
-        if(needSort)
-        {
-            qSort(items_);
-        }
+        qSort(items_);
 
         return true;
     }
@@ -84,24 +81,8 @@ bool ItemListModel::appendPointList(const ID &id, bool needSort)
 
 void ItemListModel::appendPointList(const IDList &items)
 {
-    bool needSort = false;
-    bool isAdded = false;
-
     foreach(const ID& id, items)
     {
-        isAdded = appendPointList(id, false);
-
-        if(isAdded)
-        {
-            if(!needSort)
-            {
-                needSort = true;
-            }
-        }
-    }
-
-    if(needSort)
-    {
-       qSort(items_) ;
+        appendPointList(id);
     }
 }

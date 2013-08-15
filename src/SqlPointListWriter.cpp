@@ -5,7 +5,7 @@ SqlPointListWriter::SqlPointListWriter(const QString &dataBaseName, const QStrin
 {   
 }
 
-void SqlPointListWriter::write(const ID &item, const PointList &points)
+void SqlPointListWriter::write(const ID &item, const PointList &points) const
 {
     QSqlQuery query(dataBase());
     bool querySuccess = false;
@@ -35,5 +35,4 @@ void SqlPointListWriter::write(const ID &item, const PointList &points)
     }
      dataBase().commit();
      query.finish();
-     query.clear();
 }

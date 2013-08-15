@@ -26,7 +26,7 @@ public:
     int columnCount(const QModelIndex &parent  = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-    bool appendPointList(const ID& id, bool needSort = true);
+    bool appendPointList(const ID& id);
     void appendPointList(const IDList &items);
 
 protected:

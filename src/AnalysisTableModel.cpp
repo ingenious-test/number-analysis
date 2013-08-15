@@ -2,9 +2,8 @@
 
 
 
-AnalysisTableModel::AnalysisTableModel(AbstractPointListReader *reader, const AnalysisCollection &colletions, QObject *parent):
+AnalysisTableModel::AnalysisTableModel(AbstractPointListReader *reader, QObject *parent):
     QAbstractItemModel(parent),
-    collection_(colletions),
     reader_(reader)
 {
 
@@ -42,7 +41,7 @@ QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    IDAnalysisList listAnalysis = collection_.getNameList();
+    IDAnalysisList listAnalysis = collection_.getIDList();
 
     if (role == Qt::DisplayRole)
     {
@@ -74,7 +73,7 @@ QVariant AnalysisTableModel::headerData(int section, Qt::Orientation orientation
         return QVariant();
     }
 
-    QStringList list = collection_.getNameList();
+    QStringList list = collection_.getIDList();
 
     if (orientation == Qt::Horizontal)
     {
@@ -96,28 +95,14 @@ QVariant AnalysisTableModel::headerData(int section, Qt::Orientation orientation
     return QVariant();
 }
 
-IDAnalysisList AnalysisTableModel::getHeaders()
+IDAnalysisList AnalysisTableModel::getHeaders() const
 {
-    return collection_.getNameList();
+    return collection_.getIDList();
 }
 
-void AnalysisTableModel::analyze(const ID &id)
-{
-    MocPointListReader reader(IDList() << ID("2"));
-
-    PointList points = reader.read(id);
-
-    qWarning() << points;
-}
-
-const AnalysisResults &AnalysisTableModel::Results()
+const AnalysisResults &AnalysisTableModel::Results() const
 {
     return results_;
-}
-
-const AnalysisCollection &AnalysisTableModel::analysisCollection()
-{
-    return collection_;
 }
 
 void AnalysisTableModel::addAnalysis(AbstractAnalysis *analysis)
@@ -143,12 +128,11 @@ void AnalysisTableModel::appendPointList(const ID &id)
     if(!items_.contains(id))
     {
         items_.append(id);
-        analyze(id);
         reset();
     }
     else
     {
-        qWarning() << QString("ItemListModel contains ID: %1").arg(id);
+        qWarning() << QString("AnalysisTableModel contains ID: %1").arg(id);
     }
 }
 
@@ -160,7 +144,24 @@ void AnalysisTableModel::appendPointList(const IDList &items)
     }
 }
 
-bool AnalysisTableModel::containsPointList(const ID &id)
+bool AnalysisTableModel::containsPointList(const ID &id) const
 {
     return items_.contains(id);
+}
+
+void AnalysisTableModel::analyzeAll()
+{
+    results_.clear();
+
+    foreach(const ID& item, items_)
+    {
+        analyze(item);
+    }
+}
+
+void AnalysisTableModel::analyze(const ID &item)
+{
+    PointList pointList;
+    AnalysisResult result = collection_.analyze(pointList);
+    results_.insertInc(item, result);
 }

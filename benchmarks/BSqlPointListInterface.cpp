@@ -10,7 +10,7 @@ void BSqlPointListInterface::run()
 {
     for(int i = 0; i < nRuns_; ++i)
     {
-        qDebug() << "iteration : " << i << " / " << nRuns_;
+        qWarning() << "iteration : " << i << " / " << nRuns_;
         QString dataBaseName = QString("test%1.db").arg(i);
         QString tableName = QString("table%1").arg(i);
 

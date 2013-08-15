@@ -120,7 +120,7 @@ void TAnalysisCollection::TestAnalyzeAnalysisAddRemove()
 
     QCOMPARE(actualLength, expectedLength);
 
-    const IDAnalysisList actualNames = collection.getNameList();
+    const IDAnalysisList actualNames = collection.getIDList();
     const IDAnalysisList expectedNames = nameList;
 
     QCOMPARE(actualNames, expectedNames);
