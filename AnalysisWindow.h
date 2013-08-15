@@ -13,6 +13,7 @@
 #include "src/AverageIgnoreNullAnalysis.h"
 #include "src/SqlPointListReader.h"
 #include "src/SqlPointListWriter.h"
+#include "src/DatabaseGenerator.h"
 
 class AnalysisWindow : public QWidget
 {

@@ -18,6 +18,9 @@ public:
 private slots:
     void TestGenerator_data();
     void TestGenerator();
+
+    void TestValueGenerator_data();
+    void TestValueGenerator();
 };
 
 #endif // TPOINTLISTGENERATOR_H
