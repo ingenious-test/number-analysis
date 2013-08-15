@@ -20,6 +20,22 @@ public:
 };
 Q_DECLARE_METATYPE(AnalysisResult)
 
+class AnalysisResults : public QHash<ID, AnalysisResult>
+{
+public:
+    AnalysisResults& insertInc(const ID &id, const AnalysisResult &analysisResult)
+    {
+        if(contains(id))
+        {
+            remove(id);
+        }
+
+        insert(id, analysisResult);
+        return *this;
+    }
+};
+Q_DECLARE_METATYPE(AnalysisResults)
+
 
 typedef QList<AbstractAnalysis*> AnalysisList;
 Q_DECLARE_METATYPE(AnalysisList)

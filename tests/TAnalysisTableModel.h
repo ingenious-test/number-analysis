@@ -4,6 +4,8 @@
 
 #include <QTest>
 
+#include "TestingUtilities.h"
+
 #include "../src/AnalysisCollection.h"
 #include "../src/StupidAnalysis.h"
 #include "../src/AverageAnalysis.h"

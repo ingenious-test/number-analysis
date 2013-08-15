@@ -23,7 +23,7 @@ void TAnalysisTableModel::TestAddRemoveMoc_data()
                          << (IDList() << "First")
                          << (IDAnalysisList() <<StupidAnalysis().id() << AverageAnalysis().id())
                          << AnalysisResults().insertInc("First",
-                                                        AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                                        AnalysisResult().insertInc(StupidAnalysis().id(), 0.0)
                                                         .insertInc(AverageAnalysis().id(), 0.0));
 
     QTest::newRow("two") << (AnalysisList()
@@ -47,13 +47,13 @@ void TAnalysisTableModel::TestAddRemoveMoc_data()
                            << (IDAnalysisList() << StupidAnalysis().id() << AverageAnalysis().id())
                            <<  AnalysisResults()
                                .insertInc("First",
-                                          AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                          AnalysisResult().insertInc(StupidAnalysis().id(), 0.0)
                                           .insertInc(AverageAnalysis().id(), 0.0))
                                .insertInc("Second",
-                                          AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                          AnalysisResult().insertInc(StupidAnalysis().id(), 0.0)
                                           .insertInc(AverageAnalysis().id(), 0.0))
                                .insertInc("Third",
-                                          AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                          AnalysisResult().insertInc(StupidAnalysis().id(), 0.0)
                                           .insertInc(AverageAnalysis().id(), 0.0));
 
     QTest::newRow("four-with-empty") << (AnalysisList()
@@ -141,5 +141,12 @@ void TAnalysisTableModel::TestAddRemoveMoc()
     const AnalysisResults actualAnalysisResults = model.Results();
     const AnalysisResults expectedAnalysisResults= analyzesResult;
 
-    QCOMPARE(actualAnalysisResults, expectedAnalysisResults);
+    bool isCompare = analysisResultsFuzzyCompare(actualAnalysisResults,expectedAnalysisResults);
+    if(!isCompare)
+    {
+        QFAIL(QString("Compare values are not the same. \nActual:\n"
+                      + analysisResultsToString(actualAnalysisResults)
+                      + "\nExpected:\n"
+                      + analysisResultsToString(expectedAnalysisResults)).toStdString().c_str());
+    }
 }

@@ -8,21 +8,6 @@
 
 #include "AnalysisCollection.h"
 
-class AnalysisResults : public QHash<ID, AnalysisResult>
-{
-public:
-    AnalysisResults& insertInc(const ID &id, const AnalysisResult &analysisResult)
-    {
-        if(contains(id))
-        {
-            remove(id);
-        }
-
-        insert(id, analysisResult);
-        return *this;
-    }
-};
-Q_DECLARE_METATYPE(AnalysisResults)
 
 class AnalysisTableModel : public QAbstractItemModel
 {
