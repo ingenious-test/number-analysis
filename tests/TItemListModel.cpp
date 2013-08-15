@@ -40,7 +40,7 @@ void TItemListModel::TestAddRemoveMoc_data()
                                    << (IDList() << "id1" << "id2" << "id3" << "id4" << "id5" << "id6");
 
     QTest::newRow("seven-none-sort") << (IDList() << "id6" << "id4" << "id2" << "id1" << "id3" << "id7" << "id5")
-                                    << (IDList() << "id1" << "id2" << "id3" << "id4" << "id5" << "id6" << "id7");
+                                     << (IDList() << "id1" << "id2" << "id3" << "id4" << "id5" << "id6" << "id7");
 }
 
 void TItemListModel::TestAddRemoveMoc()
@@ -111,11 +111,9 @@ void TItemListModel::TestAddRemoveSql()
 
     SqlPointListWriter writer(dataBaseName, tableName);
     {
-        int index = 0;
         foreach(const ID& item, list)
         {
             writer.write(item, PointList() << Point(1.0));
-            index++;
         }
     }
 

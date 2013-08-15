@@ -173,12 +173,12 @@ void TSqlPointListReader::TestWriteRead()
         }
     }
 
-    SqlPointListWriter writer(dataBaseName, tableName);
+    SqlPointListWriter* writer  = new SqlPointListWriter(dataBaseName, tableName);
     {
         int index = 0;
         foreach(const ID& item, items)
         {
-            writer.write(item, points[index]);
+            writer->write(item, points[index]);
             index++;
         }
     }

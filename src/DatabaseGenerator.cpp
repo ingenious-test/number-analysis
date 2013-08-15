@@ -8,6 +8,16 @@ void DatabaseGenerator::generateDataBase(const QString &dataBaseName, const QStr
 {
     PointListGenerator pointListGenerator;
     PointList pointList;
+
+    if(QFile::exists(dataBaseName))
+    {
+        if(!QFile::remove(dataBaseName))
+        {
+            qWarning() << "can't remove testing database";
+            return;
+        }
+    }
+
     SqlPointListWriter writer(dataBaseName, tableName);
 
     if(writer.isOpen())

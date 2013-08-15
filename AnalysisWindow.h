@@ -3,6 +3,7 @@
 
 #include <QtGui/QTableView>
 #include <QtGui/QLayout>
+#include <QPushButton>
 
 #include "src/ItemListView.h"
 
@@ -24,6 +25,8 @@ public:
     ~AnalysisWindow();
 
 private:
+    QPushButton* analyzeButton;
+
     QTableView* analyzesView_;
     AnalysisTableModel* analyzesModel_;
 
@@ -34,6 +37,7 @@ private:
 
 private slots:
     void addItem(const ID &item);
+    void onAnalyzeButtonClick();
 };
 
 #endif // WIDGET_H

@@ -28,6 +28,11 @@ double AverageIgnoreNullAnalysis::analyze(const PointList &values) const
         }
     }
 
+    if(length == 0)
+    {
+        return 0.0;
+    }
+
     const double result = sum / static_cast<double>(length);
 
     return result;

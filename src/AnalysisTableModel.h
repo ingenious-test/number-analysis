@@ -14,6 +14,7 @@ class AnalysisTableModel : public QAbstractItemModel
     Q_OBJECT
 
     friend class TAnalysisTableModel;
+    friend class AnalysisWindow;
 
 public:
     AnalysisTableModel(AbstractPointListReader *reader,
@@ -39,6 +40,7 @@ public:
     void appendPointList(const ID& id);
     void appendPointList(const IDList& items);
     bool containsPointList(const ID& id) const;
+
 
 protected slots:
     void analyzeAll();

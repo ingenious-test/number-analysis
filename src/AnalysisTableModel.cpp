@@ -55,7 +55,7 @@ QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
             {
                 return 0;
             }
-            return results_.value(listAnalysis.at(index.row())).value(items_.at(index.column() - 1),0);
+            return results_.value(items_.at(index.row())).value(listAnalysis.at(index.column() - 1));
         }
     }
     else
@@ -161,7 +161,8 @@ void AnalysisTableModel::analyzeAll()
 
 void AnalysisTableModel::analyze(const ID &item)
 {
-    PointList pointList;
+    PointList pointList = reader_->read(item);
     AnalysisResult result = collection_.analyze(pointList);
+    reset();
     results_.insertInc(item, result);
 }

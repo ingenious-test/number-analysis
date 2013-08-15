@@ -32,9 +32,14 @@ PointList PointListGenerator::generateConst(const int start, const int end)
 {
     PointList pointList;
 
+    if(start > end)
+    {
+        return pointList;
+    }
+
     for(int i = start; i <= end; i++)
     {
-        pointList.append(i);
+        pointList.append(static_cast<Point>(i));
     }
 
     return pointList;

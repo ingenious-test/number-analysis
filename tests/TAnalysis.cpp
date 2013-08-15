@@ -134,6 +134,9 @@ void TAnalysis::TestAverageIgnoreNullAnalysis_data()
     QTest::addColumn<double>("result");
 
     QTest::newRow("empty") << PointList() << 0.0;
+
+    QTest::newRow("null") << (PointList() << 0.0 << 0.0 << 0.0) << 0.0;
+
     QTest::newRow("one-value") << (PointList() << 23.0) << 23.0;
     QTest::newRow("one-doubled-value") << (PointList() << 3.5) << 3.5;
     QTest::newRow("one-negative-value") << (PointList() << -3.0) << -3.0;
