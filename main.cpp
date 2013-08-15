@@ -8,6 +8,7 @@
 #include "tests/TAnalysisTableModel.h"
 #include "tests/TItemListModel.h"
 #include "tests/TSqlPointListReader.h"
+#include "tests/TPointListGenerator.h"
 
 #include "benchmarks/BAnalysisCollections.h"
 #include "benchmarks/BSqlPointListInterface.h"
@@ -60,6 +61,10 @@ int main(int argc, char *argv[])
     TSqlPointListReader tSqlPointListReader;
     QTest::qExec(&tSqlPointListReader);
 
+    qDebug() << "\r\n";
+
+    TPointListGenerator tPointListGenerator;
+    QTest::qExec(&tPointListGenerator);
 #ifdef STRESS 
     qDebug() << "\r\n";
 
@@ -74,7 +79,7 @@ int main(int argc, char *argv[])
     qDebug() << "\r\n";
 
     BSqlPointListReadWrite bSqlPointListReadWrite(10000);
-    //bSqlPointListReadWrite.runWrite();
+    bSqlPointListReadWrite.runWrite();
     bSqlPointListReadWrite.runRead();
 #endif  
 
