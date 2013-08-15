@@ -1,34 +1,16 @@
 #include "SqlPointListInterface.h"
 
-const QString SqlPointListInterface::connectionName("connection");
+const QString SqlPointListInterface::connectionName_("connection");
+const ColumnsName SqlPointListInterface::columnID_("id");
+const ColumnsName SqlPointListInterface::columnNUM_("num");
+const ColumnsName SqlPointListInterface::columnVALUE_("value");
 
 SqlPointListInterface::SqlPointListInterface(const QString &dataBaseName, const QString& tableName) :
     dataBaseName_(dataBaseName),
-    tableName_(tableName)
+    tableName_(tableName),
+    open_(false)
 {
-    if(QSqlDatabase::contains(connectionName))
-    {
-        dataBase_ = QSqlDatabase::database(connectionName);
-    }
-    else
-    {
-        dataBase_ = QSqlDatabase::addDatabase("QSQLITE", "connection");
-    }
 
-    dataBase_.setDatabaseName(dataBaseName_);
-    if (!dataBase_.open())
-    {
-        qWarning() << "can't open database " << dataBaseName_;
-        return;
-    }
-
-    QSqlQuery query(dataBase_);
-    bool querySuccess = false;
-
-    querySuccess = execQuery(query, "CREATE TABLE IF NOT EXISTS "
-                             + tableName_ +
-                             " (id, num, value, PRIMARY KEY(id, num))");
-    query.finish();
 }
 
 SqlPointListInterface::~SqlPointListInterface()
@@ -77,11 +59,84 @@ bool SqlPointListInterface::execQuery(QSqlQuery &query, const QString& queryStr)
     return false;
 }
 
+bool SqlPointListInterface::createTable(QSqlQuery &query)
+{
+    QString queryStr = "CREATE TABLE IF NOT EXISTS "
+            + tableName_ +
+            " (" + columnID() + ", " + columnNUM() + ", " + columnVALUE()
+            + ", PRIMARY KEY(" + columnID() + ", " + columnNUM() + "))";
+
+
+
+    bool result = execQuery(query, queryStr);
+    return result;
+}
+
 void SqlPointListInterface::removeConnection()
 {
-    if(QSqlDatabase::contains(connectionName))
+    if(QSqlDatabase::contains(connectionName_))
     {
 
-        QSqlDatabase::removeDatabase(connectionName);
+        QSqlDatabase::removeDatabase(connectionName_);
     }
+}
+
+bool SqlPointListInterface::open()
+{
+
+    if(QSqlDatabase::contains(connectionName_))
+    {
+        dataBase_ = QSqlDatabase::database(connectionName_);
+    }
+    else
+    {
+        dataBase_ = QSqlDatabase::addDatabase("QSQLITE", "connection");
+    }
+
+    dataBase_.setDatabaseName(dataBaseName_);
+    if (!dataBase_.open())
+    {
+        qWarning() << "can't open database " << dataBaseName_;
+        open_ = false;
+        return false;
+    }
+
+    QSqlQuery query(dataBase_);
+
+    const bool createTableSuccess = createTable(query);
+    if(!createTableSuccess)
+    {
+        open_ = false;
+        return false;
+    }
+
+
+    if(prepareQueries())
+    {
+        open_ = true;
+        return true;
+    }
+
+    open_ = false;
+    return false;
+}
+
+bool SqlPointListInterface::isOpen() const
+{
+    return open_;
+}
+
+const ColumnsName &SqlPointListInterface::columnID()
+{
+    return columnID_;
+}
+
+const ColumnsName &SqlPointListInterface::columnNUM()
+{
+    return columnNUM_;
+}
+
+const ColumnsName &SqlPointListInterface::columnVALUE()
+{
+    return columnVALUE_;
 }

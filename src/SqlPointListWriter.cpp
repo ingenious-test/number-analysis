@@ -3,36 +3,45 @@
 SqlPointListWriter::SqlPointListWriter(const QString &dataBaseName, const QString &tableName) :
     SqlPointListInterface(dataBaseName, tableName)
 {   
+    if(!open())
+    {
+        qWarning() << "SqlPointListWriter not open";
+    }
 }
 
-void SqlPointListWriter::write(const ID &item, const PointList &points) const
+void SqlPointListWriter::write(const ID &item, const PointList &points)
 {
-    QSqlQuery query(dataBase());
-    bool querySuccess = false;
-
-    querySuccess = query.prepare("INSERT OR ABORT INTO " + tableName() + " VALUES(:id, :num, :value)");
-
-    if(!querySuccess)
-    {
-        return;
-    }
-
     dataBase().transaction();
     for(int num = 0; num < points.length(); ++num)
     {
-        query.bindValue(":id", item);
-        query.bindValue(":num", num);
-        query.bindValue(":value", points.at(num));
+        writePointsByID_.bindValue(":id", item);
+        writePointsByID_.bindValue(":num", num);
+        writePointsByID_.bindValue(":value", points.at(num));
 
-        querySuccess = query.exec();
+        const bool querySuccess = writePointsByID_.exec();
 
         if(!querySuccess)
         {
-            qWarning() << "exec insert table" << query.lastError().text();
+            qWarning() << "exec insert table" << writePointsByID_.lastError().text();
             dataBase().commit();
             return;
         }
     }
      dataBase().commit();
-     query.finish();
+     writePointsByID_.finish();
+}
+
+bool SqlPointListWriter::prepareQueries()
+{
+    writePointsByID_ = QSqlQuery(dataBase());
+
+    writePointsByID_.prepare("INSERT OR ABORT INTO " + tableName() + " VALUES(:id, :num, :value)");
+    if(writePointsByID_.lastError().text() != " ")
+    {
+        qWarning() << "prepare insert points" << writePointsByID_.lastError().text();
+        return false;
+    }
+
+
+    return true;
 }

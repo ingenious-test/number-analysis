@@ -12,8 +12,14 @@ class SqlPointListReader :
 public:
     SqlPointListReader(const QString &dataBaseName, const QString &tableName);
 
-    virtual PointList read(const ID &item);
-    virtual IDList readAllItems();
+    bool prepareQueries();
+
+    PointList read(const ID &item);
+    IDList readAllItems();
+
+private:
+    QSqlQuery readPointsByID_;
+    QSqlQuery readAllPointsIDs_;
 };
 
 #endif // SQLPOINTLISTREADER_H

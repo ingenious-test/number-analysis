@@ -23,7 +23,7 @@ void TAnalysisTableModel::TestAddRemoveMoc_data()
                          << (IDList() << "First")
                          << (IDAnalysisList() <<StupidAnalysis().id() << AverageAnalysis().id())
                          << AnalysisResults().insertInc("First",
-                                                        AnalysisResult().insertInc(StupidAnalysis().id(), 0.0)
+                                                        AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
                                                         .insertInc(AverageAnalysis().id(), 0.0));
 
     QTest::newRow("two") << (AnalysisList()
@@ -47,13 +47,13 @@ void TAnalysisTableModel::TestAddRemoveMoc_data()
                            << (IDAnalysisList() << StupidAnalysis().id() << AverageAnalysis().id())
                            <<  AnalysisResults()
                                .insertInc("First",
-                                          AnalysisResult().insertInc(StupidAnalysis().id(), 0.0)
+                                          AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
                                           .insertInc(AverageAnalysis().id(), 0.0))
                                .insertInc("Second",
-                                          AnalysisResult().insertInc(StupidAnalysis().id(), 0.0)
+                                          AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
                                           .insertInc(AverageAnalysis().id(), 0.0))
                                .insertInc("Third",
-                                          AnalysisResult().insertInc(StupidAnalysis().id(), 0.0)
+                                          AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
                                           .insertInc(AverageAnalysis().id(), 0.0));
 
     QTest::newRow("four-with-empty") << (AnalysisList()

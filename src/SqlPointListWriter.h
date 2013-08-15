@@ -10,7 +10,12 @@ class SqlPointListWriter : public SqlPointListInterface
 public:
     SqlPointListWriter(const QString &dataBaseName, const QString& tableName);
 
-    void write(const ID &item, const PointList &points) const;
+    void write(const ID &item, const PointList &points);
+
+    bool prepareQueries();
+
+private:
+    QSqlQuery writePointsByID_;
 };
 
 #endif // SQLPOINTLISTWRITER_H

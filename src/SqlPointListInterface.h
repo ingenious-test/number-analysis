@@ -4,8 +4,10 @@
 
 #include <QSqlQuery>
 #include <QSqlError>
-
+#include <QStringList>
 #include <QDebug>
+
+typedef QString ColumnsName;
 
 class SqlPointListInterface
 {
@@ -22,8 +24,19 @@ public:
     QSqlDatabase dataBase() const;
     QString tableName() const;
 
+    virtual bool prepareQueries() = 0;
+    bool isOpen() const;
+
+
+    static const ColumnsName& columnID();
+    static const ColumnsName& columnNUM();
+    static const ColumnsName& columnVALUE();
+
+
 protected:
+    bool open();
     bool execQuery(QSqlQuery &query, const QString& queryStr);
+    bool createTable(QSqlQuery &query);
     static void removeConnection();
 
 private:
@@ -32,7 +45,14 @@ private:
 
     const QString tableName_;
 
-    static const QString connectionName;
+    static const QString connectionName_;
+
+    static const ColumnsName columnID_;
+    static const ColumnsName columnNUM_;
+    static const ColumnsName columnVALUE_;
+
+    bool open_;
+
 
 };
 

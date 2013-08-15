@@ -3,64 +3,87 @@
 SqlPointListReader::SqlPointListReader(const QString &dataBaseName, const QString& tableName) :
     SqlPointListInterface(dataBaseName, tableName)
 {
+    if(!open())
+    {
+        qWarning() << "SqlPointListReader not open";
+    }
+}
+
+bool SqlPointListReader::prepareQueries()
+{
+    readPointsByID_ = QSqlQuery(dataBase());
+    readAllPointsIDs_ = QSqlQuery(dataBase());
+
+    readPointsByID_.prepare("SELECT " + columnVALUE() + " FROM " + tableName() + " WHERE " + columnID() + " = :id");
+    if(readPointsByID_.lastError().text() != " ")
+    {
+        qWarning() << "prepare select points" << readPointsByID_.lastError().text();
+        return false;
+    }
+
+    readAllPointsIDs_.prepare("SELECT DISTINCT " + columnID() + " FROM " + tableName() + "");
+    if(readAllPointsIDs_.lastError().text() != " ")
+    {
+        qWarning() << "prepare select points ids" << readAllPointsIDs_.lastError().text();
+        return false;
+    }
+
+    return true;
 }
 
 PointList SqlPointListReader::read(const ID &item)
 {
-    PointList points;
-
-
-    QSqlQuery query(dataBase());
-
-    query.prepare("SELECT value FROM " + tableName() + " WHERE id = :id");
-    if(query.lastError().text() != " ")
+    if(isOpen())
     {
-        qWarning() << "prepare select points" << query.lastError().text();
-        return PointList();
+        PointList points;
+
+        readPointsByID_.bindValue(":id", item);
+
+        readPointsByID_.exec();
+        if(readPointsByID_.lastError().text() != " ")
+        {
+            qWarning() << "exec select point" << readPointsByID_.lastError().text();
+            return PointList();
+        }
+
+        while(readPointsByID_.next())
+        {
+            const Point point(readPointsByID_.value(0).toDouble());
+            points << point;
+        }
+
+        readPointsByID_.finish();
+
+        return points;
     }
-
-    query.bindValue(":id", item);
-
-    query.exec();
-    if(query.lastError().text() != " ")
-    {
-        qWarning() << "exec select point" << query.lastError().text();
-        return PointList();
-    }
-
-    while(query.next())
-    {
-        const Point point(query.value(0).toDouble());
-        points << point;
-    }
-
-    query.finish();
-
-    return points;
+    return PointList();
 }
 
 IDList SqlPointListReader::readAllItems()
 {
-    IDList allItems;
-
-    QSqlQuery query(dataBase());
-    bool querySuccess = false;
-
-    querySuccess = execQuery(query, "SELECT DISTINCT id FROM " + tableName() + "");
-
-    if(!querySuccess)
+    if(isOpen())
     {
-        return IDList();;
+        IDList allItems;
+
+        const bool querySuccess = readAllPointsIDs_.exec();
+
+        if(!querySuccess)
+        {
+            qWarning() << "exec select point ids" << readAllPointsIDs_.lastError().text();
+            return IDList();
+        }
+
+
+        while(readAllPointsIDs_.next())
+        {
+            const ID item(readAllPointsIDs_.value(0).toString());
+
+            allItems << item;
+        }
+
+        readAllPointsIDs_.finish();
+
+        return allItems;
     }
-
-    while(query.next())
-    {
-        const ID item(query.value(0).toString());
-
-        allItems << item;
-    }
-
-    query.finish();
-
-    return allItems;
+    return IDList();
 }
