@@ -8,6 +8,8 @@
 #include "../src/AverageIgnoreNullAnalysis.h"
 #include "../src/StandardDeviationAnalysis.h"
 
+#include "../src/Metatypes.h"
+
 #include "TestingUtilities.h"
 
 class TAnalysis : public QObject

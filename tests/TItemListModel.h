@@ -8,6 +8,8 @@
 #include "../src/SqlPointListReader.h"
 #include "../src/SqlPointListWriter.h"
 
+#include "../src/Metatypes.h"
+
 class TItemListModel : public QObject
 {
     Q_OBJECT

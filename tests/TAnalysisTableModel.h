@@ -13,6 +13,8 @@
 #include "../src/SqlPointListReader.h"
 #include "../src/SqlPointListWriter.h"
 
+#include "../src/Metatypes.h"
+
 
 class TAnalysisTableModel : public QObject
 {

@@ -8,6 +8,8 @@
 
 #include "../src/PointListGenerator.h"
 
+#include "../src/Metatypes.h"
+
 class TPointListGenerator : public QObject
 {
     Q_OBJECT

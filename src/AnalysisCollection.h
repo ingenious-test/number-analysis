@@ -18,7 +18,7 @@ public:
         return *this;
     }
 };
-Q_DECLARE_METATYPE(AnalysisResult)
+
 
 class AnalysisResults : public QHash<ID, AnalysisResult>
 {
@@ -34,11 +34,11 @@ public:
         return *this;
     }
 };
-Q_DECLARE_METATYPE(AnalysisResults)
+
 
 
 typedef QList<AbstractAnalysis*> AnalysisList;
-Q_DECLARE_METATYPE(AnalysisList)
+
 
 class AnalysisCollection
 {

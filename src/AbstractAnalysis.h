@@ -9,13 +9,13 @@ typedef QList<IDAnalysis> IDAnalysisList;
 
 typedef QString ID;
 typedef QList<ID> IDList;
-Q_DECLARE_METATYPE(IDList)
+
 
 typedef double Point;
 typedef QList<Point> PointList;
-Q_DECLARE_METATYPE(PointList)
+
 typedef QList<PointList> SequencePointList;
-Q_DECLARE_METATYPE(SequencePointList)
+
 
 class AbstractAnalysis
 {

@@ -8,6 +8,8 @@
 #include "../src/SqlPointListWriter.h"
 #include "TestingUtilities.h"
 
+#include "../src/Metatypes.h"
+
 class TSqlPointListReader : public QObject
 {
     Q_OBJECT

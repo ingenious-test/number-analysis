@@ -38,8 +38,6 @@ AnalysisWindow::AnalysisWindow(QWidget *parent)
     analyzeButton = new QPushButton("Провести анализ");
 
 
-
-
     QHBoxLayout* subLayout_1 = new QHBoxLayout;
     subLayout_1->addStretch();
     subLayout_1->addWidget(analyzeButton);

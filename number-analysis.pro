@@ -53,7 +53,9 @@ SOURCES += main.cpp\
     tests/TestingUtilities.cpp \
     src/DatabaseGenerator.cpp \
     tests/TPointListGenerator.cpp \
-    src/PointListGenerator.cpp
+    src/PointListGenerator.cpp \
+    tests/TPointListStorageStatistics.cpp \
+    src/PointListStorageStatistics.cpp
 
 HEADERS  += AnalysisWindow.h \
     src/StupidAnalysis.h \
@@ -81,4 +83,7 @@ HEADERS  += AnalysisWindow.h \
     benchmarks/BSqlPointListReadWrite.h \
     src/DatabaseGenerator.h \
     tests/TPointListGenerator.h \
-    src/PointListGenerator.h
+    src/PointListGenerator.h \
+    tests/TPointListStorageStatistics.h \
+    src/PointListStorageStatistics.h \
+    src/Metatypes.h

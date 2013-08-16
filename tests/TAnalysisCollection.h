@@ -9,6 +9,8 @@
 #include "../src/AverageAnalysis.h"
 #include "../src/AverageIgnoreNullAnalysis.h"
 
+#include "../src/Metatypes.h"
+
 class TAnalysisCollection : public QObject
 {
     Q_OBJECT
