@@ -4,16 +4,31 @@ PointListStorageStatistics::PointListStorageStatistics()
 {
 }
 
-void PointListStorageStatistics::appendStatistic(const IDStatistics &id, const StatisticsValue &value)
+void PointListStorageStatistics::appendStatistics(const IDStatistics &id, const StatisticsValue &value)
 {
+    if(contains(id))
+    {
+        removeStatistics(id);
+    }
+
+    statistics_.insert(id, value);
 }
+
+void PointListStorageStatistics::removeStatistics(const IDStatistics &id)
+{
+    if(contains(id))
+    {
+        statistics_.remove(id);
+    }
+}
+
 
 const int PointListStorageStatistics::size() const
 {
-    return 0;
+    return statistics_.size();
 }
 
 bool PointListStorageStatistics::contains(const IDStatistics &id) const
 {
-    return true;
+    return statistics_.contains(id);
 }

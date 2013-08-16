@@ -16,10 +16,14 @@ class PointListStorageStatistics
 public:
     PointListStorageStatistics();
 
-    void appendStatistic(const IDStatistics &id, const StatisticsValue &value);
+    void appendStatistics(const IDStatistics &id, const StatisticsValue &value);
+    void removeStatistics(const IDStatistics &id);
+
     const int size() const;
     bool contains(const IDStatistics &id) const;
 
+private:
+    QHash<IDStatistics, StatisticsValue> statistics_;
 
 };
 

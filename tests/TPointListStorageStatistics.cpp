@@ -10,6 +10,14 @@ void TPointListStorageStatistics::TestAddRemoveStatistic_data()
     QTest::addColumn<StatisticsValueList>("statisticValue");
 
     QTest::newRow("empty") << IDStatisticsList() << StatisticsValueList();
+
+    QTest::newRow("one-string")
+            << (IDStatisticsList() << IDStatistics("First"))
+            << (StatisticsValueList() << QString("0000000001"));
+
+    QTest::newRow("one-stringlist")
+            << (IDStatisticsList() << IDStatistics("First"))
+            << (StatisticsValueList() << (QStringList() << QString("1") << QString("2")));
 }
 
 void TPointListStorageStatistics::TestAddRemoveStatistic()
@@ -21,7 +29,7 @@ void TPointListStorageStatistics::TestAddRemoveStatistic()
 
     for(int i = 0; i < statisticNames.size(); i++)
     {
-        statistics.appendStatistic(statisticNames.at(i), statisticValue.at(i));
+        statistics.appendStatistics(statisticNames.at(i), statisticValue.at(i));
     }
 
 
