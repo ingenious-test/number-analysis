@@ -311,22 +311,40 @@ void TAnalysisTableModel::TestSorting_data()
                          << 0
                          << 0;
 
-    QTest::newRow("two") << AnalysisResults()
-                            .insertInc("First",
-                                       AnalysisResult()
-                                       .insertInc(StupidAnalysis().id(), 1.0)
-                                       .insertInc(AverageAnalysis().id(), 2.0))
-                            .insertInc("Second",
-                                       AnalysisResult()
-                                       .insertInc(StupidAnalysis().id(), 2.0)
-                                       .insertInc(AverageAnalysis().id(), 3.0))
-                         << (AnalysisList()
-                             << new StupidAnalysis(1.0)
-                             << new AverageAnalysis())
-                         << (IDList() << ID("Second") << ID("First"))
-                         << (IDList() << ID("First") << ID("Second"))
-                         << 0
-                         << 0;
+    QTest::newRow("two-asc") << AnalysisResults()
+                                .insertInc("First",
+                                           AnalysisResult()
+                                           .insertInc(StupidAnalysis().id(), 1.0)
+                                           .insertInc(AverageAnalysis().id(), 2.0))
+                                .insertInc("Second",
+                                           AnalysisResult()
+                                           .insertInc(StupidAnalysis().id(), 2.0)
+                                           .insertInc(AverageAnalysis().id(), 3.0))
+                             << (AnalysisList()
+                                 << new StupidAnalysis(1.0)
+                                 << new AverageAnalysis())
+                             << (IDList() << ID("Second") << ID("First"))
+                             << (IDList() << ID("First") << ID("Second"))
+                             << 0
+                             << 0;
+
+    QTest::newRow("two-desc") << AnalysisResults()
+                                 .insertInc("First",
+                                            AnalysisResult()
+                                            .insertInc(StupidAnalysis().id(), 1.0)
+                                            .insertInc(AverageAnalysis().id(), 2.0))
+                                 .insertInc("Second",
+                                            AnalysisResult()
+                                            .insertInc(StupidAnalysis().id(), 2.0)
+                                            .insertInc(AverageAnalysis().id(), 3.0))
+                              << (AnalysisList()
+                                  << new StupidAnalysis(1.0)
+                                  << new AverageAnalysis())
+                              << (IDList() << ID("First") << ID("Second"))
+                              << (IDList() << ID("Second") << ID("First"))
+
+                              << 0
+                              << 1;
 
 }
 

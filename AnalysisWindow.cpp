@@ -25,6 +25,7 @@ AnalysisWindow::AnalysisWindow(QWidget *parent)
     }
 
     analyzesView_ = new QTableView();
+    analyzesView_->setSortingEnabled(true);
 
     analyzesView_->setModel(analyzesModel_);
 

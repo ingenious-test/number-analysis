@@ -95,9 +95,27 @@ QVariant AnalysisTableModel::headerData(int section, Qt::Orientation orientation
     return QVariant();
 }
 
+bool columnIDLessThan(const ID &s1, const ID &s2)
+{
+    return s1 < s2;
+}
+
+bool columnIDMoreThan(const ID &s1, const ID &s2)
+{
+    return s1 > s2;
+}
+
 void AnalysisTableModel::sort(int column, Qt::SortOrder order)
 {
-
+    if(column == 0)
+    {
+        switch(order)
+        {
+            case Qt::AscendingOrder: qSort(items_.begin(), items_.end(), columnIDLessThan); break;
+            case Qt::DescendingOrder: qSort(items_.begin(), items_.end(), columnIDMoreThan); break;
+        }
+    }
+    reset();
 }
 
 IDAnalysisList AnalysisTableModel::getHeaders() const
