@@ -95,14 +95,29 @@ QVariant AnalysisTableModel::headerData(int section, Qt::Orientation orientation
     return QVariant();
 }
 
+void AnalysisTableModel::sort(int column, Qt::SortOrder order)
+{
+
+}
+
 IDAnalysisList AnalysisTableModel::getHeaders() const
 {
     return collection_.getIDList();
 }
 
+const IDList &AnalysisTableModel::getPointsIDs() const
+{
+    return items_;
+}
+
 const AnalysisResults &AnalysisTableModel::Results() const
 {
     return results_;
+}
+
+void AnalysisTableModel::setResults(const AnalysisResults &results)
+{
+    results_ = AnalysisResults(results);
 }
 
 void AnalysisTableModel::addAnalysis(AbstractAnalysis *analysis)

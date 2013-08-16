@@ -290,3 +290,85 @@ void TAnalysisTableModel::TestAddRemoveSql()
                       + analysisResultsToString(expectedAnalysisResults)).toStdString().c_str());
     }
 }
+
+void TAnalysisTableModel::TestSorting_data()
+{
+    QTest::addColumn<AnalysisResults>("inputResult");
+    QTest::addColumn<AnalysisList>("analyzes");
+    QTest::addColumn<IDList>("pointsIDs");
+    QTest::addColumn<IDList>("resultPointsIDs");
+    QTest::addColumn<int>("column");
+    QTest::addColumn<int>("sortType");
+
+    QTest::newRow("one") << AnalysisResults().insertInc("First",
+                                                        AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
+                                                        .insertInc(AverageAnalysis().id(), 2.0))
+                         << (AnalysisList()
+                             << new StupidAnalysis(1.0)
+                             << new AverageAnalysis())
+                         << (IDList() << ID("First"))
+                         << (IDList() << ID("First"))
+                         << 0
+                         << 0;
+
+    QTest::newRow("two") << AnalysisResults()
+                            .insertInc("First",
+                                       AnalysisResult()
+                                       .insertInc(StupidAnalysis().id(), 1.0)
+                                       .insertInc(AverageAnalysis().id(), 2.0))
+                            .insertInc("Second",
+                                       AnalysisResult()
+                                       .insertInc(StupidAnalysis().id(), 2.0)
+                                       .insertInc(AverageAnalysis().id(), 3.0))
+                         << (AnalysisList()
+                             << new StupidAnalysis(1.0)
+                             << new AverageAnalysis())
+                         << (IDList() << ID("Second") << ID("First"))
+                         << (IDList() << ID("First") << ID("Second"))
+                         << 0
+                         << 0;
+
+}
+
+void TAnalysisTableModel::TestSorting()
+{
+    QFETCH(AnalysisResults, inputResult);
+    QFETCH(AnalysisList, analyzes);
+    QFETCH(IDList, pointsIDs);
+    QFETCH(IDList, resultPointsIDs);
+    QFETCH(int, column);
+    QFETCH(int, sortType);
+
+
+    AnalysisTableModel model(0);
+
+    model.appendPointList(pointsIDs);
+
+    foreach(AbstractAnalysis* analysis, analyzes)
+    {
+        model.addAnalysis(analysis);
+        delete analysis;
+    }
+
+    model.setResults(inputResult);
+
+    model.sort(column, sortType == 0 ? Qt::AscendingOrder : Qt::DescendingOrder);
+
+    const AnalysisResults actualAnalysisResults = model.Results();
+    const AnalysisResults expectedAnalysisResults= inputResult;
+
+    bool isCompare = analysisResultsFuzzyCompare(actualAnalysisResults,expectedAnalysisResults);
+    if(!isCompare)
+    {
+        QFAIL(QString("Compare values are not the same. \nActual:\n"
+                      + analysisResultsToString(actualAnalysisResults)
+                      + "\nExpected:\n"
+                      + analysisResultsToString(expectedAnalysisResults)).toStdString().c_str());
+    }
+
+
+    const IDList actualPointsID = model.getPointsIDs();
+    const IDList expectedPointsID= resultPointsIDs;
+
+    QCOMPARE(actualPointsID, expectedPointsID);
+}

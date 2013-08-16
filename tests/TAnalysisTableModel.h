@@ -21,12 +21,16 @@ public:
     TAnalysisTableModel();
 
 
+
 private slots:
     void TestAddRemoveMoc_data();
     void TestAddRemoveMoc();
 
     void TestAddRemoveSql_data();
     void TestAddRemoveSql();
+
+    void TestSorting_data();
+    void TestSorting();
 };
 
 #endif // TANALYSISTABLEMODEL_H

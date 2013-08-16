@@ -30,9 +30,13 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation = Qt::Horizontal, int role = Qt::DisplayRole) const;
 
+    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
+
     IDAnalysisList getHeaders() const;
+    const IDList& getPointsIDs() const;
 
     const AnalysisResults& Results() const;
+    void  setResults(const AnalysisResults& results);
 
     void addAnalysis(AbstractAnalysis *analysis);
     void removeAnalysis(const QString &id);
