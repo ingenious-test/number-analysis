@@ -111,10 +111,66 @@ void AnalysisTableModel::sort(int column, Qt::SortOrder order)
     {
         switch(order)
         {
-            case Qt::AscendingOrder: qSort(items_.begin(), items_.end(), columnIDLessThan); break;
-            case Qt::DescendingOrder: qSort(items_.begin(), items_.end(), columnIDMoreThan); break;
+        case Qt::AscendingOrder: qSort(items_.begin(), items_.end(), columnIDLessThan); break;
+        case Qt::DescendingOrder: qSort(items_.begin(), items_.end(), columnIDMoreThan); break;
         }
     }
+    else
+    {
+        if(results_.isEmpty())
+        {
+            return;
+        }
+
+        if(column - 1 > collection_.size())
+        {
+            return;
+        }
+
+        const IDAnalysis& idAnalysis = collection_.getIDAt(column - 1);
+
+        for(int i = 0; i < (items_.size() - 1); i++)
+        {
+            const ID& point1ID = items_.at(i);
+            const Point& point1 =  results_.value(point1ID).value(idAnalysis);
+            int replaceIndex = -1;
+
+            Point comparisonPoint = point1;
+
+            for(int j = i + 1; j < items_.size(); j++)
+            {
+                const ID& point2ID = items_.at(j);
+                const Point& point2 =  results_.value(point2ID).value(idAnalysis);
+                bool sort = false;
+
+                if(order == Qt::AscendingOrder)
+                {
+                     sort = comparisonPoint > point2;
+
+                }
+
+                if(order == Qt::DescendingOrder)
+                {
+                    sort = comparisonPoint < point2;
+                }
+
+                if(sort)
+                {
+                    comparisonPoint = point2;
+                    replaceIndex = j;
+                }
+            }
+
+            if(replaceIndex != -1)
+            {
+                const ID item = items_.takeAt(replaceIndex);
+
+                    items_.insert(i,item);
+            }
+        }
+
+    }
+
     reset();
 }
 
