@@ -22,35 +22,35 @@ void DatabaseGenerator::generateDataBase(const QString &dataBaseName, const QStr
 
     if(writer.isOpen())
     {
-        pointList = pointListGenerator.generateConst(20, Point(0.0));
+        pointList = pointListGenerator.generateByLenghtValue(20, Point(0.0));
         writer.write(ID("twenty-zeros"), pointList);
 
-        pointList = pointListGenerator.generateConst(20, Point(3.0));
+        pointList = pointListGenerator.generateByLenghtValue(20, Point(3.0));
         writer.write(ID("twenty-triples"), pointList);
 
-        pointList = pointListGenerator.generateConst(20);
+        pointList = pointListGenerator.generateByLenghtConst(20);
         writer.write(ID("from-one-to-twenty"), pointList);
 
 
-        pointList = pointListGenerator.generateConst(10);
+        pointList = pointListGenerator.generateByLenghtConst(10);
         writer.write(ID("from-one-to-ten"), pointList);
 
-        pointList = pointListGenerator.generateConst(10, 20);
+        pointList = pointListGenerator.generateStartEnd(10, 20);
         writer.write(ID("from-ten-to-twenty"), pointList);
 
-        pointList = pointListGenerator.generateConst(40, Point(3.0));
+        pointList = pointListGenerator.generateByLenghtValue(40, Point(3.0));
         writer.write(ID("forty-triples"), pointList);
 
-        pointList = pointListGenerator.generateConst(30, Point(1.0));
+        pointList = pointListGenerator.generateByLenghtValue(30, Point(1.0));
         writer.write(ID("thirty-one"), pointList);
 
-        pointList = pointListGenerator.generateConst(20, 30);
+        pointList = pointListGenerator.generateStartEnd(20, 30);
         writer.write(ID("from-twenty-to-thirty"), pointList);
 
-        pointList = pointListGenerator.generateConst(12, 20);
+        pointList = pointListGenerator.generateStartEnd(12, 20);
         writer.write(ID("from-twelve-to-twenty"), pointList);
 
-        pointList = pointListGenerator.generateConst(2, 8);
+        pointList = pointListGenerator.generateStartEnd(2, 8);
         writer.write(ID("from-two-to-eight"), pointList);
     }
 

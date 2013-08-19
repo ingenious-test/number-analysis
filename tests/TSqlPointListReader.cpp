@@ -174,29 +174,28 @@ void TSqlPointListReader::TestWriteRead()
     }
 
     SqlPointListWriter* writer  = new SqlPointListWriter(dataBaseName, tableName);
+    for(int i = 0; i < items.size(); i++)
     {
-        int index = 0;
-        foreach(const ID& item, items)
-        {
-            writer->write(item, points[index]);
-            index++;
-        }
+        writer->write(items.at(i), points.at(i));
     }
+    delete writer;
 
     QVERIFY(QFile::exists(dataBaseName));
 
-    SqlPointListReader reader(dataBaseName, tableName);
+    SqlPointListReader* reader = new SqlPointListReader(dataBaseName, tableName);
 
-    const IDList actualAllItems = reader.readAllItems();
+    const IDList actualAllItems = reader->readAllItems();
     const IDList expectedAllItems = allItems;
-
-    QCOMPARE(actualAllItems, expectedAllItems);
 
     SequencePointList seqFromDataBase;
     foreach (const ID& item, actualAllItems)
     {
-        seqFromDataBase.append(reader.read(item));
+        seqFromDataBase.append(reader->read(item));
     }
+
+    delete reader;
+
+    QCOMPARE(actualAllItems, expectedAllItems);
 
     const SequencePointList actualPoints = seqFromDataBase;
     const SequencePointList expectedPoints = allPoints;
@@ -209,4 +208,114 @@ void TSqlPointListReader::TestWriteRead()
                       + "\nExpected:\n"
                       + sequencePointListToString(expectedPoints)).toStdString().c_str());
     }
+}
+
+void TSqlPointListReader::TestStatistics_data()
+{
+    QTest::addColumn<IDList>("items");
+    QTest::addColumn<SequencePointList>("points");
+    QTest::addColumn<IDStatistics>("statisticsID");
+    QTest::addColumn<QVariant>("statisticsValue");
+
+    QTest::newRow("max-sequence-length-id")
+            << (IDList() << "First" << "Second" << "Third")
+            << (SequencePointList()
+                << (PointList() << Point(1.0) << Point(2.0))
+                << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0))
+                << (PointList() << Point(1.0)))
+            << "max-sequence-length-id"
+            << QVariant::fromValue(QString("Second"));
+
+    QTest::newRow("max-sequence-length")
+            << (IDList() << "First" << "Second" << "Third")
+            << (SequencePointList()
+                << (PointList() << Point(1.0) << Point(2.0))
+                << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0))
+                << (PointList() << Point(1.0)))
+            << "max-sequence-length"
+            << QVariant::fromValue(3);
+
+    QTest::newRow("min-sequence-length-id")
+            << (IDList() << "First" << "Second" << "Third")
+            << (SequencePointList()
+                << (PointList() << Point(1.0) << Point(2.0))
+                << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0))
+                << (PointList() << Point(1.0)))
+            << "min-sequence-length-id"
+            << QVariant::fromValue(QString("Third"));
+
+    QTest::newRow("min-sequence-length")
+            << (IDList() << "First" << "Second" << "Third")
+            << (SequencePointList()
+                << (PointList() << Point(1.0) << Point(2.0))
+                << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0))
+                << (PointList() << Point(1.0)))
+            << "min-sequence-length"
+            << QVariant::fromValue(1);
+
+
+
+    QTest::newRow("average-sequence-length")
+            << (IDList() << "First" << "Second" << "Third" << "Four")
+            << (SequencePointList()
+                << (PointList() << Point(1.0))
+                << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0))
+                << (PointList() << Point(1.0))
+                << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0) << Point(4.0)))
+            << "average-sequence-length"
+            << QVariant::fromValue(2.25);
+
+    QTest::newRow("five-top-sequence-length")
+            << (IDList() << "First" << "Second" << "Third" << "Four" << "Five" << "Six")
+            << (SequencePointList()
+                << (PointList() << Point(1.0))
+                << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0))
+                << (PointList() << Point(1.0) << Point(2.0))
+                << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0) << Point(4.0))
+                << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0) << Point(4.0))
+                << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0) << Point(4.0)))
+            << "five-top-sequence-length"
+            << QVariant::fromValue(QStringList() << "Five" << "Four" << "Six" << "Second" << "Third");
+
+    QTest::newRow("average-null-count-points")
+            << (IDList() << "First" << "Second" << "Third")
+            << (SequencePointList()
+                << (PointList() << Point(0.0) << Point(0.0) << Point(1.0) << Point(0.0))
+                << (PointList() << Point(1.0) << Point(0.0)  << Point(1.0) << Point(1.0) << Point(0.0))
+                << (PointList() << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0)))
+            << "average-null-count-points"
+            << QVariant::fromValue(5.0 / 3.0);
+}
+
+void TSqlPointListReader::TestStatistics()
+{
+    QFETCH(IDList, items);
+    QFETCH(SequencePointList, points);
+    QFETCH(IDStatistics, statisticsID);
+    QFETCH(QVariant, statisticsValue);
+
+    const QString dataBaseName = QString(QTest::currentDataTag()) + "TestWriteRead.db";
+    const QString tableName = "Points";
+
+    if(QFile::exists(dataBaseName))
+    {
+        if(!QFile::remove(dataBaseName))
+        {
+            QFAIL("can't remove testing database");
+        }
+    }
+
+    SqlPointListWriter writer(dataBaseName, tableName);
+    for(int i = 0; i < items.size(); i++)
+    {
+        writer.write(items.at(i), points.at(i));
+    }
+
+    SqlPointListReader reader(dataBaseName, tableName);
+    PointListStorageStatistics storageStatistics = reader.statistics();
+
+    const QVariant actualStatisticValue = storageStatistics.value(statisticsID);
+    const QVariant expectedStatisticValue = statisticsValue;
+
+    QCOMPARE(actualStatisticValue, expectedStatisticValue);
 }

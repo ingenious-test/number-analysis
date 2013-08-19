@@ -48,7 +48,7 @@ void TPointListGenerator::TestGenerator()
 
     PointListGenerator pointListGenerator;
 
-    const PointList actualPoints = pointListGenerator.generateConst(lenght);
+    const PointList actualPoints = pointListGenerator.generateByLenghtConst(lenght);
     const PointList expectedPoints = resultPoints;
 
     bool isCompare = pointListFuzzyCompare(actualPoints,expectedPoints);
@@ -107,7 +107,7 @@ void TPointListGenerator::TestValueGenerator()
 
     PointListGenerator pointListGenerator;
 
-    const PointList actualPoints = pointListGenerator.generateConst(lenght, value);
+    const PointList actualPoints = pointListGenerator.generateByLenghtValue(lenght, value);
     const PointList expectedPoints = resultPoints;
 
     bool isCompare = pointListFuzzyCompare(actualPoints,expectedPoints);
@@ -152,7 +152,7 @@ void TPointListGenerator::TestStartEndGenerator()
 
     PointListGenerator pointListGenerator;
 
-    const PointList actualPoints = pointListGenerator.generateConst(start, end);
+    const PointList actualPoints = pointListGenerator.generateStartEnd(start, end);
     const PointList expectedPoints = resultPoints;
 
     bool isCompare = pointListFuzzyCompare(actualPoints,expectedPoints);

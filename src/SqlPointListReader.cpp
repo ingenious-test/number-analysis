@@ -12,7 +12,7 @@ SqlPointListReader::SqlPointListReader(const QString &dataBaseName, const QStrin
 bool SqlPointListReader::prepareQueries()
 {
     readPointsByID_ = QSqlQuery(dataBase());
-    readAllPointsIDs_ = QSqlQuery(dataBase());
+
 
     readPointsByID_.prepare("SELECT " + columnVALUE() + " FROM " + tableName() + " WHERE " + columnID() + " = :id");
     if(readPointsByID_.lastError().text() != " ")
@@ -21,10 +21,59 @@ bool SqlPointListReader::prepareQueries()
         return false;
     }
 
+    readAllPointsIDs_ = QSqlQuery(dataBase());
     readAllPointsIDs_.prepare("SELECT DISTINCT " + columnID() + " FROM " + tableName() + "");
     if(readAllPointsIDs_.lastError().text() != " ")
     {
         qWarning() << "prepare select points ids" << readAllPointsIDs_.lastError().text();
+        return false;
+    }
+
+    statisticsMaxSequenceLengthId = QSqlQuery(dataBase());
+    statisticsMaxSequenceLengthId.prepare("select id, c from (select "
+                                          + columnID() + " as id, count(*) as c from "
+                                          + tableName() + " group by id order by c desc);");
+    if(statisticsMaxSequenceLengthId.lastError().text() != " ")
+    {
+        qWarning() << "prepare select max sequence length" << statisticsMaxSequenceLengthId.lastError().text();
+        qWarning() << statisticsMaxSequenceLengthId.lastQuery();
+        return false;
+    }
+
+    statisticsMinSequenceLengthId = QSqlQuery(dataBase());
+    statisticsMinSequenceLengthId.prepare("select id, c from (select "
+                                          + columnID() + " as id, count(*) as c from "
+                                          + tableName() + " group by id order by c asc) limit 1;");
+    if(statisticsMinSequenceLengthId.lastError().text() != " ")
+    {
+        qWarning() << "prepare select min sequence length" << statisticsMinSequenceLengthId.lastError().text();
+        qWarning() << statisticsMinSequenceLengthId.lastQuery();
+        return false;
+    }
+
+    statisticsAverageSequenceLength = QSqlQuery(dataBase());
+    statisticsAverageSequenceLength.prepare("select AVG(c) from (select "
+                                            + columnID() + ", count(*) as c from "
+                                            + tableName() + " group by id)");
+    if(statisticsAverageSequenceLength.lastError().text() != " ")
+    {
+        qWarning() << "prepare select average sequence length" << statisticsAverageSequenceLength.lastError().text();
+        qWarning() << statisticsAverageSequenceLength.lastQuery();
+        return false;
+    }
+
+    statisticsAverageNullCountPoints = QSqlQuery(dataBase());
+    statisticsAverageNullCountPoints.prepare("select (select count(*) from "
+                                             + tableName() +
+                                             " where " + columnVALUE() +
+                                             " = 0) / (select count(*) from (select "
+                                             + columnID() + " from "
+                                             + tableName() +" group by "
+                                             + columnID() + "))");
+            if(statisticsAverageNullCountPoints.lastError().text() != " ")
+    {
+        qWarning() << "prepare select average null count points" << statisticsAverageNullCountPoints.lastError().text();
+        qWarning() << statisticsAverageNullCountPoints.lastQuery();
         return false;
     }
 
@@ -90,5 +139,61 @@ IDList SqlPointListReader::readAllItems()
 
 PointListStorageStatistics SqlPointListReader::statistics()
 {
+    PointListStorageStatistics storageStatistics;
 
+
+    if(statisticsMaxSequenceLengthId.exec())
+    {
+        if(statisticsMaxSequenceLengthId.first())
+        {
+
+            storageStatistics << PointListStatistics("max-sequence-length-id", statisticsMaxSequenceLengthId.value(0));
+            storageStatistics << PointListStatistics("max-sequence-length", statisticsMaxSequenceLengthId.value(1));
+
+            QStringList fiveTopSequenceIds;
+            for(int i = 0; i < 5; i++)
+            {
+                fiveTopSequenceIds << statisticsMaxSequenceLengthId.value(0).toString();
+                if(!statisticsMaxSequenceLengthId.next())
+                {
+                    break;
+                }
+            }
+
+            storageStatistics << PointListStatistics("five-top-sequence-length", fiveTopSequenceIds);
+
+        }
+    }
+
+    if(statisticsMinSequenceLengthId.exec())
+    {
+        if(statisticsMinSequenceLengthId.first())
+        {
+
+            storageStatistics << PointListStatistics("min-sequence-length-id", statisticsMinSequenceLengthId.value(0));
+            storageStatistics << PointListStatistics("min-sequence-length", statisticsMinSequenceLengthId.value(1));
+        }
+    }
+
+
+
+    if(statisticsAverageSequenceLength.exec())
+    {
+        if(statisticsAverageSequenceLength.first())
+        {
+
+            storageStatistics << PointListStatistics("average-sequence-length", statisticsAverageSequenceLength.value(0));
+        }
+    }
+
+    if(statisticsAverageNullCountPoints.exec())
+    {
+        if(statisticsAverageNullCountPoints.first())
+        {
+
+            storageStatistics << PointListStatistics("average-null-count-points", statisticsAverageSequenceLength.value(0));
+        }
+    }
+
+    return storageStatistics;
 }

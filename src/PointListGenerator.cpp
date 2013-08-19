@@ -4,7 +4,7 @@ PointListGenerator::PointListGenerator()
 {
 }
 
-PointList PointListGenerator::generateConst(const int lenght)
+PointList PointListGenerator::generateByLenghtConst(const int lenght)
 {
     PointList pointList;
 
@@ -16,7 +16,7 @@ PointList PointListGenerator::generateConst(const int lenght)
     return pointList;
 }
 
-PointList PointListGenerator::generateConst(const int lenght, const Point value)
+PointList PointListGenerator::generateByLenghtValue(const int lenght, const Point value)
 {
     PointList pointList;
 
@@ -28,7 +28,7 @@ PointList PointListGenerator::generateConst(const int lenght, const Point value)
     return pointList;
 }
 
-PointList PointListGenerator::generateConst(const int start, const int end)
+PointList PointListGenerator::generateStartEnd(const int start, const int end)
 {
     PointList pointList;
 

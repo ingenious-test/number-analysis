@@ -10,7 +10,7 @@ AnalysisWindow::AnalysisWindow(QWidget *parent)
     IDList list;
     list << "First" << "Second" << "Third";
 
-    reader_ = new /*SqlPointListReader("database.db", "points")*/ MocPointListReader(list);
+    reader_ = new SqlPointListReader("database.db", "points");
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
     QHBoxLayout* subLayout = new QHBoxLayout;

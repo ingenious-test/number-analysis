@@ -11,6 +11,7 @@ typedef QList<IDStatistics> IDStatisticsList;
 class PointListStatistics
 {
 public:
+    PointListStatistics() : id_(IDStatistics()), value_(QVariant()) {}
     PointListStatistics(const IDStatistics& id, const QVariant& value) :
         id_(id), value_(value)
     {}

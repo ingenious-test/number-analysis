@@ -20,6 +20,9 @@ public:
 private slots:
     void TestWriteRead_data();
     void TestWriteRead();
+
+    void TestStatistics_data();
+    void TestStatistics();
 };
 
 #endif // TSQLPOINTLISTREADER_H

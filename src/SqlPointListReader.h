@@ -22,6 +22,13 @@ public:
 private:
     QSqlQuery readPointsByID_;
     QSqlQuery readAllPointsIDs_;
+
+    //statistics querys
+    QSqlQuery statisticsMaxSequenceLengthId;
+    QSqlQuery statisticsMinSequenceLengthId;
+    QSqlQuery statisticsAverageSequenceLength;
+    QSqlQuery statisticsAverageNullCountPoints;
+
 };
 
 #endif // SQLPOINTLISTREADER_H
