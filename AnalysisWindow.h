@@ -4,6 +4,7 @@
 #include <QtGui/QTableView>
 #include <QtGui/QLayout>
 #include <QPushButton>
+#include <QMenuBar>
 
 #include "src/ItemListView.h"
 
@@ -15,6 +16,7 @@
 #include "src/SqlPointListReader.h"
 #include "src/SqlPointListWriter.h"
 #include "src/DatabaseGenerator.h"
+#include "src/PointListStorageStatisticsDialog.h"
 
 class AnalysisWindow : public QWidget
 {
@@ -35,9 +37,15 @@ private:
 
     AbstractPointListReader *reader_;
 
+    QMenuBar* mainMenu_;
+
+
+    void createMenu();
+
 private slots:
     void addItem(const ID &item);
     void onAnalyzeButtonClick();
+    void onStatisticsClick();
 };
 
 #endif // WIDGET_H

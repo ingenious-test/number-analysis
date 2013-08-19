@@ -4,14 +4,14 @@ PointListStorageStatistics::PointListStorageStatistics()
 {
 }
 
-void PointListStorageStatistics::appendStatistics(const IDStatistics &id, const StatisticsValue &value)
+void PointListStorageStatistics::appendStatistics(const PointListStatistics &statistics)
 {
-    if(contains(id))
+    if(contains(statistics.id()))
     {
-        removeStatistics(id);
+        removeStatistics(statistics.id());
     }
 
-    statistics_.insert(id, value);
+    statistics_.insert(statistics.id(), statistics.value());
 }
 
 void PointListStorageStatistics::removeStatistics(const IDStatistics &id)
@@ -20,6 +20,40 @@ void PointListStorageStatistics::removeStatistics(const IDStatistics &id)
     {
         statistics_.remove(id);
     }
+}
+
+const QVariant PointListStorageStatistics::value(const IDStatistics &id)
+{
+    return statistics_.value(id);
+}
+
+const QStringList PointListStorageStatistics::toString()
+{
+    QStringList result;
+    QHashIterator<IDStatistics, QVariant> value(statistics_);
+    while (value.hasNext()) {
+        value.next();
+        QString text;
+
+        qDebug() << value.value().typeName();
+
+        const QString typeName = QString(value.value().typeName());
+
+        if(typeName == "QStringList")
+        {
+            text = value.key() + " - " + qvariant_cast<QStringList>(value.value()).join(",");
+        }
+        else
+        {
+            text = value.key() + " - " + value.value().toString();
+        }
+
+
+
+        result << text;
+    }
+
+    return result;
 }
 
 

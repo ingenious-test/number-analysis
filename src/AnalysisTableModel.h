@@ -46,6 +46,9 @@ public:
     bool containsPointList(const ID& id) const;
 
 
+    static bool columnIDLessThan(const ID &s1, const ID &s2);
+    static bool columnIDMoreThan(const ID &s1, const ID &s2);
+
 protected slots:
     void analyzeAll();
     void analyze(const ID& item);

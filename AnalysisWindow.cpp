@@ -9,12 +9,15 @@ AnalysisWindow::AnalysisWindow(QWidget *parent)
 
     reader_ = new SqlPointListReader("database.db", "points");
 
-    QHBoxLayout* mainLayout = new QHBoxLayout;
+    QVBoxLayout* mainLayout = new QVBoxLayout;
+    QHBoxLayout* subLayout = new QHBoxLayout;
 
     AnalysisList analyzes;
     analyzes << new StupidAnalysis(1.0)
              << new AverageIgnoreNullAnalysis()
              << new AverageAnalysis;
+
+    this->createMenu();
 
     analyzesModel_ = new AnalysisTableModel(reader_);
 
@@ -38,17 +41,25 @@ AnalysisWindow::AnalysisWindow(QWidget *parent)
     analyzeButton = new QPushButton("Провести анализ");
 
 
-    QHBoxLayout* subLayout_1 = new QHBoxLayout;
-    subLayout_1->addStretch();
-    subLayout_1->addWidget(analyzeButton);
+    QHBoxLayout* buttonsSection = new QHBoxLayout;
+    buttonsSection->addStretch();
+    buttonsSection->addWidget(analyzeButton);
 
-    QVBoxLayout* subLayout = new QVBoxLayout;
-    subLayout->addWidget(analyzesView_);
-    subLayout->addLayout(subLayout_1);
+    QVBoxLayout* analyzesResultSectionLayout = new QVBoxLayout;
+    analyzesResultSectionLayout->addWidget(analyzesView_);
+    analyzesResultSectionLayout->addLayout(buttonsSection);
 
+    subLayout->addWidget(seqPointListView_);
+    subLayout->addLayout(analyzesResultSectionLayout);
 
-    mainLayout->addWidget(seqPointListView_);
+    mainLayout->addWidget(mainMenu_);
     mainLayout->addLayout(subLayout);
+
+    mainLayout->setSpacing(0);
+    mainLayout->setMargin(0);
+
+    subLayout->setMargin(5);
+    subLayout->setSpacing(5);
 
 
     setLayout(mainLayout);
@@ -61,6 +72,13 @@ AnalysisWindow::~AnalysisWindow()
 {
     delete reader_;
     SqlPointListInterface::removeConnection();
+}
+
+void AnalysisWindow::createMenu()
+{
+    mainMenu_ = new QMenuBar;
+
+    mainMenu_->addAction("Статисткика", this, SLOT(onStatisticsClick()));
 }
 
 void AnalysisWindow::addItem(const ID &item)
@@ -78,4 +96,17 @@ void AnalysisWindow::addItem(const ID &item)
 void AnalysisWindow::onAnalyzeButtonClick()
 {
     analyzesModel_->analyzeAll();
+}
+
+void AnalysisWindow::onStatisticsClick()
+{
+    PointListStorageStatistics statistic;
+
+    statistic << PointListStatistics("First", QString("100"))
+              << PointListStatistics("Second", (QStringList() << "1" << "2" << "3"))
+              << PointListStatistics("Third", 1.25);
+
+
+    PointListStorageStatisticsDialog dialog(statistic);
+    dialog.exec();
 }

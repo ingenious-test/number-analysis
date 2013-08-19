@@ -95,12 +95,12 @@ QVariant AnalysisTableModel::headerData(int section, Qt::Orientation orientation
     return QVariant();
 }
 
-bool columnIDLessThan(const ID &s1, const ID &s2)
+bool AnalysisTableModel::columnIDLessThan(const ID &s1, const ID &s2)
 {
     return s1 < s2;
 }
 
-bool columnIDMoreThan(const ID &s1, const ID &s2)
+bool AnalysisTableModel::columnIDMoreThan(const ID &s1, const ID &s2)
 {
     return s1 > s2;
 }

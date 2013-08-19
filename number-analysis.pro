@@ -55,7 +55,8 @@ SOURCES += main.cpp\
     tests/TPointListGenerator.cpp \
     src/PointListGenerator.cpp \
     tests/TPointListStorageStatistics.cpp \
-    src/PointListStorageStatistics.cpp
+    src/PointListStorageStatistics.cpp \
+    src/PointListStorageStatisticsDialog.cpp
 
 HEADERS  += AnalysisWindow.h \
     src/StupidAnalysis.h \
@@ -86,4 +87,5 @@ HEADERS  += AnalysisWindow.h \
     src/PointListGenerator.h \
     tests/TPointListStorageStatistics.h \
     src/PointListStorageStatistics.h \
-    src/Metatypes.h
+    src/Metatypes.h \
+    src/PointListStorageStatisticsDialog.h

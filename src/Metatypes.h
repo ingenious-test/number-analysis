@@ -13,5 +13,7 @@ Q_DECLARE_METATYPE(SequencePointList)
 Q_DECLARE_METATYPE(AnalysisResult)
 Q_DECLARE_METATYPE(AnalysisResults)
 Q_DECLARE_METATYPE(AnalysisList)
+Q_DECLARE_METATYPE(PointListStorageStatistics)
+Q_DECLARE_METATYPE(Qt::SortOrder)
 
 #endif // METATYPES_H

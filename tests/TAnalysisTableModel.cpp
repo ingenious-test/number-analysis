@@ -298,7 +298,7 @@ void TAnalysisTableModel::TestSorting_data()
     QTest::addColumn<IDList>("pointsIDs");
     QTest::addColumn<IDList>("resultPointsIDs");
     QTest::addColumn<int>("column");
-    QTest::addColumn<int>("sortType");
+    QTest::addColumn<Qt::SortOrder>("sortType");
 
     QTest::newRow("one") << AnalysisResults().insertInc("First",
                                                         AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
@@ -309,7 +309,7 @@ void TAnalysisTableModel::TestSorting_data()
                          << (IDList() << ID("First"))
                          << (IDList() << ID("First"))
                          << 0
-                         << 0;
+                         << Qt::AscendingOrder;
 
     QTest::newRow("two-asc") << AnalysisResults()
                                 .insertInc("First",
@@ -326,7 +326,7 @@ void TAnalysisTableModel::TestSorting_data()
                              << (IDList() << ID("Second") << ID("First"))
                              << (IDList() << ID("First") << ID("Second"))
                              << 0
-                             << 0;
+                             << Qt::AscendingOrder;
 
     QTest::newRow("two-desc") << AnalysisResults()
                                  .insertInc("First",
@@ -344,7 +344,7 @@ void TAnalysisTableModel::TestSorting_data()
                               << (IDList() << ID("Second") << ID("First"))
 
                               << 0
-                              << 1;
+                              << Qt::DescendingOrder;
 
     QTest::newRow("three-sortcolumn-1-asc") << AnalysisResults()
                                                .insertInc("First",
@@ -365,7 +365,7 @@ void TAnalysisTableModel::TestSorting_data()
                                             << (IDList() << ID("First") << ID("Third") << ID("Second"))
                                             << (IDList() << ID("Third") << ID("Second")  << ID("First"))
                                             << 1
-                                            << 0;
+                                            << Qt::AscendingOrder;
 
     QTest::newRow("three-sortcolumn-1-desc") << AnalysisResults()
                                                 .insertInc("First",
@@ -386,7 +386,7 @@ void TAnalysisTableModel::TestSorting_data()
                                              << (IDList() << ID("First") << ID("Third") << ID("Second"))
                                              << (IDList() << ID("Second") << ID("Third")  << ID("First"))
                                              << 1
-                                             << 1;
+                                             << Qt::DescendingOrder;
 
     QTest::newRow("four-sortcolumn-2-asc") << AnalysisResults()
                                                .insertInc("First",
@@ -411,7 +411,7 @@ void TAnalysisTableModel::TestSorting_data()
                                             << (IDList() << ID("First") << ID("Third") << ID("Second") << ID("Four"))
                                             << (IDList() << ID("Second") << ID("Four")  << ID("First") << ID("Third"))
                                             << 2
-                                            << 0;
+                                            << Qt::AscendingOrder;
 
     QTest::newRow("four-sortcolumn-2-desc") << AnalysisResults()
                                                 .insertInc("First",
@@ -436,7 +436,7 @@ void TAnalysisTableModel::TestSorting_data()
                                              << (IDList() << ID("First") << ID("Third") << ID("Second") << ID("Four"))
                                              << (IDList() << ID("Four") << ID("Second")  << ID("First") << ID("Third"))
                                              << 2
-                                             << 1;
+                                             << Qt::DescendingOrder;
 
 
 
@@ -449,7 +449,7 @@ void TAnalysisTableModel::TestSorting()
     QFETCH(IDList, pointsIDs);
     QFETCH(IDList, resultPointsIDs);
     QFETCH(int, column);
-    QFETCH(int, sortType);
+    QFETCH(Qt::SortOrder, sortType);
 
 
     AnalysisTableModel model(0);
@@ -464,7 +464,7 @@ void TAnalysisTableModel::TestSorting()
 
     model.setResults(inputResult);
 
-    model.sort(column, sortType == 0 ? Qt::AscendingOrder : Qt::DescendingOrder);
+    model.sort(column, sortType);
 
     const AnalysisResults actualAnalysisResults = model.Results();
     const AnalysisResults expectedAnalysisResults= inputResult;
