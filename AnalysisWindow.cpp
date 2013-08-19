@@ -7,7 +7,10 @@ AnalysisWindow::AnalysisWindow(QWidget *parent)
 
     databaseGenerator.generateDataBase("database.db", "points");
 
-    reader_ = new SqlPointListReader("database.db", "points");
+    IDList list;
+    list << "First" << "Second" << "Third";
+
+    reader_ = new /*SqlPointListReader("database.db", "points")*/ MocPointListReader(list);
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
     QHBoxLayout* subLayout = new QHBoxLayout;
@@ -100,13 +103,7 @@ void AnalysisWindow::onAnalyzeButtonClick()
 
 void AnalysisWindow::onStatisticsClick()
 {
-    PointListStorageStatistics statistic;
 
-    statistic << PointListStatistics("First", QString("100"))
-              << PointListStatistics("Second", (QStringList() << "1" << "2" << "3"))
-              << PointListStatistics("Third", 1.25);
-
-
-    PointListStorageStatisticsDialog dialog(statistic);
+    PointListStorageStatisticsDialog dialog(reader_->statistics());
     dialog.exec();
 }

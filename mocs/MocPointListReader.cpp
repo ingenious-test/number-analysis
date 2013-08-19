@@ -17,3 +17,18 @@ IDList MocPointListReader::readAllItems()
 {
     return table_.keys();
 }
+
+PointListStorageStatistics MocPointListReader::statistics()
+{
+    PointListStorageStatistics storageStatistics;
+
+    storageStatistics << PointListStatistics("First", 1)
+                      << PointListStatistics("Second", "2")
+                      << PointListStatistics("Third",
+                                             QVariant::fromValue(QStringList()
+                                                                 << QString("1")
+                                                                 << QString("2")
+                                                                 << QString("3")));
+
+    return storageStatistics;
+}

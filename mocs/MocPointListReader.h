@@ -12,6 +12,8 @@ public:
     PointList read(const ID &item);
     IDList readAllItems();
 
+    PointListStorageStatistics statistics();
+
 private:
     QHash<ID, PointList> table_;
 };

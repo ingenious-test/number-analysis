@@ -1,6 +1,6 @@
 #include "PointListStorageStatisticsDialog.h"
 
-PointListStorageStatisticsDialog::PointListStorageStatisticsDialog(PointListStorageStatistics &statistics, QWidget *parent) :
+PointListStorageStatisticsDialog::PointListStorageStatisticsDialog(PointListStorageStatistics statistics, QWidget *parent) :
     QDialog(parent)
 {
     QVBoxLayout* mainLayout = new QVBoxLayout;

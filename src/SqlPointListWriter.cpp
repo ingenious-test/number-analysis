@@ -23,7 +23,6 @@ void SqlPointListWriter::write(const ID &item, const PointList &points)
         if(!querySuccess)
         {
             qWarning() << "exec insert table" << writePointsByID_.lastError().text();
-            dataBase().commit();
             return;
         }
     }

@@ -87,3 +87,8 @@ IDList SqlPointListReader::readAllItems()
     }
     return IDList();
 }
+
+PointListStorageStatistics SqlPointListReader::statistics()
+{
+
+}

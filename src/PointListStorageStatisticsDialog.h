@@ -13,7 +13,7 @@ class PointListStorageStatisticsDialog : public QDialog
 {
     Q_OBJECT
 public:
-    PointListStorageStatisticsDialog(PointListStorageStatistics &statistics, QWidget *parent = 0);
+    PointListStorageStatisticsDialog(PointListStorageStatistics statistics, QWidget *parent = 0);
 
 private:
     QTextEdit* text_;

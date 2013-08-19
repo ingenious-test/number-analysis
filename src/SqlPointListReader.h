@@ -17,6 +17,8 @@ public:
     PointList read(const ID &item);
     IDList readAllItems();
 
+    PointListStorageStatistics statistics();
+
 private:
     QSqlQuery readPointsByID_;
     QSqlQuery readAllPointsIDs_;

@@ -35,8 +35,6 @@ const QStringList PointListStorageStatistics::toString()
         value.next();
         QString text;
 
-        qDebug() << value.value().typeName();
-
         const QString typeName = QString(value.value().typeName());
 
         if(typeName == "QStringList")
