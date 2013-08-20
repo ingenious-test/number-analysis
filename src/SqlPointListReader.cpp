@@ -70,10 +70,41 @@ bool SqlPointListReader::prepareQueries()
                                              + columnID() + " from "
                                              + tableName() +" group by "
                                              + columnID() + "))");
-            if(statisticsAverageNullCountPoints.lastError().text() != " ")
+    if(statisticsAverageNullCountPoints.lastError().text() != " ")
     {
         qWarning() << "prepare select average null count points" << statisticsAverageNullCountPoints.lastError().text();
         qWarning() << statisticsAverageNullCountPoints.lastQuery();
+        return false;
+    }
+
+    statisticsMaxPoint = QSqlQuery(dataBase());
+    statisticsMaxPoint.prepare("select MAX(" + columnVALUE() + ") FROM " + tableName());
+    if(statisticsMaxPoint.lastError().text() != " ")
+    {
+        qWarning() << "prepare select max point" << statisticsMaxPoint.lastError().text();
+        qWarning() << statisticsMaxPoint.lastQuery();
+        return false;
+    }
+
+    statisticsMinPoint = QSqlQuery(dataBase());
+    statisticsMinPoint.prepare("select MIN(" + columnVALUE() + ") FROM " + tableName());
+    if(statisticsMinPoint.lastError().text() != " ")
+    {
+        qWarning() << "prepare select min point" << statisticsMinPoint.lastError().text();
+        qWarning() << statisticsMinPoint.lastQuery();
+        return false;
+    }
+
+
+    statisticsFiveTopPointsValue = QSqlQuery(dataBase());
+    statisticsFiveTopPointsValue.prepare("SELECT value, count(" + columnVALUE()
+                                         + ") FROM " + tableName() + " GROUP BY "
+                                         + columnVALUE() + " ORDER BY count("
+                                         + columnVALUE() + ") DESC LIMIT 5");
+    if(statisticsFiveTopPointsValue.lastError().text() != " ")
+    {
+        qWarning() << "prepare select five top points value" << statisticsFiveTopPointsValue.lastError().text();
+        qWarning() << statisticsFiveTopPointsValue.lastQuery();
         return false;
     }
 
@@ -192,6 +223,47 @@ PointListStorageStatistics SqlPointListReader::statistics()
         {
 
             storageStatistics << PointListStatistics("average-null-count-points", statisticsAverageSequenceLength.value(0));
+        }
+    }
+
+    if(statisticsMaxPoint.exec())
+    {
+        if(statisticsMaxPoint.first())
+        {
+
+            storageStatistics << PointListStatistics("max-point", statisticsMaxPoint.value(0));
+        }
+    }
+
+    if(statisticsMinPoint.exec())
+    {
+        if(statisticsMinPoint.first())
+        {
+
+            storageStatistics << PointListStatistics("min-point", statisticsMinPoint.value(0));
+        }
+    }
+
+
+
+    if(statisticsFiveTopPointsValue.exec())
+    {
+        if(statisticsFiveTopPointsValue.first())
+        {
+
+            storageStatistics << PointListStatistics("min-point", statisticsFiveTopPointsValue.value(0));
+
+            QStringList fiveTopPointsValue;
+            for(int i = 0; i < 5; i++)
+            {
+                fiveTopPointsValue << statisticsFiveTopPointsValue.value(0).toString();
+                if(!statisticsFiveTopPointsValue.next())
+                {
+                    break;
+                }
+            }
+
+            storageStatistics << PointListStatistics("five-top-points-value", fiveTopPointsValue);
         }
     }
 

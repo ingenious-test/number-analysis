@@ -27,7 +27,12 @@ private:
     QSqlQuery statisticsMaxSequenceLengthId;
     QSqlQuery statisticsMinSequenceLengthId;
     QSqlQuery statisticsAverageSequenceLength;
-    QSqlQuery statisticsAverageNullCountPoints;
+
+    QSqlQuery statisticsAverageNullCountPoints; //not work
+
+    QSqlQuery statisticsMaxPoint;
+    QSqlQuery statisticsMinPoint;
+    QSqlQuery statisticsFiveTopPointsValue;
 
 };
 

@@ -277,14 +277,41 @@ void TSqlPointListReader::TestStatistics_data()
             << "five-top-sequence-length"
             << QVariant::fromValue(QStringList() << "Five" << "Four" << "Six" << "Second" << "Third");
 
-    QTest::newRow("average-null-count-points")
+    /*QTest::newRow("average-null-count-points")
             << (IDList() << "First" << "Second" << "Third")
             << (SequencePointList()
                 << (PointList() << Point(0.0) << Point(0.0) << Point(1.0) << Point(0.0))
                 << (PointList() << Point(1.0) << Point(0.0)  << Point(1.0) << Point(1.0) << Point(0.0))
                 << (PointList() << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0)))
             << "average-null-count-points"
-            << QVariant::fromValue(5.0 / 3.0);
+            << QVariant::fromValue(5.0 / 3.0);*/
+
+    QTest::newRow("max-point")
+                << (IDList() << "First" << "Second" << "Third")
+                << (SequencePointList()
+                    << (PointList() << Point(3.5) << Point(6.1) << Point(8.9) << Point(3.6))
+                    << (PointList() << Point(10.9) << Point(11.6)  << Point(2.3) << Point(1.1) << Point(1.8))
+                    << (PointList() << Point(13.3) << Point(12.0) << Point(10.0) << Point(1.0) << Point(2.0) << Point(3.0)))
+                << "max-point"
+                << QVariant::fromValue(13.3);
+
+    QTest::newRow("min-point")
+                << (IDList() << "First" << "Second" << "Third")
+                << (SequencePointList()
+                    << (PointList() << Point(3.5) << Point(6.1) << Point(8.9) << Point(3.6))
+                    << (PointList() << Point(10.9) << Point(11.6)  << Point(2.3) << Point(1.1) << Point(1.8))
+                    << (PointList() << Point(13.3) << Point(12.0) << Point(10.0) << Point(1.0) << Point(2.0) << Point(3.0)))
+                << "min-point"
+                << QVariant::fromValue(1.0);
+
+    QTest::newRow("five-top-points-value")
+                << (IDList() << "First" << "Second" << "Third")
+                << (SequencePointList()
+                    << (PointList() << Point(3.5) << Point(3.5) << Point(3.5) << Point(3.6)  << Point(3.6) << Point(0.2))
+                    << (PointList() << Point(1.9) << Point(1.9)  << Point(2.3) << Point(1.1) << Point(1.1) << Point(3.1))
+                    << (PointList() << Point(1.9) << Point(2.3) << Point(1.9) << Point(3.5) << Point(2.3) << Point(3.5)  << Point(1.8)))
+                << "five-top-points-value"
+                << QVariant::fromValue(QStringList() << "3.5" << "1.9" << "2.3" << "1.1" << "3.6");
 }
 
 void TSqlPointListReader::TestStatistics()
