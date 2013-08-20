@@ -117,58 +117,26 @@ void AnalysisTableModel::sort(int column, Qt::SortOrder order)
     }
     else
     {
-        if(results_.isEmpty())
+        const QString  sortingAnalysis = collection_.getIDAt(column - 1);
+
+        QList< QPair<ID, double> > resultPairs =
+                results_.project(sortingAnalysis);
+
+        switch(order)
         {
-            return;
+        case Qt::AscendingOrder: qSort(resultPairs.begin(), resultPairs.end(), sortByAnalysisLessThan); break;
+        case Qt::DescendingOrder: qSort(resultPairs.begin(), resultPairs.end(), sortByAnalysisMoreThan); break;
         }
 
-        if(column - 1 > collection_.size())
+        IDList sortedItems;
+
+        for(int i = 0; i < resultPairs.size(); ++i)
         {
-            return;
+            const QPair<ID, double> &pair = resultPairs.at(i);
+            sortedItems << pair.first;
         }
 
-        const IDAnalysis& idAnalysis = collection_.getIDAt(column - 1);
-
-        for(int i = 0; i < (items_.size() - 1); i++)
-        {
-            const ID& point1ID = items_.at(i);
-            const Point& point1 =  results_.value(point1ID).value(idAnalysis);
-            int replaceIndex = -1;
-
-            Point comparisonPoint = point1;
-
-            for(int j = i + 1; j < items_.size(); j++)
-            {
-                const ID& point2ID = items_.at(j);
-                const Point& point2 =  results_.value(point2ID).value(idAnalysis);
-                bool sort = false;
-
-                if(order == Qt::AscendingOrder)
-                {
-                     sort = comparisonPoint > point2;
-
-                }
-
-                if(order == Qt::DescendingOrder)
-                {
-                    sort = comparisonPoint < point2;
-                }
-
-                if(sort)
-                {
-                    comparisonPoint = point2;
-                    replaceIndex = j;
-                }
-            }
-
-            if(replaceIndex != -1)
-            {
-                const ID item = items_.takeAt(replaceIndex);
-
-                    items_.insert(i,item);
-            }
-        }
-
+        items_ = sortedItems;
     }
 
     reset();
@@ -255,3 +223,16 @@ void AnalysisTableModel::analyze(const ID &item)
     reset();
     results_.insertInc(item, result);
 }
+
+bool AnalysisTableModel::sortByAnalysisLessThan(const QPair<ID, double> &pair1,
+                                                const QPair<ID, double> &pair2)
+{
+    return pair1.second < pair2.second;
+}
+
+bool AnalysisTableModel::sortByAnalysisMoreThan(const QPair<ID, double> &pair1,
+                                                const QPair<ID, double> &pair2)
+{
+    return sortByAnalysisLessThan(pair2, pair1);
+}
+

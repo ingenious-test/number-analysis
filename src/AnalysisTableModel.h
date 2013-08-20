@@ -53,6 +53,11 @@ protected slots:
     void analyzeAll();
     void analyze(const ID& item);
 
+    static bool sortByAnalysisLessThan(const QPair<ID, double> &pair1,
+                                const QPair<ID, double> &pair2);
+    static bool sortByAnalysisMoreThan(const QPair<ID, double> &pair1,
+                                       const QPair<ID, double> &pair2);
+
 private:
     AnalysisResults results_;
     AnalysisCollection collection_;

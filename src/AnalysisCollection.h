@@ -33,6 +33,19 @@ public:
         insert(id, analysisResult);
         return *this;
     }
+
+    QList< QPair<ID, double> > project(const IDAnalysis &analysis) const
+    {
+        QList< QPair<ID, double> > projection;
+
+        foreach(const ID &item, keys())
+        {
+            projection << QPair<ID, double>(item, value(item).value(analysis, 0.0));
+        }
+
+        return projection;
+    }
+
 };
 
 
@@ -63,7 +76,6 @@ public:
     const int size() const;
 
     AnalysisCollection* clone();
-
 
 private:
     AnalysisCollection(const AnalysisCollection& collection);
