@@ -63,10 +63,8 @@ bool SqlPointListInterface::createTable(QSqlQuery &query)
 {
     QString queryStr = "CREATE TABLE IF NOT EXISTS "
             + tableName_ +
-            " (" + columnID() + ", " + columnNUM() + ", " + columnVALUE()
-            + ", PRIMARY KEY(" + columnID() + ", " + columnNUM() + "))";
-
-
+            " (" + columnID() + " VARCHAR, " + columnNUM() + " INT, " + columnVALUE()
+            + " REAL, PRIMARY KEY(" + columnID() + ", " + columnNUM() + "))";
 
     bool result = execQuery(query, queryStr);
     return result;

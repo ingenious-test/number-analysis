@@ -338,6 +338,16 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(1.9) << Point(2.3) << Point(1.9) << Point(3.5) << Point(2.3) << Point(3.5)  << Point(1.8)))
             << "five-top-points-value"
             << QVariant::fromValue(QStringList() << "3.5" << "1.9" << "2.3" << "1.1" << "3.6");
+
+    QTest::newRow("sequence-with-repeat-count")
+            << (IDList() << "First" << "Second" << "Third")
+            << (SequencePointList()
+                << (PointList() << Point(1.0) << Point(2.0) << Point(3.0) << Point(4.0)  << Point(5.0) << Point(6.0))
+                << (PointList() << Point(1.0) << Point(1.0)  << Point(2.0) << Point(3.0) << Point(3.0) << Point(3.0))
+                << (PointList() << Point(1.0) << Point(2.0) << Point(2.0) << Point(3.0) << Point(4.0) << Point(5.0)))
+            << "sequence-with-repeat-count"
+            << QVariant::fromValue(2);
+
 }
 
 void TSqlPointListReader::TestStatistics()

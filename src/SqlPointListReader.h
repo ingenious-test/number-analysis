@@ -40,6 +40,8 @@ private:
 
     QSqlQuery statisticsFiveTopPointsValue;
 
+    QSqlQuery statisticsSequenceWithRepeatCount;
+
 };
 
 #endif // SQLPOINTLISTREADER_H

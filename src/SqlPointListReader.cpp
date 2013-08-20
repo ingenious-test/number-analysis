@@ -147,6 +147,24 @@ bool SqlPointListReader::prepareQueries()
         return false;
     }
 
+
+    statisticsSequenceWithRepeatCount = QSqlQuery(dataBase());
+    statisticsSequenceWithRepeatCount.prepare("select count(*) from (select distinct ps1.id from "
+                                              + tableName() + " as ps1 inner join "
+                                              + tableName() + " as ps2 on ps1."
+                                              + columnID() + " = ps2."
+                                              + columnID() + " and ps1."
+                                              + columnNUM() + " = ps2."
+                                              + columnNUM() + " + 1 and ps1."
+                                              + columnVALUE() + " = ps2."
+                                              +columnVALUE() + ");");
+    if(statisticsSequenceWithRepeatCount.lastError().text() != " ")
+    {
+        qWarning() << "prepare select sequence with repeat count" << statisticsSequenceWithRepeatCount.lastError().text();
+        qWarning() << statisticsSequenceWithRepeatCount.lastQuery();
+        return false;
+    }
+
     return true;
 }
 
@@ -333,6 +351,15 @@ PointListStorageStatistics SqlPointListReader::statistics()
             }
 
             storageStatistics << PointListStatistics("five-top-points-value", fiveTopPointsValue);
+        }
+    }
+
+    if(statisticsSequenceWithRepeatCount.exec())
+    {
+        if(statisticsSequenceWithRepeatCount.first())
+        {
+
+            storageStatistics << PointListStatistics("sequence-with-repeat-count", statisticsSequenceWithRepeatCount.value(0));
         }
     }
 
