@@ -66,10 +66,9 @@ bool SqlPointListReader::prepareQueries()
     statisticsAverageNullCountPoints.prepare("select (select count(*) from "
                                              + tableName() +
                                              " where " + columnVALUE() +
-                                             " = 0) / (select count(*) from (select "
+                                             " = 0) / (select cast(count(*) as float) from (select distinct "
                                              + columnID() + " from "
-                                             + tableName() +" group by "
-                                             + columnID() + "))");
+                                             + tableName() + "))");
     if(statisticsAverageNullCountPoints.lastError().text() != " ")
     {
         qWarning() << "prepare select average null count points" << statisticsAverageNullCountPoints.lastError().text();
@@ -222,7 +221,7 @@ PointListStorageStatistics SqlPointListReader::statistics()
         if(statisticsAverageNullCountPoints.first())
         {
 
-            storageStatistics << PointListStatistics("average-null-count-points", statisticsAverageSequenceLength.value(0));
+            storageStatistics << PointListStatistics("average-null-count-points", statisticsAverageNullCountPoints.value(0));
         }
     }
 
