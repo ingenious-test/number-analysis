@@ -26,12 +26,18 @@ private:
     //statistics querys
     QSqlQuery statisticsMaxSequenceLengthId;
     QSqlQuery statisticsMinSequenceLengthId;
+
     QSqlQuery statisticsAverageSequenceLength;
 
-    QSqlQuery statisticsAverageNullCountPoints; //not work
+    QSqlQuery statisticsAverageNullCountPoints;
+    QSqlQuery statisticsAverageNoneNullCountPoints;
+
+    QSqlQuery statisticsPercentNullCountPoints;
+    QSqlQuery statisticsPercentNoneNullCountPoints;
 
     QSqlQuery statisticsMaxPoint;
     QSqlQuery statisticsMinPoint;
+
     QSqlQuery statisticsFiveTopPointsValue;
 
 };

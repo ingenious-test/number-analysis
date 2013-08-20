@@ -284,6 +284,34 @@ void TSqlPointListReader::TestStatistics_data()
             << "average-null-count-points"
             << QVariant::fromValue(5.0 / 3.0);
 
+    QTest::newRow("average-none-null-count-points")
+            << (IDList() << "First" << "Second" << "Third")
+            << (SequencePointList()
+                << (PointList() << Point(0.0) << Point(0.0) << Point(1.0) << Point(0.0))
+                << (PointList() << Point(1.0) << Point(0.0)  << Point(1.0) << Point(1.0) << Point(0.0))
+                << (PointList() << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0)))
+            << "average-none-null-count-points"
+            << QVariant::fromValue(10.0 / 3.0);
+
+
+    QTest::newRow("percent-null-count-points")
+            << (IDList() << "First" << "Second" << "Third")
+            << (SequencePointList()
+                << (PointList() << Point(0.0) << Point(0.0) << Point(1.0) << Point(0.0))
+                << (PointList() << Point(1.0) << Point(0.0)  << Point(1.0) << Point(1.0) << Point(0.0))
+                << (PointList() << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0)))
+            << "percent-null-count-points"
+            << QVariant::fromValue((5.0 / 15.0) * 100.0);
+
+    QTest::newRow("percent-none-null-count-points")
+            << (IDList() << "First" << "Second" << "Third")
+            << (SequencePointList()
+                << (PointList() << Point(0.0) << Point(0.0) << Point(1.0) << Point(0.0))
+                << (PointList() << Point(1.0) << Point(0.0)  << Point(1.0) << Point(1.0) << Point(0.0))
+                << (PointList() << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0)))
+            << "percent-none-null-count-points"
+            << QVariant::fromValue((10.0 / 15.0) * 100.0);
+
     QTest::newRow("max-point")
             << (IDList() << "First" << "Second" << "Third")
             << (SequencePointList()

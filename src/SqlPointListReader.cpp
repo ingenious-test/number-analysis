@@ -76,6 +76,46 @@ bool SqlPointListReader::prepareQueries()
         return false;
     }
 
+    statisticsAverageNoneNullCountPoints = QSqlQuery(dataBase());
+    statisticsAverageNoneNullCountPoints.prepare("select (select count(*) from "
+                                                 + tableName() +
+                                                 " where " + columnVALUE() +
+                                                 " <> 0) / (select cast(count(*) as float) from (select distinct "
+                                                 + columnID() + " from "
+                                                 + tableName() + "))");
+    if(statisticsAverageNoneNullCountPoints.lastError().text() != " ")
+    {
+        qWarning() << "prepare select average none null count points" << statisticsAverageNoneNullCountPoints.lastError().text();
+        qWarning() << statisticsAverageNoneNullCountPoints.lastQuery();
+        return false;
+    }
+
+    statisticsPercentNullCountPoints = QSqlQuery(dataBase());
+    statisticsPercentNullCountPoints.prepare("select (select count(*) from "
+                                             + tableName() +
+                                             " where " + columnVALUE() +
+                                             " = 0) / (select cast(count(*) as float) from "
+                                             + tableName() + ") * 100");
+    if(statisticsPercentNullCountPoints.lastError().text() != " ")
+    {
+        qWarning() << "prepare select average null percent points" << statisticsPercentNullCountPoints.lastError().text();
+        qWarning() << statisticsPercentNullCountPoints.lastQuery();
+        return false;
+    }
+
+    statisticsPercentNoneNullCountPoints = QSqlQuery(dataBase());
+    statisticsPercentNoneNullCountPoints.prepare("select (select count(*) from "
+                                                 + tableName() +
+                                                 " where " + columnVALUE() +
+                                                 " <> 0) / (select cast(count(*) as float) from "
+                                                 + tableName() + ") * 100");
+    if(statisticsPercentNoneNullCountPoints.lastError().text() != " ")
+    {
+        qWarning() << "prepare select average null percent points" << statisticsPercentNoneNullCountPoints.lastError().text();
+        qWarning() << statisticsPercentNoneNullCountPoints.lastQuery();
+        return false;
+    }
+
     statisticsMaxPoint = QSqlQuery(dataBase());
     statisticsMaxPoint.prepare("select MAX(" + columnVALUE() + ") FROM " + tableName());
     if(statisticsMaxPoint.lastError().text() != " ")
@@ -216,12 +256,42 @@ PointListStorageStatistics SqlPointListReader::statistics()
         }
     }
 
+
     if(statisticsAverageNullCountPoints.exec())
     {
         if(statisticsAverageNullCountPoints.first())
         {
 
             storageStatistics << PointListStatistics("average-null-count-points", statisticsAverageNullCountPoints.value(0));
+        }
+    }
+
+
+    if(statisticsAverageNoneNullCountPoints.exec())
+    {
+        if(statisticsAverageNoneNullCountPoints.first())
+        {
+
+            storageStatistics << PointListStatistics("average-none-null-count-points", statisticsAverageNoneNullCountPoints.value(0));
+        }
+    }
+
+    if(statisticsPercentNullCountPoints.exec())
+    {
+        if(statisticsPercentNullCountPoints.first())
+        {
+
+            storageStatistics << PointListStatistics("percent-null-count-points", statisticsPercentNullCountPoints.value(0));
+        }
+    }
+
+
+    if(statisticsPercentNoneNullCountPoints.exec())
+    {
+        if(statisticsPercentNoneNullCountPoints.first())
+        {
+
+            storageStatistics << PointListStatistics("percent-none-null-count-points", statisticsPercentNoneNullCountPoints.value(0));
         }
     }
 
