@@ -3,10 +3,10 @@
 #define POINTLISTSTORAGESTATISTICS_H
 
 #include <QtCore>
-#include <QList>
 
 typedef QString IDStatistics;
 typedef QList<IDStatistics> IDStatisticsList;
+
 
 class PointListStatistics
 {

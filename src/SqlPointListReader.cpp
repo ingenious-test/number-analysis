@@ -7,6 +7,9 @@ SqlPointListReader::SqlPointListReader(const QString &dataBaseName, const QStrin
     {
         qWarning() << "SqlPointListReader not open";
     }
+
+    statisticsCollection
+            << new AverageSequenceLengthStatistics(dataBaseName, tableName);
 }
 
 bool SqlPointListReader::prepareQueries()
@@ -279,157 +282,161 @@ PointListStorageStatistics SqlPointListReader::statistics()
 {
     PointListStorageStatistics storageStatistics;
 
-
-    if(statisticsMaxSequenceLengthId.exec())
+    foreach(AbstractStatictics *s, statisticsCollection)
     {
-        if(statisticsMaxSequenceLengthId.first())
-        {
-
-            storageStatistics << PointListStatistics("max-sequence-length-id", statisticsMaxSequenceLengthId.value(0));
-            storageStatistics << PointListStatistics("max-sequence-length", statisticsMaxSequenceLengthId.value(1));
-
-            QStringList fiveTopSequenceIds;
-            for(int i = 0; i < 5; i++)
-            {
-                fiveTopSequenceIds << statisticsMaxSequenceLengthId.value(0).toString();
-                if(!statisticsMaxSequenceLengthId.next())
-                {
-                    break;
-                }
-            }
-
-            storageStatistics << PointListStatistics("five-top-sequence-length", fiveTopSequenceIds);
-
-        }
+        storageStatistics << PointListStatistics(s->name(), s->exec());
     }
 
-    if(statisticsMinSequenceLengthId.exec())
-    {
-        if(statisticsMinSequenceLengthId.first())
-        {
+//    if(statisticsMaxSequenceLengthId.exec())
+//    {
+//        if(statisticsMaxSequenceLengthId.first())
+//        {
 
-            storageStatistics << PointListStatistics("min-sequence-length-id", statisticsMinSequenceLengthId.value(0));
-            storageStatistics << PointListStatistics("min-sequence-length", statisticsMinSequenceLengthId.value(1));
-        }
-    }
+//            storageStatistics << PointListStatistics("max-sequence-length-id", statisticsMaxSequenceLengthId.value(0));
+//            storageStatistics << PointListStatistics("max-sequence-length", statisticsMaxSequenceLengthId.value(1));
 
+//            QStringList fiveTopSequenceIds;
+//            for(int i = 0; i < 5; i++)
+//            {
+//                fiveTopSequenceIds << statisticsMaxSequenceLengthId.value(0).toString();
+//                if(!statisticsMaxSequenceLengthId.next())
+//                {
+//                    break;
+//                }
+//            }
 
+//            storageStatistics << PointListStatistics("five-top-sequence-length", fiveTopSequenceIds);
 
-    if(statisticsAverageSequenceLength.exec())
-    {
-        if(statisticsAverageSequenceLength.first())
-        {
+//        }
+//    }
 
-            storageStatistics << PointListStatistics("average-sequence-length", statisticsAverageSequenceLength.value(0));
-        }
-    }
+//    if(statisticsMinSequenceLengthId.exec())
+//    {
+//        if(statisticsMinSequenceLengthId.first())
+//        {
 
-
-    if(statisticsAverageNullCountPoints.exec())
-    {
-        if(statisticsAverageNullCountPoints.first())
-        {
-
-            storageStatistics << PointListStatistics("average-null-count-points", statisticsAverageNullCountPoints.value(0));
-        }
-    }
-
-
-    if(statisticsAverageNoneNullCountPoints.exec())
-    {
-        if(statisticsAverageNoneNullCountPoints.first())
-        {
-
-            storageStatistics << PointListStatistics("average-none-null-count-points", statisticsAverageNoneNullCountPoints.value(0));
-        }
-    }
-
-    if(statisticsPercentNullCountPoints.exec())
-    {
-        if(statisticsPercentNullCountPoints.first())
-        {
-
-            storageStatistics << PointListStatistics("percent-null-count-points", statisticsPercentNullCountPoints.value(0));
-        }
-    }
-
-
-    if(statisticsPercentNoneNullCountPoints.exec())
-    {
-        if(statisticsPercentNoneNullCountPoints.first())
-        {
-
-            storageStatistics << PointListStatistics("percent-none-null-count-points", statisticsPercentNoneNullCountPoints.value(0));
-        }
-    }
-
-    if(statisticsMaxPoint.exec())
-    {
-        if(statisticsMaxPoint.first())
-        {
-
-            storageStatistics << PointListStatistics("max-point", statisticsMaxPoint.value(0));
-        }
-    }
-
-    if(statisticsMinPoint.exec())
-    {
-        if(statisticsMinPoint.first())
-        {
-
-            storageStatistics << PointListStatistics("min-point", statisticsMinPoint.value(0));
-        }
-    }
+//            storageStatistics << PointListStatistics("min-sequence-length-id", statisticsMinSequenceLengthId.value(0));
+//            storageStatistics << PointListStatistics("min-sequence-length", statisticsMinSequenceLengthId.value(1));
+//        }
+//    }
 
 
 
-    if(statisticsFiveTopPointsValue.exec())
-    {
-        if(statisticsFiveTopPointsValue.first())
-        {
+//    if(statisticsAverageSequenceLength.exec())
+//    {
+//        if(statisticsAverageSequenceLength.first())
+//        {
 
-            storageStatistics << PointListStatistics("min-point", statisticsFiveTopPointsValue.value(0));
+//            storageStatistics << PointListStatistics("average-sequence-length", statisticsAverageSequenceLength.value(0));
+//        }
+//    }
 
-            QStringList fiveTopPointsValue;
-            for(int i = 0; i < 5; i++)
-            {
-                fiveTopPointsValue << statisticsFiveTopPointsValue.value(0).toString();
-                if(!statisticsFiveTopPointsValue.next())
-                {
-                    break;
-                }
-            }
 
-            storageStatistics << PointListStatistics("five-top-points-value", fiveTopPointsValue);
-        }
-    }
+//    if(statisticsAverageNullCountPoints.exec())
+//    {
+//        if(statisticsAverageNullCountPoints.first())
+//        {
 
-    if(statisticsSequenceWithRepeatCount.exec())
-    {
-        if(statisticsSequenceWithRepeatCount.first())
-        {
+//            storageStatistics << PointListStatistics("average-null-count-points", statisticsAverageNullCountPoints.value(0));
+//        }
+//    }
 
-            storageStatistics << PointListStatistics("sequence-with-repeat-count", statisticsSequenceWithRepeatCount.value(0));
-        }
-    }
 
-    if(statisticsIncSequencesCount.exec())
-    {
-        if(statisticsIncSequencesCount.first())
-        {
+//    if(statisticsAverageNoneNullCountPoints.exec())
+//    {
+//        if(statisticsAverageNoneNullCountPoints.first())
+//        {
 
-            storageStatistics << PointListStatistics("inc-sequences-count", statisticsIncSequencesCount.value(0));
-        }
-    }
+//            storageStatistics << PointListStatistics("average-none-null-count-points", statisticsAverageNoneNullCountPoints.value(0));
+//        }
+//    }
 
-    if(statisticsDecSequencesCount.exec())
-    {
-        if(statisticsDecSequencesCount.first())
-        {
+//    if(statisticsPercentNullCountPoints.exec())
+//    {
+//        if(statisticsPercentNullCountPoints.first())
+//        {
 
-            storageStatistics << PointListStatistics("dec-sequences-count", statisticsDecSequencesCount.value(0));
-        }
-    }
+//            storageStatistics << PointListStatistics("percent-null-count-points", statisticsPercentNullCountPoints.value(0));
+//        }
+//    }
+
+
+//    if(statisticsPercentNoneNullCountPoints.exec())
+//    {
+//        if(statisticsPercentNoneNullCountPoints.first())
+//        {
+
+//            storageStatistics << PointListStatistics("percent-none-null-count-points", statisticsPercentNoneNullCountPoints.value(0));
+//        }
+//    }
+
+//    if(statisticsMaxPoint.exec())
+//    {
+//        if(statisticsMaxPoint.first())
+//        {
+
+//            storageStatistics << PointListStatistics("max-point", statisticsMaxPoint.value(0));
+//        }
+//    }
+
+//    if(statisticsMinPoint.exec())
+//    {
+//        if(statisticsMinPoint.first())
+//        {
+
+//            storageStatistics << PointListStatistics("min-point", statisticsMinPoint.value(0));
+//        }
+//    }
+
+
+
+//    if(statisticsFiveTopPointsValue.exec())
+//    {
+//        if(statisticsFiveTopPointsValue.first())
+//        {
+
+//            storageStatistics << PointListStatistics("min-point", statisticsFiveTopPointsValue.value(0));
+
+//            QStringList fiveTopPointsValue;
+//            for(int i = 0; i < 5; i++)
+//            {
+//                fiveTopPointsValue << statisticsFiveTopPointsValue.value(0).toString();
+//                if(!statisticsFiveTopPointsValue.next())
+//                {
+//                    break;
+//                }
+//            }
+
+//            storageStatistics << PointListStatistics("five-top-points-value", fiveTopPointsValue);
+//        }
+//    }
+
+//    if(statisticsSequenceWithRepeatCount.exec())
+//    {
+//        if(statisticsSequenceWithRepeatCount.first())
+//        {
+
+//            storageStatistics << PointListStatistics("sequence-with-repeat-count", statisticsSequenceWithRepeatCount.value(0));
+//        }
+//    }
+
+//    if(statisticsIncSequencesCount.exec())
+//    {
+//        if(statisticsIncSequencesCount.first())
+//        {
+
+//            storageStatistics << PointListStatistics("inc-sequences-count", statisticsIncSequencesCount.value(0));
+//        }
+//    }
+
+//    if(statisticsDecSequencesCount.exec())
+//    {
+//        if(statisticsDecSequencesCount.first())
+//        {
+
+//            storageStatistics << PointListStatistics("dec-sequences-count", statisticsDecSequencesCount.value(0));
+//        }
+//    }
 
 
     return storageStatistics;

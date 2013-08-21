@@ -4,6 +4,7 @@
 
 #include "SqlPointListInterface.h"
 #include "AbstractPointListReader.h"
+#include "StatisticsCollection.h"
 
 class SqlPointListReader :
         public AbstractPointListReader,
@@ -44,6 +45,8 @@ private:
 
     QSqlQuery statisticsIncSequencesCount;
     QSqlQuery statisticsDecSequencesCount;
+
+    QList<AbstractStatictics*> statisticsCollection;
 
 };
 
