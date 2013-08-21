@@ -42,6 +42,9 @@ private:
 
     QSqlQuery statisticsSequenceWithRepeatCount;
 
+    QSqlQuery statisticsIncSequencesCount;
+    QSqlQuery statisticsDecSequencesCount;
+
 };
 
 #endif // SQLPOINTLISTREADER_H

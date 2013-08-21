@@ -30,9 +30,11 @@ bool SqlPointListReader::prepareQueries()
     }
 
     statisticsMaxSequenceLengthId = QSqlQuery(dataBase());
-    statisticsMaxSequenceLengthId.prepare("select id, c from (select "
-                                          + columnID() + " as id, count(*) as c from "
-                                          + tableName() + " group by id order by c desc);");
+    statisticsMaxSequenceLengthId.prepare("SELECT " + columnID() + ", count("
+                                          + columnVALUE() + ") FROM "
+                                          + tableName() + " GROUP BY "
+                                          + columnID() + " ORDER BY count("
+                                          + columnVALUE() + ") DESC LIMIT 5;");
     if(statisticsMaxSequenceLengthId.lastError().text() != " ")
     {
         qWarning() << "prepare select max sequence length" << statisticsMaxSequenceLengthId.lastError().text();
@@ -41,9 +43,11 @@ bool SqlPointListReader::prepareQueries()
     }
 
     statisticsMinSequenceLengthId = QSqlQuery(dataBase());
-    statisticsMinSequenceLengthId.prepare("select id, c from (select "
-                                          + columnID() + " as id, count(*) as c from "
-                                          + tableName() + " group by id order by c asc) limit 1;");
+    statisticsMinSequenceLengthId.prepare("SELECT " + columnID() + ", count("
+                                          + columnVALUE() + ") FROM "
+                                          + tableName() + " GROUP BY "
+                                          + columnID() + " ORDER BY count("
+                                          + columnVALUE() + ") ASC LIMIT 1;");
     if(statisticsMinSequenceLengthId.lastError().text() != " ")
     {
         qWarning() << "prepare select min sequence length" << statisticsMinSequenceLengthId.lastError().text();
@@ -162,6 +166,52 @@ bool SqlPointListReader::prepareQueries()
     {
         qWarning() << "prepare select sequence with repeat count" << statisticsSequenceWithRepeatCount.lastError().text();
         qWarning() << statisticsSequenceWithRepeatCount.lastQuery();
+        return false;
+    }
+
+    statisticsIncSequencesCount = QSqlQuery(dataBase());
+    statisticsIncSequencesCount.prepare("SELECT count( * ) FROM ( SELECT table1."
+                                        + columnID() + ", table1.count, table2.count FROM ( SELECT ps1."
+                                        + columnID() + " AS id, count( * ) AS count  FROM "
+                                        + tableName() + " AS ps1 INNER JOIN "
+                                        + tableName() + " AS ps2 ON ps1."
+                                        + columnID() + " = ps2."
+                                        + columnID() + " AND ps1."
+                                        + columnNUM() + " = ps2."
+                                        + columnNUM() + " + 1 WHERE ps1."
+                                        + columnVALUE() + " - ps2."
+                                        +columnVALUE() + " > 0 GROUP BY ps1."
+                                        + columnID() + ") AS table1 INNER JOIN (SELECT "
+                                        + columnID() + ", count( * ) - 1 AS count FROM "
+                                        + tableName() + " GROUP BY "
+                                        + columnID() + ") AS table2 ON table1.id = table2.id AND table1.count = table2.count);");
+    if(statisticsIncSequencesCount.lastError().text() != " ")
+    {
+        qWarning() << "prepare select increasing sequence count" << statisticsIncSequencesCount.lastError().text();
+        qWarning() << statisticsIncSequencesCount.lastQuery();
+        return false;
+    }
+
+    statisticsDecSequencesCount = QSqlQuery(dataBase());
+    statisticsDecSequencesCount.prepare("SELECT count( * ) FROM ( SELECT table1."
+                                        + columnID() + ", table1.count, table2.count FROM ( SELECT ps1."
+                                        + columnID() + " AS id, count( * ) AS count  FROM "
+                                        + tableName() + " AS ps1 INNER JOIN "
+                                        + tableName() + " AS ps2 ON ps1."
+                                        + columnID() + " = ps2."
+                                        + columnID() + " AND ps1."
+                                        + columnNUM() + " = ps2."
+                                        + columnNUM() + " + 1 WHERE ps1."
+                                        + columnVALUE() + " - ps2."
+                                        +columnVALUE() + " < 0 GROUP BY ps1."
+                                        + columnID() + ") AS table1 INNER JOIN (SELECT "
+                                        + columnID() + ", count( * ) - 1 AS count FROM "
+                                        + tableName() + " GROUP BY "
+                                        + columnID() + ") AS table2 ON table1.id = table2.id AND table1.count = table2.count);");
+    if(statisticsDecSequencesCount.lastError().text() != " ")
+    {
+        qWarning() << "prepare select decreasing sequence count" << statisticsDecSequencesCount.lastError().text();
+        qWarning() << statisticsDecSequencesCount.lastQuery();
         return false;
     }
 
@@ -362,6 +412,25 @@ PointListStorageStatistics SqlPointListReader::statistics()
             storageStatistics << PointListStatistics("sequence-with-repeat-count", statisticsSequenceWithRepeatCount.value(0));
         }
     }
+
+    if(statisticsIncSequencesCount.exec())
+    {
+        if(statisticsIncSequencesCount.first())
+        {
+
+            storageStatistics << PointListStatistics("inc-sequences-count", statisticsIncSequencesCount.value(0));
+        }
+    }
+
+    if(statisticsDecSequencesCount.exec())
+    {
+        if(statisticsDecSequencesCount.first())
+        {
+
+            storageStatistics << PointListStatistics("dec-sequences-count", statisticsDecSequencesCount.value(0));
+        }
+    }
+
 
     return storageStatistics;
 }

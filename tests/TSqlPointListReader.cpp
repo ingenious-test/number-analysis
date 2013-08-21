@@ -348,6 +348,24 @@ void TSqlPointListReader::TestStatistics_data()
             << "sequence-with-repeat-count"
             << QVariant::fromValue(2);
 
+    QTest::newRow("inc-sequences-count")
+            << (IDList() << "First" << "Second" << "Third")
+            << (SequencePointList()
+                << (PointList() << Point(1.0) << Point(2.0) << Point(3.0) << Point(4.0)  << Point(5.0) << Point(6.0))
+                << (PointList() << Point(1.0) << Point(1.0)  << Point(2.0) << Point(3.0) << Point(3.0) << Point(3.0))
+                << (PointList() << Point(1.0) << Point(2.0) << Point(5.0) << Point(7.0) << Point(10.0) << Point(15.0)))
+            << "inc-sequences-count"
+            << QVariant::fromValue(2);
+
+    QTest::newRow("dec-sequences-count")
+            << (IDList() << "First" << "Second" << "Third" << "Four")
+            << (SequencePointList()
+                << (PointList() << Point(1.0) << Point(2.0) << Point(3.0) << Point(4.0)  << Point(5.0) << Point(6.0))
+                << (PointList() << Point(10.0) << Point(7.0)  << Point(5.0) << Point(3.0) << Point(2.0) << Point(1.0))
+                << (PointList() << Point(4.0) << Point(3.0) << Point(2.0) << Point(1.0) << Point(0.0) << Point(-1.0))
+                << (PointList() << Point(1.0) << Point(1.0)  << Point(2.0) << Point(3.0) << Point(3.0) << Point(3.0)))
+            << "dec-sequences-count"
+            << QVariant::fromValue(2);
 }
 
 void TSqlPointListReader::TestStatistics()
