@@ -119,6 +119,28 @@ bool SqlPointListInterface::open()
     return false;
 }
 
+bool SqlPointListInterface::open(const QString &dataBaseName, const QString &tableName)
+{
+    if(dataBaseName.isNull())
+    {
+        qWarning() << "database name is not set";
+        open_ = false;
+        return open_;
+    }
+
+    if(tableName.isNull())
+    {
+        qWarning() << "tableName name is not set";
+        open_ = false;
+        return open_;
+    }
+
+    dataBaseName_ = dataBaseName;
+    tableName_ = tableName;
+
+    return open();
+}
+
 bool SqlPointListInterface::isOpen() const
 {
     return open_;

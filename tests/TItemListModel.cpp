@@ -110,6 +110,7 @@ void TItemListModel::TestAddRemoveSql()
     }
 
     SqlPointListWriter writer(dataBaseName, tableName);
+    writer.open();
     {
         foreach(const ID& item, list)
         {
@@ -118,6 +119,7 @@ void TItemListModel::TestAddRemoveSql()
     }
 
     SqlPointListReader reader(dataBaseName, tableName);
+    reader.open();
 
     ItemListModel model(&reader);
 

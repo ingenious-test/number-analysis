@@ -18,7 +18,7 @@ class SqlPointListInterface
     friend class TItemListModel;
 
 public:
-    SqlPointListInterface(const QString &dataBaseName, const QString &tableName);
+    SqlPointListInterface(const QString &dataBaseName = QString(), const QString &tableName = QString());
 
     virtual ~SqlPointListInterface();
 
@@ -28,6 +28,8 @@ public:
 
     virtual bool prepareQueries() = 0;
     bool isOpen() const;
+    bool open();
+    bool open(const QString &dataBaseName, const QString &tableName);
 
 
     static const ColumnsName& columnID();
@@ -36,16 +38,14 @@ public:
 
 
 protected:
-    bool open();
     bool execQuery(QSqlQuery &query, const QString& queryStr);
     bool createTable(QSqlQuery &query);
     static void removeConnection();
 
 private:
     QSqlDatabase dataBase_;
-    const QString dataBaseName_;
-
-    const QString tableName_;
+    QString dataBaseName_;
+    QString tableName_;
 
     static const QString connectionName_;
 

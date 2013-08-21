@@ -19,6 +19,7 @@ void DatabaseGenerator::generateDataBase(const QString &dataBaseName, const QStr
     }
 
     SqlPointListWriter writer(dataBaseName, tableName);
+    writer.open();
 
     if(writer.isOpen())
     {

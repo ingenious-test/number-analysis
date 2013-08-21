@@ -2,32 +2,72 @@
 
 SqlPointListWriter::SqlPointListWriter(const QString &dataBaseName, const QString &tableName) :
     SqlPointListInterface(dataBaseName, tableName)
-{   
-    if(!open())
-    {
-        qWarning() << "SqlPointListWriter not open";
-    }
+{
+
 }
 
 void SqlPointListWriter::write(const ID &item, const PointList &points)
 {
-    dataBase().transaction();
-    for(int num = 0; num < points.length(); ++num)
+    if(isOpen())
     {
-        writePointsByID_.bindValue(":id", item);
-        writePointsByID_.bindValue(":num", num);
-        writePointsByID_.bindValue(":value", points.at(num));
-
-        const bool querySuccess = writePointsByID_.exec();
-
-        if(!querySuccess)
+        dataBase().transaction();
+        for(int num = 0; num < points.length(); ++num)
         {
-            qWarning() << "exec insert table" << writePointsByID_.lastError().text();
-            return;
+            writePointsByID_.bindValue(":id", item);
+            writePointsByID_.bindValue(":num", num);
+            writePointsByID_.bindValue(":value", points.at(num));
+
+            const bool querySuccess = writePointsByID_.exec();
+
+            if(!querySuccess)
+            {
+                qWarning() << "exec insert table" << writePointsByID_.lastError().text();
+                return;
+            }
         }
+        dataBase().commit();
+        writePointsByID_.finish();
     }
-     dataBase().commit();
-     writePointsByID_.finish();
+    else
+    {
+        qWarning() << "database not open";
+    }
+}
+
+void SqlPointListWriter::write(const IDList &items, const SequencePointList &seqPoints)
+{
+    if(items.size() != seqPoints.size())
+    {
+        qWarning() << "not equal sizes";
+        return;
+    }
+
+    if(isOpen())
+    {
+        dataBase().transaction();
+        for(int i = 0; i < items.size(); i++){
+            for(int num = 0; num < seqPoints.at(i).length(); ++num)
+            {
+                writePointsByID_.bindValue(":id", items.at(i));
+                writePointsByID_.bindValue(":num", num);
+                writePointsByID_.bindValue(":value", seqPoints.at(i).at(num));
+
+                const bool querySuccess = writePointsByID_.exec();
+
+                if(!querySuccess)
+                {
+                    qWarning() << "exec insert table" << writePointsByID_.lastError().text();
+                    return;
+                }
+            }
+        }
+        dataBase().commit();
+        writePointsByID_.finish();
+    }
+    else
+    {
+        qWarning() << "database not open";
+    }
 }
 
 bool SqlPointListWriter::prepareQueries()

@@ -23,7 +23,9 @@ void BSqlPointListInterface::run()
         }
 
         SqlPointListWriter* writer = new SqlPointListWriter(dataBaseName, tableName);
-        AbstractPointListReader* reader = new SqlPointListReader(dataBaseName, tableName);
+        writer->open();
+        SqlPointListReader* reader = new SqlPointListReader(dataBaseName, tableName);
+        reader->open();
 
         delete writer;
         delete reader;

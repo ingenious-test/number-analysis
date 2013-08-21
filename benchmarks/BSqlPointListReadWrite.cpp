@@ -20,6 +20,7 @@ void BSqlPointListReadWrite::runRead()
         }
 
         SqlPointListReader* reader = new SqlPointListReader(dataBaseName, tableName);
+        reader->open();
 
         SequencePointList seqList;
         for(int j = 0; j < pointsCount_; j++)
@@ -63,6 +64,7 @@ void BSqlPointListReadWrite::runWrite()
 
 
         SqlPointListWriter* writer = new SqlPointListWriter(dataBaseName, tableName);
+        writer->open();
 
         qsrand(QTime(0,0).secsTo(QTime::currentTime()));
         for(int j = 0; j < pointsCount_; j++)

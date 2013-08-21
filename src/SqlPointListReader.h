@@ -12,11 +12,14 @@ class SqlPointListReader :
 {
 public:
     SqlPointListReader(const QString &dataBaseName, const QString &tableName);
+    ~SqlPointListReader();
 
     bool prepareQueries();
 
     PointList read(const ID &item);
     IDList readAllItems();
+
+    void appendStatistics(AbstractStatictics*& statistics);
 
     PointListStorageStatistics statistics();
 
@@ -24,29 +27,7 @@ private:
     QSqlQuery readPointsByID_;
     QSqlQuery readAllPointsIDs_;
 
-    //statistics querys
-    QSqlQuery statisticsMaxSequenceLengthId;
-    QSqlQuery statisticsMinSequenceLengthId;
-
-    QSqlQuery statisticsAverageSequenceLength;
-
-    QSqlQuery statisticsAverageNullCountPoints;
-    QSqlQuery statisticsAverageNoneNullCountPoints;
-
-    QSqlQuery statisticsPercentNullCountPoints;
-    QSqlQuery statisticsPercentNoneNullCountPoints;
-
-    QSqlQuery statisticsMaxPoint;
-    QSqlQuery statisticsMinPoint;
-
-    QSqlQuery statisticsFiveTopPointsValue;
-
-    QSqlQuery statisticsSequenceWithRepeatCount;
-
-    QSqlQuery statisticsIncSequencesCount;
-    QSqlQuery statisticsDecSequencesCount;
-
-    QList<AbstractStatictics*> statisticsCollection;
+    StatisticsList statisticsCollection;
 
 };
 

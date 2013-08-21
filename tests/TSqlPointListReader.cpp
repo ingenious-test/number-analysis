@@ -173,27 +173,27 @@ void TSqlPointListReader::TestWriteRead()
         }
     }
 
-    SqlPointListWriter* writer  = new SqlPointListWriter(dataBaseName, tableName);
+    SqlPointListWriter writer(dataBaseName, tableName);
+    writer.open();
     for(int i = 0; i < items.size(); i++)
     {
-        writer->write(items.at(i), points.at(i));
+        writer.write(items.at(i), points.at(i));
     }
-    delete writer;
 
     QVERIFY(QFile::exists(dataBaseName));
 
-    SqlPointListReader* reader = new SqlPointListReader(dataBaseName, tableName);
+    SqlPointListReader reader(dataBaseName, tableName);
+    reader.open();
 
-    const IDList actualAllItems = reader->readAllItems();
+    const IDList actualAllItems = reader.readAllItems();
     const IDList expectedAllItems = allItems;
 
     SequencePointList seqFromDataBase;
     foreach (const ID& item, actualAllItems)
     {
-        seqFromDataBase.append(reader->read(item));
+        seqFromDataBase.append(reader.read(item));
     }
 
-    delete reader;
 
     QCOMPARE(actualAllItems, expectedAllItems);
 
@@ -214,7 +214,7 @@ void TSqlPointListReader::TestStatistics_data()
 {
     QTest::addColumn<IDList>("items");
     QTest::addColumn<SequencePointList>("points");
-    QTest::addColumn<IDStatistics>("statisticsID");
+    QTest::addColumn<AbstractStatictics*>("statistics");
     QTest::addColumn<QVariant>("statisticsValue");
 
     QTest::newRow("max-sequence-length-id")
@@ -223,7 +223,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(1.0) << Point(2.0))
                 << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0))
                 << (PointList() << Point(1.0)))
-            << "max-sequence-length-id"
+            << static_cast<AbstractStatictics*>(new MaxSequenceLengthIdStatistics)
             << QVariant::fromValue(QString("Second"));
 
     QTest::newRow("max-sequence-length")
@@ -232,7 +232,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(1.0) << Point(2.0))
                 << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0))
                 << (PointList() << Point(1.0)))
-            << "max-sequence-length"
+            << static_cast<AbstractStatictics*>(new MaxSequenceLengthStatistics)
             << QVariant::fromValue(3);
 
     QTest::newRow("min-sequence-length-id")
@@ -241,7 +241,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(1.0) << Point(2.0))
                 << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0))
                 << (PointList() << Point(1.0)))
-            << "min-sequence-length-id"
+            << static_cast<AbstractStatictics*>(new MinSequenceLengthIdStatistics)
             << QVariant::fromValue(QString("Third"));
 
     QTest::newRow("min-sequence-length")
@@ -250,7 +250,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(1.0) << Point(2.0))
                 << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0))
                 << (PointList() << Point(1.0)))
-            << "min-sequence-length"
+            << static_cast<AbstractStatictics*>(new MinSequenceLengthStatistics)
             << QVariant::fromValue(1);
 
     QTest::newRow("average-sequence-length")
@@ -260,7 +260,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0))
                 << (PointList() << Point(1.0))
                 << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0) << Point(4.0)))
-            << "average-sequence-length"
+            << static_cast<AbstractStatictics*>(new AverageSequenceLengthStatistics)
             << QVariant::fromValue(2.25);
 
     QTest::newRow("five-top-sequence-length")
@@ -272,7 +272,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0) << Point(4.0))
                 << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0) << Point(4.0))
                 << (PointList() << Point(1.0) << Point(2.0)  << Point(3.0) << Point(4.0)))
-            << "five-top-sequence-length"
+            << static_cast<AbstractStatictics*>(new FiveTopSequenceLengthStatistics)
             << QVariant::fromValue(QStringList() << "Five" << "Four" << "Six" << "Second" << "Third");
 
     QTest::newRow("average-null-count-points")
@@ -281,7 +281,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(0.0) << Point(0.0) << Point(1.0) << Point(0.0))
                 << (PointList() << Point(1.0) << Point(0.0)  << Point(1.0) << Point(1.0) << Point(0.0))
                 << (PointList() << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0)))
-            << "average-null-count-points"
+            << static_cast<AbstractStatictics*>(new AverageNullCountPointsStatistics)
             << QVariant::fromValue(5.0 / 3.0);
 
     QTest::newRow("average-none-null-count-points")
@@ -290,7 +290,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(0.0) << Point(0.0) << Point(1.0) << Point(0.0))
                 << (PointList() << Point(1.0) << Point(0.0)  << Point(1.0) << Point(1.0) << Point(0.0))
                 << (PointList() << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0)))
-            << "average-none-null-count-points"
+            << static_cast<AbstractStatictics*>(new AverageNoneNullCountPointsStatistics)
             << QVariant::fromValue(10.0 / 3.0);
 
 
@@ -300,7 +300,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(0.0) << Point(0.0) << Point(1.0) << Point(0.0))
                 << (PointList() << Point(1.0) << Point(0.0)  << Point(1.0) << Point(1.0) << Point(0.0))
                 << (PointList() << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0)))
-            << "percent-null-count-points"
+            << static_cast<AbstractStatictics*>(new PercentNullCountPointsStatistics)
             << QVariant::fromValue((5.0 / 15.0) * 100.0);
 
     QTest::newRow("percent-none-null-count-points")
@@ -309,7 +309,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(0.0) << Point(0.0) << Point(1.0) << Point(0.0))
                 << (PointList() << Point(1.0) << Point(0.0)  << Point(1.0) << Point(1.0) << Point(0.0))
                 << (PointList() << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0) << Point(1.0)))
-            << "percent-none-null-count-points"
+            << static_cast<AbstractStatictics*>(new PercentNoneNullCountPointsStatistics)
             << QVariant::fromValue((10.0 / 15.0) * 100.0);
 
     QTest::newRow("max-point")
@@ -318,7 +318,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(3.5) << Point(6.1) << Point(8.9) << Point(3.6))
                 << (PointList() << Point(10.9) << Point(11.6)  << Point(2.3) << Point(1.1) << Point(1.8))
                 << (PointList() << Point(13.3) << Point(12.0) << Point(10.0) << Point(1.0) << Point(2.0) << Point(3.0)))
-            << "max-point"
+            << static_cast<AbstractStatictics*>(new MaxPointStatistics)
             << QVariant::fromValue(13.3);
 
     QTest::newRow("min-point")
@@ -327,7 +327,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(3.5) << Point(6.1) << Point(8.9) << Point(3.6))
                 << (PointList() << Point(10.9) << Point(11.6)  << Point(2.3) << Point(1.1) << Point(1.8))
                 << (PointList() << Point(13.3) << Point(12.0) << Point(10.0) << Point(1.0) << Point(2.0) << Point(3.0)))
-            << "min-point"
+            << static_cast<AbstractStatictics*>(new MinPointStatistics)
             << QVariant::fromValue(1.0);
 
     QTest::newRow("five-top-points-value")
@@ -336,7 +336,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(3.5) << Point(3.5) << Point(3.5) << Point(3.6)  << Point(3.6) << Point(0.2))
                 << (PointList() << Point(1.9) << Point(1.9)  << Point(2.3) << Point(1.1) << Point(1.1) << Point(3.1))
                 << (PointList() << Point(1.9) << Point(2.3) << Point(1.9) << Point(3.5) << Point(2.3) << Point(3.5)  << Point(1.8)))
-            << "five-top-points-value"
+            << static_cast<AbstractStatictics*>(new FiveTopPointsValueStatistics)
             << QVariant::fromValue(QStringList() << "3.5" << "1.9" << "2.3" << "1.1" << "3.6");
 
     QTest::newRow("sequence-with-repeat-count")
@@ -345,7 +345,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(1.0) << Point(2.0) << Point(3.0) << Point(4.0)  << Point(5.0) << Point(6.0))
                 << (PointList() << Point(1.0) << Point(1.0)  << Point(2.0) << Point(3.0) << Point(3.0) << Point(3.0))
                 << (PointList() << Point(1.0) << Point(2.0) << Point(2.0) << Point(3.0) << Point(4.0) << Point(5.0)))
-            << "sequence-with-repeat-count"
+            << static_cast<AbstractStatictics*>(new SequenceWithRepeatCountStatistics)
             << QVariant::fromValue(2);
 
     QTest::newRow("inc-sequences-count")
@@ -354,7 +354,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(1.0) << Point(2.0) << Point(3.0) << Point(4.0)  << Point(5.0) << Point(6.0))
                 << (PointList() << Point(1.0) << Point(1.0)  << Point(2.0) << Point(3.0) << Point(3.0) << Point(3.0))
                 << (PointList() << Point(1.0) << Point(2.0) << Point(5.0) << Point(7.0) << Point(10.0) << Point(15.0)))
-            << "inc-sequences-count"
+            << static_cast<AbstractStatictics*>(new IncSequenceCountStatistics)
             << QVariant::fromValue(2);
 
     QTest::newRow("dec-sequences-count")
@@ -364,7 +364,7 @@ void TSqlPointListReader::TestStatistics_data()
                 << (PointList() << Point(10.0) << Point(7.0)  << Point(5.0) << Point(3.0) << Point(2.0) << Point(1.0))
                 << (PointList() << Point(4.0) << Point(3.0) << Point(2.0) << Point(1.0) << Point(0.0) << Point(-1.0))
                 << (PointList() << Point(1.0) << Point(1.0)  << Point(2.0) << Point(3.0) << Point(3.0) << Point(3.0)))
-            << "dec-sequences-count"
+            << static_cast<AbstractStatictics*>(new DecSequenceCountStatistics)
             << QVariant::fromValue(2);
 }
 
@@ -372,7 +372,7 @@ void TSqlPointListReader::TestStatistics()
 {
     QFETCH(IDList, items);
     QFETCH(SequencePointList, points);
-    QFETCH(IDStatistics, statisticsID);
+    QFETCH(AbstractStatictics*, statistics);
     QFETCH(QVariant, statisticsValue);
 
     const QString dataBaseName = QString(QTest::currentDataTag()) + "TestWriteRead.db";
@@ -387,16 +387,28 @@ void TSqlPointListReader::TestStatistics()
     }
 
     SqlPointListWriter writer(dataBaseName, tableName);
+    writer.open();
     for(int i = 0; i < items.size(); i++)
     {
         writer.write(items.at(i), points.at(i));
     }
 
     SqlPointListReader reader(dataBaseName, tableName);
+    reader.appendStatistics(statistics);
+    reader.open();
+
     PointListStorageStatistics storageStatistics = reader.statistics();
 
-    const QVariant actualStatisticValue = storageStatistics.value(statisticsID);
+    statistics->open(dataBaseName, tableName);
+
+
+    const QVariant actualStatisticValue = statistics->exec();
     const QVariant expectedStatisticValue = statisticsValue;
 
     QCOMPARE(actualStatisticValue, expectedStatisticValue);
+
+    const QVariant actualStatisticReaderValue = storageStatistics.value(statistics->name());
+    const QVariant expectedStatisticReaderValue = statisticsValue;
+
+    QCOMPARE(actualStatisticReaderValue, expectedStatisticReaderValue);
 }

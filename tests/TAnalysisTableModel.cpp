@@ -234,6 +234,7 @@ void TAnalysisTableModel::TestAddRemoveSql()
     }
 
     SqlPointListWriter writer(dataBaseName, tableName);
+    writer.open();
     {
         for(int i = 0; i < pointsIDs.size(); i++)
         {
@@ -242,6 +243,7 @@ void TAnalysisTableModel::TestAddRemoveSql()
     }
 
     SqlPointListReader reader(dataBaseName, tableName);
+    reader.open();
 
     AnalysisTableModel model(&reader);
     model.appendPointList(pointsIDs);

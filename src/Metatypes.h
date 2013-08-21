@@ -6,6 +6,7 @@
 
 #include "AnalysisTableModel.h"
 #include "PointListStorageStatistics.h"
+#include "StatisticsCollection.h"
 
 Q_DECLARE_METATYPE(IDList)
 Q_DECLARE_METATYPE(PointList)
@@ -16,5 +17,6 @@ Q_DECLARE_METATYPE(AnalysisList)
 Q_DECLARE_METATYPE(PointListStorageStatistics)
 Q_DECLARE_METATYPE(PointListStatistics)
 Q_DECLARE_METATYPE(Qt::SortOrder)
+Q_DECLARE_METATYPE(AbstractStatictics*)
 
 #endif // METATYPES_H
