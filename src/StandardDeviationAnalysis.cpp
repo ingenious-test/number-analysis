@@ -17,7 +17,7 @@ double StandardDeviationAnalysis::analyze(const PointList &values) const
         return 0.0;
     }
 
-    if(values.size() == 1)
+    if(values.count() == 1)
     {
         return 0.0;
     }
@@ -26,7 +26,7 @@ double StandardDeviationAnalysis::analyze(const PointList &values) const
     double average = averageAnalysis.analyze(values);
 
     double sum = 0;
-    foreach(Point value, values)
+    foreach(Point value, values.points())
     {
         sum += qPow(value - average, 2.0);
     }

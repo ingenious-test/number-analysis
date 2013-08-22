@@ -40,6 +40,7 @@ public:
 protected:
     bool execQuery(QSqlQuery &query, const QString& queryStr);
     bool createTable(QSqlQuery &query);
+    bool createIndexes(QSqlQuery &query);
     static void removeConnection();
 
 private:

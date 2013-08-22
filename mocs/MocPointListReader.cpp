@@ -4,7 +4,7 @@ MocPointListReader::MocPointListReader(const IDList &items)
 {
     foreach(const ID &item, items)
     {
-        table_.insert(item, PointList());
+        table_.insert(item, PointList(item));
     }
 }
 

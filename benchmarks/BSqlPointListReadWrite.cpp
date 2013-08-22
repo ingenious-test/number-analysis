@@ -25,20 +25,20 @@ void BSqlPointListReadWrite::runRead()
         SequencePointList seqList;
         for(int j = 0; j < pointsCount_; j++)
         {
-            PointList pointsiD;
+            PointList points;
 
             QTime readTime;
             readTime.start();
-            pointsiD = reader->read(QString("id%1").arg(j));
+            points = reader->read(QString("id%1").arg(j));
             qWarning() << "read pointlist"
                      << QString("id%1").arg(j)
                      << " with "
-                     << pointsiD.size()
+                     << points.count()
                      << " points "
                      << readTime.elapsed() / 1000.0
                      << "seconds";
 
-            seqList.append(pointsiD);
+            seqList.append(points);
         }
 
         delete reader;
@@ -70,18 +70,18 @@ void BSqlPointListReadWrite::runWrite()
         for(int j = 0; j < pointsCount_; j++)
         {
             const int pointsCount = (qrand() % (500) + 1);
-            PointList pointsiD;
+            PointList points(QString("id%1").arg(j));
             for(int pointNum = 0; pointNum < pointsCount; pointNum++)
             {
-                pointsiD << pointNum;
+                points << pointNum;
             }
 
 
             QTime writeTime;
             writeTime.start();
-            writer->write(QString("id%1").arg(j), pointsiD);
+            writer->write(points);
             qWarning() << "write pointlist"
-                     << QString("id%1").arg(j)
+                     << points.id()
                      << " with "
                      << pointsCount
                      << " points "

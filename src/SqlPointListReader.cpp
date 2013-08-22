@@ -43,7 +43,7 @@ PointList SqlPointListReader::read(const ID &item)
 {
     if(isOpen())
     {
-        PointList points;
+        PointList points(item);
 
         readPointsByID_.bindValue(":id", item);
 

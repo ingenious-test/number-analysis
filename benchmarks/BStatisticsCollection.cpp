@@ -25,15 +25,13 @@ void BStatisticsCollection::generateDatabase(const int seqCount, const int point
     SqlPointListWriter writer(dataBaseName_, tableName_);
     writer.open();
     SequencePointList seqPoints;
-    IDList items;
     for(int i = 0; i < seqCount; i++)
     {
-        PointList pointList;
+        PointList pointList(QString("id%1").arg(i));
         for(int j = 0; j < pointsCount; j++)
         {
             pointList << Point(j);
         }
-        items << QString("id%1").arg(i);
         seqPoints << pointList;
         qDebug() << i << " / " << seqCount;
     }
@@ -41,7 +39,7 @@ void BStatisticsCollection::generateDatabase(const int seqCount, const int point
 
     qWarning() << "----Start Write to DataBase----";
     QTime time(QTime::currentTime());
-    writer.write(items, seqPoints);
+    writer.write(seqPoints);
     const int timeElapsed = time.secsTo(QTime::currentTime());
     qWarning() << "----End Write to DataBase----";
 

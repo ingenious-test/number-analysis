@@ -6,14 +6,20 @@ SqlPointListWriter::SqlPointListWriter(const QString &dataBaseName, const QStrin
 
 }
 
-void SqlPointListWriter::write(const ID &item, const PointList &points)
+void SqlPointListWriter::write(const PointList &points)
 {
+    if(!points.isValid())
+    {
+        qWarning() << "Point list do not valid";
+        return ;
+    }
+
     if(isOpen())
     {
         dataBase().transaction();
-        for(int num = 0; num < points.length(); ++num)
+        for(int num = 0; num < points.count(); ++num)
         {
-            writePointsByID_.bindValue(":id", item);
+            writePointsByID_.bindValue(":id", points.id());
             writePointsByID_.bindValue(":num", num);
             writePointsByID_.bindValue(":value", points.at(num));
 
@@ -34,21 +40,27 @@ void SqlPointListWriter::write(const ID &item, const PointList &points)
     }
 }
 
-void SqlPointListWriter::write(const IDList &items, const SequencePointList &seqPoints)
+void SqlPointListWriter::write(const SequencePointList &seqPoints)
 {
-    if(items.size() != seqPoints.size())
+    if(seqPoints.isEmpty())
     {
-        qWarning() << "not equal sizes";
+        qWarning() << "empty SequencePointList";
+        return;
+    }
+
+    if(!seqPoints.isValid())
+    {
+        qWarning() << "not valid SequencePointList";
         return;
     }
 
     if(isOpen())
     {
         dataBase().transaction();
-        for(int i = 0; i < items.size(); i++){
-            for(int num = 0; num < seqPoints.at(i).length(); ++num)
+        for(int i = 0; i < seqPoints.count(); i++){
+            for(int num = 0; num < seqPoints.at(i).count(); ++num)
             {
-                writePointsByID_.bindValue(":id", items.at(i));
+                writePointsByID_.bindValue(":id",  seqPoints.at(i).id());
                 writePointsByID_.bindValue(":num", num);
                 writePointsByID_.bindValue(":value", seqPoints.at(i).at(num));
 

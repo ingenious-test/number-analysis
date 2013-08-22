@@ -4,7 +4,7 @@ QString sequencePointListToString(const SequencePointList &spl)
 {
     QString stringRepresentation;
 
-    foreach(const PointList &pl, spl)
+    foreach(const PointList &pl, spl.sequencesPoints())
     {
         stringRepresentation += "(" + pointListToString(pl) + ")\n";
     }
@@ -15,26 +15,27 @@ QString sequencePointListToString(const SequencePointList &spl)
 QString pointListToString(const PointList &pl)
 {
     QStringList pointsRepresentation;
-    foreach(const Point &p, pl)
+    foreach(const Point &p, pl.points())
     {
         pointsRepresentation << QString::number(p);
     }
-    return pointsRepresentation.join(",");
+    return pl.id() + " - " + pointsRepresentation.join(",");
 }
 
 bool pointListFuzzyCompare(const PointList& actual, const PointList& expected)
 {
-    const int sizeActual = actual.size();
-    const int sizeExpected = expected.size();
+    const int sizeActual = actual.count();
+    const int sizeExpected = expected.count();
 
     if(sizeActual != sizeExpected)
     {
         return false;
     }
 
-    for(int i = 0; i < actual.size(); i++)
+    for(int i = 0; i < actual.count(); i++)
     {
-        bool isCompare = fuzzyCompare(actual[i],expected[i]);
+        bool isCompare = fuzzyCompare(actual[i],expected[i]) && (actual.id() == expected.id());
+
         if(!isCompare)
         {
             return false;
@@ -46,15 +47,15 @@ bool pointListFuzzyCompare(const PointList& actual, const PointList& expected)
 
 bool seqPointListFuzzyCompare(const SequencePointList& actual, const SequencePointList& expected)
 {
-    const int sizeActual = actual.size();
-    const int sizeExpected = expected.size();
+    const int sizeActual = actual.count();
+    const int sizeExpected = expected.count();
 
     if(sizeActual != sizeExpected)
     {
         return false;
     }
 
-    for(int i = 0; i < actual.size(); i++)
+    for(int i = 0; i < actual.count(); i++)
     {
         bool isCompare = pointListFuzzyCompare(actual[i], expected[i]);
         if(!isCompare)

@@ -67,6 +67,19 @@ bool SqlPointListInterface::createTable(QSqlQuery &query)
             + " REAL, PRIMARY KEY(" + columnID() + ", " + columnNUM() + "))";
 
     bool result = execQuery(query, queryStr);
+
+    return result;
+}
+
+bool SqlPointListInterface::createIndexes(QSqlQuery &query)
+{
+    QString queryStr = "CREATE INDEX IF NOT EXISTS id1 ON " + tableName() + " ( "
+            + columnID() + ", "
+            + columnNUM() + ", "
+            + columnVALUE() +");";
+
+    bool result = execQuery(query, queryStr);
+
     return result;
 }
 
@@ -103,6 +116,13 @@ bool SqlPointListInterface::open()
 
     const bool createTableSuccess = createTable(query);
     if(!createTableSuccess)
+    {
+        open_ = false;
+        return false;
+    }
+
+    const bool createIndexesSuccess = createIndexes(query);
+    if(!createIndexesSuccess)
     {
         open_ = false;
         return false;

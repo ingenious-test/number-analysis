@@ -20,7 +20,7 @@ double AverageIgnoreNullAnalysis::analyze(const PointList &values) const
     const double sum = AbstractAnalysis::listSum(values);
     int length = 0;
 
-    foreach(const Point value, values)
+    foreach(const Point value, values.points())
     {
         if(value != 0)
         {

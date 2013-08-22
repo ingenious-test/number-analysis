@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
     qDebug() << "\r\n";
 
     BStatisticsCollection  bStatisticsCollection;
-    bStatisticsCollection.generateDatabase(100000, 200);
+    bStatisticsCollection.generateDatabase(20000, 200);
     bStatisticsCollection.statistics();
 #endif  
 

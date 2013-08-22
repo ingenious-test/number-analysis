@@ -9,7 +9,7 @@ AbstractAnalysis::AbstractAnalysis(const IDAnalysis &id) :
 double AbstractAnalysis::listSum(const PointList &list)
 {
     double sum = 0.0;
-    foreach(const Point e, list)
+    foreach(const Point e, list.points())
     {
         sum += e;
     }

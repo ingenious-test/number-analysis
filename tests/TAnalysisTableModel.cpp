@@ -154,21 +154,19 @@ void TAnalysisTableModel::TestAddRemoveMoc()
 void TAnalysisTableModel::TestAddRemoveSql_data()
 {
     QTest::addColumn<AnalysisList>("analyzes");
-    QTest::addColumn<IDList>("pointsIDs");
     QTest::addColumn<SequencePointList>("points");
     QTest::addColumn<IDList>("resultPointsIDs");
     QTest::addColumn<IDAnalysisList>("analyzesID");
     QTest::addColumn<AnalysisResults>("analyzesResult");
 
 
-    QTest::newRow("empty") << AnalysisList() << IDList() << SequencePointList() << IDList()  << IDAnalysisList() << AnalysisResults();
+    QTest::newRow("empty") << AnalysisList() << SequencePointList() << IDList()  << IDAnalysisList() << AnalysisResults();
 
     QTest::newRow("one") << (AnalysisList()
                              << new StupidAnalysis(1.0)
                              << new AverageAnalysis())
-                         << (IDList() << "First")
                          << (SequencePointList()
-                             << (PointList() << Point(1.0) << Point(2.0) << Point(3.0)))
+                             << (PointList("First") << Point(1.0) << Point(2.0) << Point(3.0)))
                          << (IDList() << "First")
                          << (IDAnalysisList() <<StupidAnalysis().id() << AverageAnalysis().id())
                          << AnalysisResults().insertInc("First",
@@ -178,13 +176,13 @@ void TAnalysisTableModel::TestAddRemoveSql_data()
     QTest::newRow("two") << (AnalysisList()
                              << new StupidAnalysis(1.0)
                              << new AverageAnalysis())
-                         << (IDList() << "First" << "Second")
                          << (SequencePointList()
-                             << (PointList() << Point(11.0) << Point(2.3) << Point(3.4))
-                             << (PointList() << Point(10.0) << Point(13.0)))
+                             << (PointList("First") << Point(11.0) << Point(2.3) << Point(3.4))
+                             << (PointList("Second") << Point(10.0) << Point(13.0)))
                          << (IDList() << "First" << "Second")
                          << (IDAnalysisList() <<StupidAnalysis().id() << AverageAnalysis().id())
-                         << AnalysisResults().insertInc("First",
+                         << AnalysisResults()
+                            .insertInc("First",
                                                         AnalysisResult().insertInc(StupidAnalysis().id(), 1.0)
                                                         .insertInc(AverageAnalysis().id(), (11.0 + 2.3 + 3.4) / 3.0))
                             .insertInc("Second",
@@ -194,11 +192,10 @@ void TAnalysisTableModel::TestAddRemoveSql_data()
     QTest::newRow("three") << (AnalysisList()
                                << new StupidAnalysis(1.0)
                                << new AverageAnalysis())
-                           << (IDList() << "First" << "Second" << "Third")
                            << (SequencePointList()
-                               << (PointList() << Point(11.1) << Point(2.3))
-                               << (PointList() << Point(12.0) << Point(13.0))
-                               << (PointList() << Point(13.4) << Point(12.0)))
+                               << (PointList("First") << Point(11.1) << Point(2.3))
+                               << (PointList("Second") << Point(12.0) << Point(13.0))
+                               << (PointList("Third") << Point(13.4) << Point(12.0)))
                            << (IDList() << "First" << "Second" << "Third")
                            << (IDAnalysisList() << StupidAnalysis().id() << AverageAnalysis().id())
                            <<  AnalysisResults()
@@ -216,7 +213,6 @@ void TAnalysisTableModel::TestAddRemoveSql_data()
 void TAnalysisTableModel::TestAddRemoveSql()
 {
     QFETCH(AnalysisList, analyzes);
-    QFETCH(IDList, pointsIDs);
     QFETCH(SequencePointList, points);
     QFETCH(IDList, resultPointsIDs);
     QFETCH(IDAnalysisList, analyzesID);
@@ -235,18 +231,14 @@ void TAnalysisTableModel::TestAddRemoveSql()
 
     SqlPointListWriter writer(dataBaseName, tableName);
     writer.open();
-    {
-        for(int i = 0; i < pointsIDs.size(); i++)
-        {
-            writer.write(pointsIDs.at(i), points.at(i));
-        }
-    }
+    writer.write(points);
+
 
     SqlPointListReader reader(dataBaseName, tableName);
     reader.open();
 
     AnalysisTableModel model(&reader);
-    model.appendPointList(pointsIDs);
+    model.appendPointList(points.getPointListIDs());
 
     foreach(AbstractAnalysis* analysis, analyzes)
     {

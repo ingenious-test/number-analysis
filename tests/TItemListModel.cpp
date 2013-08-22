@@ -114,7 +114,7 @@ void TItemListModel::TestAddRemoveSql()
     {
         foreach(const ID& item, list)
         {
-            writer.write(item, PointList() << Point(1.0));
+            writer.write(PointList(item) << Point(1.0));
         }
     }
 
