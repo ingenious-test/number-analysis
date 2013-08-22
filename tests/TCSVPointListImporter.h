@@ -2,9 +2,12 @@
 
 #define TCSVPOINTLISTIMPORTER_H
 
-#include "QtTest"
+#include <QTest>
 
 #include "../src/Metatypes.h"
+#include "../src/CSVPointListImporter.h"
+#include "../src/SqlPointListReader.h"
+#include "TestingUtilities.h"
 
 class TCSVPointListImporter : public QObject
 {
@@ -13,8 +16,13 @@ public:
     TCSVPointListImporter();
 
 private slots:
-    void TestImport_data();
-    void TestImport();
+    void TestParseLine_data();
+    void TestParseLine();
+
+    void TestImportSinglePointList_data();
+    void TestImportSinglePointList();
+
+
 };
 
 #endif // TCSVPOINTLISTIMPORTER_H

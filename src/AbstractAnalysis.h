@@ -34,6 +34,49 @@ public:
 
     inline void append(const Point& point) {list_.append(point);}
 
+
+    QString toString() const
+    {
+        QStringList pointsRepresentation;
+        foreach(const Point &p, list_)
+        {
+            pointsRepresentation << QString::number(p);
+        }
+        return pointsRepresentation.join(",");
+    }
+
+    static bool fuzzyCompare(const PointList& actual, const PointList& expected)
+    {
+        const int sizeActual = actual.count();
+        const int sizeExpected = expected.count();
+
+        if(sizeActual != sizeExpected)
+        {
+            return false;
+        }
+
+        for(int i = 0; i < actual.count(); i++)
+        {
+            bool isCompare = fuzzyComparePoints(actual[i],expected[i])
+                    && (actual.id() == expected.id());
+
+            if(!isCompare)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    static bool fuzzyComparePoints(const Point actual, const Point expected)
+   {
+       const double eps = 0.0001;
+       const bool result = (qAbs(actual - expected)  <= eps);
+       return result;
+   }
+
+
     inline const Point &operator[](int i) const { return list_[i];}
     inline Point &operator[](int i) { return list_[i];}
 
@@ -69,6 +112,42 @@ class SequencePointList
 
         return true;
     }
+
+    QString toString() const
+    {
+        QString stringRepresentation;
+
+        foreach(const PointList &pl, sequencsePoints_)
+        {
+            stringRepresentation += pl.id() + "(" + pl.toString() + ")\n";
+        }
+
+        return stringRepresentation;
+    }
+
+    static bool fuzzyCompare(const SequencePointList& actual, const SequencePointList& expected)
+    {
+        const int sizeActual = actual.count();
+        const int sizeExpected = expected.count();
+
+        if(sizeActual != sizeExpected)
+        {
+            return false;
+        }
+
+        for(int i = 0; i < actual.count(); i++)
+        {
+            bool isCompare = PointList::fuzzyCompare(actual[i], expected[i]);
+            if(!isCompare)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
 
     inline SequencePointList &operator<< (const PointList &pointList)
     { append(pointList); return *this; }

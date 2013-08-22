@@ -50,7 +50,6 @@ SOURCES += main.cpp\
     src/SqlPointListInterface.cpp \
     benchmarks/BSqlPointListInterface.cpp \
     benchmarks/BSqlPointListReadWrite.cpp \
-    tests/TestingUtilities.cpp \
     src/DatabaseGenerator.cpp \
     tests/TPointListGenerator.cpp \
     src/PointListGenerator.cpp \
@@ -58,6 +57,7 @@ SOURCES += main.cpp\
     src/PointListStorageStatistics.cpp \
     src/PointListStorageStatisticsDialog.cpp \
     benchmarks/BStatisticsCollection.cpp \
+    src/CSVPointListImporter.cpp \
     tests/TCSVPointListImporter.cpp
 
 HEADERS  += AnalysisWindow.h \
@@ -93,4 +93,5 @@ HEADERS  += AnalysisWindow.h \
     src/PointListStorageStatisticsDialog.h \
     src/StatisticsCollection.h \
     benchmarks/BStatisticsCollection.h \
+    src/CSVPointListImporter.h \
     tests/TCSVPointListImporter.h

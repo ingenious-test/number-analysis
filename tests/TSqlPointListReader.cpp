@@ -169,13 +169,13 @@ void TSqlPointListReader::TestWriteRead()
     const SequencePointList actualPoints = seqFromDataBase;
     const SequencePointList expectedPoints = allPoints;
 
-    bool isCompare = seqPointListFuzzyCompare(actualPoints,expectedPoints);
+    bool isCompare = SequencePointList::fuzzyCompare(actualPoints,expectedPoints);
     if(!isCompare)
     {
         QFAIL(QString("Compare values are not the same. \nActual:\n"
-                      + sequencePointListToString(actualPoints)
+                      + actualPoints.toString()
                       + "\nExpected:\n"
-                      + sequencePointListToString(expectedPoints)).toStdString().c_str());
+                      + expectedPoints.toString()).toStdString().c_str());
     }
 }
 

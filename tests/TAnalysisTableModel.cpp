@@ -141,13 +141,13 @@ void TAnalysisTableModel::TestAddRemoveMoc()
     const AnalysisResults actualAnalysisResults = model.Results();
     const AnalysisResults expectedAnalysisResults= analyzesResult;
 
-    bool isCompare = analysisResultsFuzzyCompare(actualAnalysisResults,expectedAnalysisResults);
+    bool isCompare = AnalysisResults::fuzzyCompare(actualAnalysisResults,expectedAnalysisResults);
     if(!isCompare)
     {
         QFAIL(QString("Compare values are not the same. \nActual:\n"
-                      + analysisResultsToString(actualAnalysisResults)
+                      + actualAnalysisResults.toString()
                       + "\nExpected:\n"
-                      + analysisResultsToString(expectedAnalysisResults)).toStdString().c_str());
+                      + expectedAnalysisResults.toString()).toStdString().c_str());
     }
 }
 
@@ -275,13 +275,13 @@ void TAnalysisTableModel::TestAddRemoveSql()
     const AnalysisResults actualAnalysisResults = model.Results();
     const AnalysisResults expectedAnalysisResults= analyzesResult;
 
-    bool isCompare = analysisResultsFuzzyCompare(actualAnalysisResults,expectedAnalysisResults);
+    bool isCompare = AnalysisResults::fuzzyCompare(actualAnalysisResults,expectedAnalysisResults);
     if(!isCompare)
     {
         QFAIL(QString("Compare values are not the same. \nActual:\n"
-                      + analysisResultsToString(actualAnalysisResults)
+                      + actualAnalysisResults.toString()
                       + "\nExpected:\n"
-                      + analysisResultsToString(expectedAnalysisResults)).toStdString().c_str());
+                      + expectedAnalysisResults.toString()).toStdString().c_str());
     }
 }
 
@@ -463,13 +463,13 @@ void TAnalysisTableModel::TestSorting()
     const AnalysisResults actualAnalysisResults = model.Results();
     const AnalysisResults expectedAnalysisResults= inputResult;
 
-    bool isCompare = analysisResultsFuzzyCompare(actualAnalysisResults,expectedAnalysisResults);
+    bool isCompare = AnalysisResults::fuzzyCompare(actualAnalysisResults,expectedAnalysisResults);
     if(!isCompare)
     {
         QFAIL(QString("Compare values are not the same. \nActual:\n"
-                      + analysisResultsToString(actualAnalysisResults)
+                      + actualAnalysisResults.toString()
                       + "\nExpected:\n"
-                      + analysisResultsToString(expectedAnalysisResults)).toStdString().c_str());
+                      + expectedAnalysisResults.toString()).toStdString().c_str());
     }
 
 

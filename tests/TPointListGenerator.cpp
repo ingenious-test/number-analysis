@@ -51,13 +51,15 @@ void TPointListGenerator::TestGenerator()
     const PointList actualPoints = pointListGenerator.generateByLenghtConst(lenght);
     const PointList expectedPoints = resultPoints;
 
-    bool isCompare = pointListFuzzyCompare(actualPoints,expectedPoints);
+    bool isCompare = PointList::fuzzyCompare(actualPoints,expectedPoints);
     if(!isCompare)
     {
         QFAIL(QString("Compare values are not the same. \nActual:\n"
-                      + pointListToString(actualPoints)
+                      + actualPoints.id() + " - "
+                      + actualPoints.toString()
                       + "\nExpected:\n"
-                      + pointListToString(expectedPoints)).toStdString().c_str());
+                      + expectedPoints.id() + " - "
+                      + expectedPoints.toString()).toStdString().c_str());
     }
 }
 
@@ -110,13 +112,15 @@ void TPointListGenerator::TestValueGenerator()
     const PointList actualPoints = pointListGenerator.generateByLenghtValue(lenght, value);
     const PointList expectedPoints = resultPoints;
 
-    bool isCompare = pointListFuzzyCompare(actualPoints,expectedPoints);
+    bool isCompare = PointList::fuzzyCompare(actualPoints,expectedPoints);
     if(!isCompare)
     {
         QFAIL(QString("Compare values are not the same. \nActual:\n"
-                      + pointListToString(actualPoints)
+                      + actualPoints.id() + " - "
+                      + actualPoints.toString()
                       + "\nExpected:\n"
-                      + pointListToString(expectedPoints)).toStdString().c_str());
+                      + expectedPoints.id() + " - "
+                      + expectedPoints.toString()).toStdString().c_str());
     }
 }
 
@@ -155,12 +159,14 @@ void TPointListGenerator::TestStartEndGenerator()
     const PointList actualPoints = pointListGenerator.generateStartEnd(start, end);
     const PointList expectedPoints = resultPoints;
 
-    bool isCompare = pointListFuzzyCompare(actualPoints,expectedPoints);
+    bool isCompare = PointList::fuzzyCompare(actualPoints,expectedPoints);
     if(!isCompare)
     {
         QFAIL(QString("Compare values are not the same. \nActual:\n"
-                      + pointListToString(actualPoints)
+                      + actualPoints.id() + " - "
+                      + actualPoints.toString()
                       + "\nExpected:\n"
-                      + pointListToString(expectedPoints)).toStdString().c_str());
+                      + expectedPoints.id() + " - "
+                      + expectedPoints.toString()).toStdString().c_str());
     }
 }
