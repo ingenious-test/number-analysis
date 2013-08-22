@@ -3,6 +3,7 @@
 #define CSVPOINTLISTIMPORTER_H
 
 #include "AbstractAnalysis.h"
+#include "SqlPointListWriter.h"
 
 class ParsedPoint
 {
@@ -21,7 +22,12 @@ public:
 
     bool operator ==(const ParsedPoint &p) const
     {
-        return false;
+        return (this->id == p.id) && (this->value == p.value);
+    }
+
+    bool operator !=(const ParsedPoint &p) const
+    {
+        return !(*this == p);
     }
 
     ID id;
@@ -38,6 +44,11 @@ public:
     void import();
 
     static ParsedPoint parseLine(const QString &line);
+
+private:
+    const QString &sourceFileName_;
+    const QString &targetFileName_;
+    const QString &targetTableName_;
 };
 
 #endif // CSVPOINTLISTIMPORTER_H

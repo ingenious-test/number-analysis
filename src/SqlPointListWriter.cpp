@@ -28,7 +28,7 @@ void SqlPointListWriter::write(const PointList &points)
             if(!querySuccess)
             {
                 qWarning() << "exec insert table" << writePointsByID_.lastError().text();
-                return;
+                break;
             }
         }
         dataBase().commit();
@@ -69,7 +69,7 @@ void SqlPointListWriter::write(const SequencePointList &seqPoints)
                 if(!querySuccess)
                 {
                     qWarning() << "exec insert table" << writePointsByID_.lastError().text();
-                    return;
+                    break;
                 }
             }
         }

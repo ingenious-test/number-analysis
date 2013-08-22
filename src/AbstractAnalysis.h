@@ -33,7 +33,7 @@ public:
     inline const Point& at(int i) const { return list_.at(i);}
 
     inline void append(const Point& point) {list_.append(point);}
-
+    inline void clear() {list_.clear();}
 
     QString toString() const
     {
@@ -147,6 +147,19 @@ class SequencePointList
         return true;
     }
 
+
+    bool contains(const ID& id)
+    {
+        foreach(const PointList& pointList, sequencesPoints())
+        {
+            if(pointList.id() == id)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 
     inline SequencePointList &operator<< (const PointList &pointList)

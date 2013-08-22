@@ -146,10 +146,7 @@ void TSqlPointListReader::TestWriteRead()
 
     SqlPointListWriter writer(dataBaseName, tableName);
     writer.open();
-    for(int i = 0; i < points.count(); i++)
-    {
-        writer.write(points.at(i));
-    }
+    writer.write(points);
 
     QVERIFY(QFile::exists(dataBaseName));
 
@@ -163,8 +160,6 @@ void TSqlPointListReader::TestWriteRead()
     {
         seqFromDataBase.append(reader.read(item));
     }
-
-
 
     const SequencePointList actualPoints = seqFromDataBase;
     const SequencePointList expectedPoints = allPoints;
@@ -339,10 +334,7 @@ void TSqlPointListReader::TestStatistics()
 
     SqlPointListWriter writer(dataBaseName, tableName);
     writer.open();
-    for(int i = 0; i < points.count(); i++)
-    {
-        writer.write(points.at(i));
-    }
+    writer.write(points);
 
     SqlPointListReader reader(dataBaseName, tableName);
     reader.appendStatistics(statistics);

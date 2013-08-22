@@ -24,7 +24,19 @@ void TCSVPointListImporter::TestParseLine()
     QFETCH(QString, line);
     QFETCH(ParsedPoint, parsedPoint);
 
-    QCOMPARE(CSVPointListImporter::parseLine(line), parsedPoint);
+    const ParsedPoint actualParsedPoint = CSVPointListImporter::parseLine(line);
+    const ParsedPoint expectedParsedPoint = parsedPoint;
+
+
+    if(actualParsedPoint != expectedParsedPoint)
+    {
+        QFAIL(QString("Compare values are not the same\nActual:\nid: "
+              + actualParsedPoint.id
+              + "\nvalue: " + actualParsedPoint.value
+              + "\n\nExpected:\nid: "
+              + expectedParsedPoint.id
+              + "\nvalue: " + expectedParsedPoint.value).toStdString().c_str());
+    }
 }
 
 void TCSVPointListImporter::TestImportSinglePointList_data()
@@ -45,6 +57,9 @@ void TCSVPointListImporter::TestImportSinglePointList_data()
                                        << (PointList(ID("id2")) << 1.0);
 
     QTest::newRow("two-lines-data") << (QStringList() << "id2;1.0" << "id2;2.0")
+                                    << (PointList(ID("id2")) << 1.0 << 2.0);
+
+    QTest::newRow("three-lines-data") << (QStringList() << "id2;1.0" << "id2;2.0")
                                     << (PointList(ID("id2")) << 1.0 << 2.0);
 }
 
@@ -79,6 +94,8 @@ void TCSVPointListImporter::TestImportSinglePointList()
     }
     QTextStream sourceFileStream(&sourceFile);
     sourceFileStream << data.join("\n");
+    sourceFile.flush();
+    sourceFile.close();
 
     CSVPointListImporter importer(sourceFileName,
                                   targetDataBaseName,
