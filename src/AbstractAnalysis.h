@@ -30,6 +30,7 @@ public:
     inline bool isValid() const { return !id_.isNull();}
 
     inline const QList<Point> &points() const { return list_;}
+    inline QList<Point> clonePoints() const { return QList<Point>(list_);}
     inline const Point& at(int i) const { return list_.at(i);}
 
     inline void append(const Point& point) {list_.append(point);}

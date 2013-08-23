@@ -254,7 +254,7 @@ void TAnalysis::TestMedian_data()
 
     QTest::newRow("empty") << PointList() << 0.0;
 
-    QTest::newRow("one-value") << (PointList() << Point(26.0)) << 23.0;
+    QTest::newRow("one-value") << (PointList() << Point(26.0)) << 26.0;
 
     QTest::newRow("four-value-sorted") << (PointList()
                                     << Point(1.0)
@@ -273,7 +273,7 @@ void TAnalysis::TestMedian_data()
     QTest::newRow("five-value-sorted") << (PointList()
                                     << Point(1.0)
                                     << Point(2.0)
-                                    << Point(3.5)
+                                    << Point(3.0)
                                     << Point(5.0)
                                     << Point(5.0))
                                 << 3.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
