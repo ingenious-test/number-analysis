@@ -7,6 +7,7 @@
 #include "../src/AverageAnalysis.h"
 #include "../src/AverageIgnoreNullAnalysis.h"
 #include "../src/StandardDeviationAnalysis.h"
+#include "../src/MedianAnalysis.h"
 
 #include "../src/Metatypes.h"
 
@@ -36,6 +37,9 @@ private slots:
 
     void TestStandardDeviation_data();
     void TestStandardDeviation();
+
+    void TestMedian_data();
+    void TestMedian();
 };
 
 #endif // TANALYSIS_H

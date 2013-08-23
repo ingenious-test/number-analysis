@@ -1,12 +1,12 @@
 #include "StandardDeviationAnalysis.h"
 
 StandardDeviationAnalysis::StandardDeviationAnalysis() :
-     AbstractAnalysis("standard-deviation")
+    AbstractAnalysis("standard-deviation")
 {
 }
 
 StandardDeviationAnalysis::StandardDeviationAnalysis(const StandardDeviationAnalysis &a):
-AbstractAnalysis("standard-deviation")
+    AbstractAnalysis("standard-deviation")
 {
 }
 

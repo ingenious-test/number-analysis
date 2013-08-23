@@ -246,3 +246,56 @@ void TAnalysis::TestStandardDeviation()
 
     FUZZY_COMPARE(actualResult, expectedResult);
 }
+
+void TAnalysis::TestMedian_data()
+{
+    QTest::addColumn< PointList >("values");
+    QTest::addColumn<double>("result");
+
+    QTest::newRow("empty") << PointList() << 0.0;
+
+    QTest::newRow("one-value") << (PointList() << Point(26.0)) << 23.0;
+
+    QTest::newRow("four-value-sorted") << (PointList()
+                                    << Point(1.0)
+                                    << Point(2.0)
+                                    << Point(3.0)
+                                    << Point(4.0))
+                                << 5.0 / 2.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
+
+    QTest::newRow("four-value-unsorter") << (PointList()
+                                    << Point(23.0)
+                                    << Point(-5.0)
+                                    << Point(0.0)
+                                    << Point(31.0))
+                                << 23.0 / 2.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
+
+    QTest::newRow("five-value-sorted") << (PointList()
+                                    << Point(1.0)
+                                    << Point(2.0)
+                                    << Point(3.5)
+                                    << Point(5.0)
+                                    << Point(5.0))
+                                << 3.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
+
+    QTest::newRow("five-value-unsorted") << (PointList()
+                                    << Point(-3.0)
+                                    << Point(13.0)
+                                    << Point(17.5)
+                                    << Point(15.0)
+                                    << Point(-4.5))
+                                << 13.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
+}
+
+void TAnalysis::TestMedian()
+{
+    QFETCH(PointList, values);
+    QFETCH(double, result);
+
+    MedianAnalysis analysis;
+
+    const double actualResult = analysis.analyze(values);
+    const double expectedResult = result;
+
+    FUZZY_COMPARE(actualResult, expectedResult);
+}
