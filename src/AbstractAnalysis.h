@@ -33,7 +33,7 @@ public:
     inline const Point& at(int i) const { return list_.at(i);}
 
     inline void append(const Point& point) {list_.append(point);}
-    inline void clear() {list_.clear();}
+    inline void clear() {*this = PointList();}
 
     QString toString() const
     {

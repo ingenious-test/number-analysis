@@ -4,6 +4,7 @@
 
 #include "AbstractAnalysis.h"
 #include "SqlPointListWriter.h"
+#include "CSVPointListValidator.h"
 
 class ParsedPoint
 {

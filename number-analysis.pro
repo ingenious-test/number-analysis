@@ -58,7 +58,9 @@ SOURCES += main.cpp\
     src/PointListStorageStatisticsDialog.cpp \
     benchmarks/BStatisticsCollection.cpp \
     src/CSVPointListImporter.cpp \
-    tests/TCSVPointListImporter.cpp
+    tests/TCSVPointListImporter.cpp \
+    tests/TCSVPointListValidator.cpp \
+    src/CSVPointListValidator.cpp
 
 HEADERS  += AnalysisWindow.h \
     src/StupidAnalysis.h \
@@ -94,4 +96,6 @@ HEADERS  += AnalysisWindow.h \
     src/StatisticsCollection.h \
     benchmarks/BStatisticsCollection.h \
     src/CSVPointListImporter.h \
-    tests/TCSVPointListImporter.h
+    tests/TCSVPointListImporter.h \
+    tests/TCSVPointListValidator.h \
+    src/CSVPointListValidator.h

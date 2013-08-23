@@ -13,11 +13,17 @@ CSVPointListImporter::CSVPointListImporter(const QString &sourceFileName,
 
 void CSVPointListImporter::import()
 {
+    if(!CSVPointListValidator::validation(sourceFileName_))
+    {
+        qWarning() << sourceFileName_ << "is not valid";
+        return;
+    }
+
     QFile file(sourceFileName_);
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qWarning() << "csv not open";
+        qWarning() << sourceFileName_ << " not open";
         return;
     }
 
@@ -35,22 +41,32 @@ void CSVPointListImporter::import()
             lastID = parsedLine.id;
         }
 
-        if((lastID != parsedLine.id) || file.atEnd())
+        if((lastID !=  parsedLine.id))
         {
-            tempPointList.append(parsedLine.value);
             if(!sequencePoint.contains(lastID))
             {
                 tempPointList.setID(lastID);
                 sequencePoint.append(tempPointList);
+                tempPointList.clear();
+            }
+        }
+
+        tempPointList.append(parsedLine.value);
+
+        if(file.atEnd())
+        {
+            if((lastID !=  parsedLine.id))
+            {
+                lastID = parsedLine.id;
             }
 
-            tempPointList.clear();
+            if(!sequencePoint.contains(lastID))
+            {
+                tempPointList.setID(lastID);
+                sequencePoint.append(tempPointList);
+                tempPointList.clear();
+            }
         }
-        else
-        {
-           tempPointList.append(parsedLine.value);
-        }
-
 
         lastID = parsedLine.id;
     }
@@ -58,13 +74,17 @@ void CSVPointListImporter::import()
     file.flush();
     file.close();
 
-    SqlPointListWriter writer(targetFileName_, targetTableName_);
-    if(!writer.open())
+    if(!sequencePoint.isEmpty())
     {
-        qWarning() << "Cannot open database " + targetFileName_ + " to write";
-        return;
+
+        SqlPointListWriter writer(targetFileName_, targetTableName_);
+        if(!writer.open())
+        {
+            qWarning() << "Cannot open database " + targetFileName_ + " to write";
+            return;
+        }
+        writer.write(sequencePoint);
     }
-    writer.write(sequencePoint);
 }
 
 ParsedPoint CSVPointListImporter::parseLine(const QString &line)

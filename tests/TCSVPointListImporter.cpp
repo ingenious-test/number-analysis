@@ -39,34 +39,45 @@ void TCSVPointListImporter::TestParseLine()
     }
 }
 
-void TCSVPointListImporter::TestImportSinglePointList_data()
+void TCSVPointListImporter::TestImportPointList_data()
 {
     QTest::addColumn<QStringList>("data");
-    QTest::addColumn<PointList>("pointList");
+    QTest::addColumn<SequencePointList>("pointList");
 
     QTest::newRow("empty-data") << QStringList()
-                                << PointList(ID("id1"));
+                                << (SequencePointList());
 
     QTest::newRow("single-line-data1") << (QStringList() << "id1;0.0")
-                                       << (PointList(ID("id1")) << 0.0);
+                                       << (SequencePointList()
+                                           << (PointList(ID("id1")) << 0.0));
 
     QTest::newRow("single-line-data2") << (QStringList() << "id1;1.0")
-                                       << (PointList(ID("id1")) << 1.0);
+                                       << (SequencePointList()
+                                           << (PointList(ID("id1")) << 1.0));
 
     QTest::newRow("single-line-data3") << (QStringList() << "id2;1.0")
-                                       << (PointList(ID("id2")) << 1.0);
+                                       << (SequencePointList()
+                                           << (PointList(ID("id2")) << 1.0));
 
     QTest::newRow("two-lines-data") << (QStringList() << "id2;1.0" << "id2;2.0")
-                                    << (PointList(ID("id2")) << 1.0 << 2.0);
+                                    << (SequencePointList()
+                                        << (PointList(ID("id2")) << 1.0 << 2.0));
 
-    QTest::newRow("three-lines-data") << (QStringList() << "id2;1.0" << "id2;2.0")
-                                    << (PointList(ID("id2")) << 1.0 << 2.0);
+    QTest::newRow("four-lines-data-correct") << (QStringList() << "id1;-13.0" << "id2;1.0" << "id2;2.0")
+                                    << (SequencePointList()
+                                        << (PointList(ID("id1")) << -13.0)
+                                        << (PointList(ID("id2")) << 1.0 << 2.0));
+
+    QTest::newRow("four-lines-data-incorrect") << (QStringList() << "id1;3.5" << "id2;1.0" << "id1;2.0")
+                                    << (SequencePointList()
+                                        << (PointList(ID("id1")) << 3.5)
+                                        << (PointList(ID("id2")) << 1.0));
 }
 
-void TCSVPointListImporter::TestImportSinglePointList()
+void TCSVPointListImporter::TestImportPointList()
 {
     QFETCH(QStringList, data);
-    QFETCH(PointList, pointList);
+    QFETCH(SequencePointList, pointList);
 
     const QString sourceFileName = QString(QTest::currentDataTag()) + QTest::currentTestFunction() + ".csv";
     const QString targetDataBaseName = QString(QTest::currentDataTag()) +  QTest::currentTestFunction() + ".db";
@@ -79,6 +90,7 @@ void TCSVPointListImporter::TestImportSinglePointList()
             QFAIL("can't remove testing source file");
         }
     }
+
     if(QFile::exists(targetDataBaseName))
     {
         if(!QFile::remove(targetDataBaseName))
@@ -105,17 +117,23 @@ void TCSVPointListImporter::TestImportSinglePointList()
     SqlPointListReader reader(targetDataBaseName, tableName);
     reader.open();
 
-    const PointList actualPointList = reader.read(pointList.id());
-    const PointList expectedPointList = pointList;
+    SequencePointList pointsFromDataBase;
+    const IDList items = reader.readAllItems();
+    foreach(const ID& item, items)
+    {
+        pointsFromDataBase << reader.read(item);
+    }
 
-    bool isCompare = PointList::fuzzyCompare(actualPointList,expectedPointList);
+
+    const SequencePointList actualPointList = pointsFromDataBase;
+    const SequencePointList expectedPointList = pointList;
+
+    bool isCompare = SequencePointList::fuzzyCompare(actualPointList,expectedPointList);
     if(!isCompare)
     {
         QFAIL(QString("Compare values are not the same. \nActual:\n"
-                      + actualPointList.id() + " - "
                       + actualPointList.toString()
                       + "\nExpected:\n"
-                      + expectedPointList.id() + " - "
                       + expectedPointList.toString()).toStdString().c_str());
     }
 }

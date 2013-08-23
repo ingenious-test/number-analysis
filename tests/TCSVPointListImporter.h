@@ -7,7 +7,6 @@
 #include "../src/Metatypes.h"
 #include "../src/CSVPointListImporter.h"
 #include "../src/SqlPointListReader.h"
-#include "TestingUtilities.h"
 
 class TCSVPointListImporter : public QObject
 {
@@ -19,8 +18,8 @@ private slots:
     void TestParseLine_data();
     void TestParseLine();
 
-    void TestImportSinglePointList_data();
-    void TestImportSinglePointList();
+    void TestImportPointList_data();
+    void TestImportPointList();
 
 
 };
