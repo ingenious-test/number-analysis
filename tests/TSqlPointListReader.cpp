@@ -9,9 +9,6 @@ void TSqlPointListReader::TestWriteRead_data()
     QTest::addColumn<SequencePointList>("points");
     QTest::addColumn<SequencePointList>("allPoints");
 
-
-
-
     QTest::newRow("empty") << SequencePointList()
                            << SequencePointList();
 
@@ -49,7 +46,7 @@ void TSqlPointListReader::TestWriteRead_data()
                     << Point(256.256)
                     << Point(512.512)));
 
-    QTest::newRow("two-item-with-one-point")
+    QTest::newRow("two-items")
             << (SequencePointList()
                 << (PointList("id1")
                     << Point(4.9)
@@ -71,7 +68,7 @@ void TSqlPointListReader::TestWriteRead_data()
                     << Point(3.3)
                     << Point(8.1)));
 
-    QTest::newRow("three-item-with-one-point")
+    QTest::newRow("three-items")
             << (SequencePointList()
                 << (PointList("id1") << Point(41.29) << Point(4.3))
                 << (PointList("id2")

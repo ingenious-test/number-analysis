@@ -12,6 +12,7 @@
 #include "tests/TPointListStorageStatistics.h"
 #include "tests/TCSVPointListImporter.h"
 #include "tests/TCSVPointListValidator.h"
+#include "tests/TCSVPointListExporter.h"
 
 #include "benchmarks/BAnalysisCollections.h"
 #include "benchmarks/BSqlPointListInterface.h"
@@ -84,6 +85,11 @@ int main(int argc, char *argv[])
 
     TCSVPointListValidator tCSVPointListValidator;
     QTest::qExec(&tCSVPointListValidator);
+
+    qDebug() << "\r\n";
+
+    TCSVPointListExporter tCSVPointListExporter;
+    QTest::qExec(&tCSVPointListExporter);
 #ifdef STRESS 
     qDebug() << "\r\n";
 
