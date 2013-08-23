@@ -12,6 +12,11 @@ public:
                          const QString &targetFileName);
 
     void exportFromDataBase();
+
+private:
+    const QString sourseDataBaseFile_;
+    const QString sourseTableName_;
+    const QString targetFileName_;
 };
 
 #endif // CSVPOINTLISTEXPORTER_H
