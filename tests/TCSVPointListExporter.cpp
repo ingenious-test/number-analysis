@@ -106,11 +106,19 @@ void TCSVPointListExporter::TestExportPointList()
     const QString targetFileName = QString(QTest::currentDataTag()) + QTest::currentTestFunction() + ".csv";
 
 
+    if(QFile::exists(targetFileName))
+    {
+        if(!QFile::remove(targetFileName))
+        {
+            QFAIL("can't remove testing target file");
+        }
+    }
+
     if(QFile::exists(sourseDataBaseName))
     {
         if(!QFile::remove(sourseDataBaseName))
         {
-            QFAIL("can't remove testing database");
+            QFAIL("can't remove testing data base");
         }
     }
 
