@@ -26,19 +26,30 @@ void CSVPointListExporter::exportFromDataBase()
     }
 
     QFile targetFile(targetFileName_);
-    if(!targetFile.open(QFile::WriteOnly))
+    if(!targetFile.open(QFile::WriteOnly | QIODevice::Text))
     {
         qWarning() << targetFileName_ << "can't open for writing";
     }
 
     QTextStream targetFileStream(&targetFile);
     const IDList idList = reader.readAllItems();
-    foreach(const ID& id, idList)
+
+    for(int i = 0; i < idList.count(); i++)
     {
+        const ID& id = idList.at(i);
         const PointList pointList = reader.read(id);
-        foreach(const Point& point, pointList.points())
+        for(int j = 0; j < pointList.count(); j++)
         {
-            targetFileStream << pointList.id() << ";" << point << "\n";
+            const Point& point = pointList.at(j);
+            targetFileStream << pointList.id() << ";" << point;
+
+            const bool isLast = ((i + 1) == idList.count())
+                    && ((j + 1) == pointList.count());
+
+            if(!isLast)
+            {
+                targetFileStream << '\n';
+            }
         }
     }
 

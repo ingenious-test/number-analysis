@@ -6,22 +6,24 @@ CSVPointListValidator::CSVPointListValidator()
 
 bool CSVPointListValidator::validation(const QString &fileName)
 {
+    lastError_ = Error();
+
     if(!QFile::exists(fileName))
     {
-        qWarning() << fileName << " do not exists";
+        lastError_.errorStr = fileName + " do not exists";
         return false;
     }
 
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qWarning() << fileName << " not open";
+        lastError_.errorStr = fileName + " not open";
         return false;
     }
 
     if(file.size() == 0)
     {
-        qWarning() << "file is empty";
+        qWarning() << fileName << "file is empty";
         return true;
     }
 
@@ -30,39 +32,42 @@ bool CSVPointListValidator::validation(const QString &fileName)
     {
         lineNum++;
         QString lineData = file.readLine();
-        QStringList valueList = lineData.split(";");
-
-        if(valueList.count() != 2)
+        if(!lineData.isEmpty())
         {
-            errorMSG("values count must be two", fileName, lineNum);
-            return false;
+            const int lastInd = lineData.count() - 1;
+            if(lineData.at(lastInd) == '\n')
+            {
+                lineData.remove(lastInd,1);
+            }
         }
 
-        ID id = valueList.at(0);
-        if(id.isNull())
-        {
-            errorMSG("id not set", fileName, lineNum);
-            return false;
-        }
+        const QString regExprStr = QString("^\\w+;-?\\d+(.\\d+)?$");
+        const QRegExp regExpr(regExprStr);
 
-        bool isOk = false;
-        valueList.at(1).toDouble(&isOk);
+        const bool isMatch = regExpr.exactMatch(lineData);
 
-        if(!isOk)
+        if(!isMatch)
         {
-            errorMSG("point value is not double", fileName, lineNum);
+            error("not math to regexp " + regExprStr, fileName, lineNum);
+            file.flush();
+            file.close();
             return false;
         }
 
     }
 
+    file.flush();
+    file.close();
     return true;
 }
 
-void CSVPointListValidator::errorMSG(const QString &errorStr, const QString &fileName, const int line)
+const CSVPointListValidator::Error &CSVPointListValidator::lastError()
 {
-    qWarning()
-            << errorStr.toStdString().c_str()
-            << "in file " << fileName.toStdString().c_str()
-            << "in line " << line;
+    return lastError_;
+}
+
+void CSVPointListValidator::error(const QString &errorStr, const QString &fileName, const int line)
+{
+    lastError_.errorStr = errorStr + " in file " + fileName;
+    lastError_.line = line;
 }

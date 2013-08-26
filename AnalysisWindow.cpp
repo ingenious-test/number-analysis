@@ -11,6 +11,27 @@ AnalysisWindow::AnalysisWindow(QWidget *parent)
     list << "First" << "Second" << "Third";
 
     reader_ = new SqlPointListReader("database.db", "points");
+    static_cast<SqlPointListReader*>(reader_)->open();
+
+    StatisticsList statisticsList;
+    statisticsList << new MaxSequenceLengthIdStatistics
+                   << new MaxSequenceLengthStatistics
+                   << new FiveTopSequenceLengthStatistics
+                   << new MinSequenceLengthIdStatistics
+                   << new MinSequenceLengthStatistics
+                   << new AverageSequenceLengthStatistics
+                   << new AverageNullCountPointsStatistics
+                   << new AverageNoneNullCountPointsStatistics
+                   << new PercentNullCountPointsStatistics
+                   << new PercentNoneNullCountPointsStatistics
+                   << new MaxPointStatistics
+                   << new MinPointStatistics
+                   << new FiveTopPointsValueStatistics
+                   << new SequenceWithRepeatCountStatistics
+                   << new IncSequenceCountStatistics
+                   << new DecSequenceCountStatistics;
+
+    static_cast<SqlPointListReader*>(reader_)->appendStatistics(statisticsList);
 
     QVBoxLayout* mainLayout = new QVBoxLayout;
     QHBoxLayout* subLayout = new QHBoxLayout;

@@ -6,13 +6,24 @@
 
 class CSVPointListValidator
 {
-
 public:
+    struct Error{
+        Error()
+            : line(0), errorStr(QString()) {}
+
+        int line;
+        QString errorStr;
+    };
+
     CSVPointListValidator();
 
-    static bool validation(const QString& fileName);
+    bool validation(const QString& fileName);
+    const Error& lastError();
+
+
  private:
-    static void errorMSG(const QString& errorStr, const QString& fileName, const int line);
+    void error(const QString& errorStr, const QString& fileName, const int line);
+    Error lastError_;
 };
 
 #endif // CSVPOINTLISTVALIDATOR_H

@@ -17,6 +17,8 @@ private slots:
     void TestValidation_data();
     void TestValidation();
 
+    void TestRegExp_data();
+    void TestRegExp();
 };
 
 #endif // TCSVPOINTLISTVALIDATOR_H

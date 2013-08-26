@@ -5,7 +5,7 @@
 #include <QTest>
 
 #include "../src/Metatypes.h"
-#include "../src/SqlPointListWriter.h"
+#include "../src/CSVPointListImporter.h"
 #include "../src/CSVPointListExporter.h"
 
 class TCSVPointListExporter : public QObject

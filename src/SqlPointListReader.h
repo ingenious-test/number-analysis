@@ -19,7 +19,8 @@ public:
     PointList read(const ID &item);
     IDList readAllItems();
 
-    void appendStatistics(AbstractStatictics*& statistics);
+    void appendStatistics(AbstractStatictics* statistics);
+    void appendStatistics(const StatisticsList& statisticsList);
 
     PointListStorageStatistics statistics();
 

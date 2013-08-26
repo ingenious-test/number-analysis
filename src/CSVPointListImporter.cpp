@@ -11,12 +11,15 @@ CSVPointListImporter::CSVPointListImporter(const QString &sourceFileName,
 {
 }
 
-void CSVPointListImporter::import()
+bool CSVPointListImporter::import()
 {
-    if(!CSVPointListValidator::validation(sourceFileName_))
+    CSVPointListValidator csvValidator;
+
+    if(!csvValidator.validation(sourceFileName_))
     {
         qWarning() << sourceFileName_ << "is not valid";
-        return;
+        qWarning() << csvValidator.lastError().errorStr << "in line" << csvValidator.lastError().line;
+        return false;
     }
 
     QFile file(sourceFileName_);
@@ -24,7 +27,7 @@ void CSVPointListImporter::import()
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         qWarning() << sourceFileName_ << " not open";
-        return;
+        return false;
     }
 
     SequencePointList sequencePoint;
@@ -74,24 +77,23 @@ void CSVPointListImporter::import()
     file.flush();
     file.close();
 
-    if(!sequencePoint.isEmpty())
+    SqlPointListWriter writer(targetFileName_, targetTableName_);
+    if(!writer.open())
     {
-
-        SqlPointListWriter writer(targetFileName_, targetTableName_);
-        if(!writer.open())
-        {
-            qWarning() << "Cannot open database " + targetFileName_ + " to write";
-            return;
-        }
-        writer.write(sequencePoint);
+        qWarning() << "Cannot open database " + targetFileName_ + " to write";
+        return false;
     }
+
+    writer.write(sequencePoint);
+
+    return true;
 }
 
 ParsedPoint CSVPointListImporter::parseLine(const QString &line)
 {
     const QStringList values = line.split(';');
 
-    if(values.count() > 2)
+    if(values.count() != 2)
     {
         return ParsedPoint();
     }

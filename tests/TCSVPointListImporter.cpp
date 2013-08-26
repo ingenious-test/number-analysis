@@ -100,7 +100,7 @@ void TCSVPointListImporter::TestImportPointList()
     }
 
     QFile sourceFile(sourceFileName);
-    if(!sourceFile.open(QFile::WriteOnly))
+    if(!sourceFile.open(QFile::WriteOnly | QIODevice::Text))
     {
         QFAIL("can't open testing source file for writing");
     }

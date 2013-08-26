@@ -15,27 +15,28 @@ double MedianAnalysis::analyze(const PointList &values) const
 {
     QList<Point> sortedList = values.clonePoints();
     qSort(sortedList);
+    const int listCount = sortedList.count();
 
     if(sortedList.isEmpty())
     {
         return 0.0;
     }
 
-    if(sortedList.count() == 1)
+    if(listCount == 1)
     {
         return sortedList.first();
     }
 
-    const bool even = (sortedList.count() % 2 == 0);
+    const bool even = (listCount % 2 == 0);
 
     if(even)
     {
-        const int index = sortedList.count() / 2;
+        const int index = listCount / 2;
         return (sortedList.at(index) + sortedList.at(index-1)) / 2.0;
     }
     else
     {
-        const int index = sortedList.count() / 2;
+        const int index = listCount / 2;
         return sortedList.at(index);
     }
 }

@@ -105,9 +105,14 @@ IDList SqlPointListReader::readAllItems()
     return IDList();
 }
 
-void SqlPointListReader::appendStatistics(AbstractStatictics *&statistics)
+void SqlPointListReader::appendStatistics(AbstractStatictics *statistics)
 {
     statisticsCollection.append(statistics);
+}
+
+void SqlPointListReader::appendStatistics(const StatisticsList &statisticsList)
+{
+    statisticsCollection.append(statisticsList);
 }
 
 PointListStorageStatistics SqlPointListReader::statistics()

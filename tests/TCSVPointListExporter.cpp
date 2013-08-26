@@ -7,36 +7,17 @@ TCSVPointListExporter::TCSVPointListExporter()
 
 void TCSVPointListExporter::TestExportPointList_data()
 {
-    QTest::addColumn<SequencePointList>("pointList");
     QTest::addColumn<QStringList>("result");
 
-    QTest::newRow("empty") << SequencePointList()
-                           << QStringList();
+    QTest::newRow("empty") << QStringList();
 
     QTest::newRow("one-item-with-one-point")
-            << (SequencePointList() << (PointList("id1") << Point(1.0)))
-            << (QStringList() << QString("id1;1.0"));
+            << (QStringList() << QString("id1;1"));
 
     QTest::newRow("one-item-with-two-point")
-            << (SequencePointList()
-                << (PointList("id1")
-                    << Point(1.0)
-                    << Point(2.0)))
-            << (QStringList() << QString("id1;1.0") << QString("id1;2.0"));
+            << (QStringList() << QString("id1;1") << QString("id1;2"));
 
     QTest::newRow("one-item-with-ten-point")
-            << (SequencePointList()
-                << (PointList("id1")
-                    << Point(1.1)
-                    << Point(2.2)
-                    << Point(4.4)
-                    << Point(8.8)
-                    << Point(16.16)
-                    << Point(32.32)
-                    << Point(64.64)
-                    << Point(128.128)
-                    << Point(256.256)
-                    << Point(512.512)))
             << (QStringList()
                 << QString("id1;1.1")
                 << QString("id1;2.2")
@@ -50,39 +31,16 @@ void TCSVPointListExporter::TestExportPointList_data()
                 << QString("id1;512.512"));
 
     QTest::newRow("two-items")
-            << (SequencePointList()
-                << (PointList("id1")
-                    << Point(4.9)
-                    << Point(6.8)
-                    << Point(11.0))
-                << (PointList("id2")
-                    << Point(14.01)
-                    << Point(12.3)
-                    << Point(3.3)
-                    << Point(8.1)))
             << (QStringList()
                     << QString("id1;4.9")
                     << QString("id1;6.8")
-                    << QString("id1;11.0")
+                    << QString("id1;11")
                     << QString("id2;14.01")
                     << QString("id2;12.3")
                     << QString("id2;3.3")
                     << QString("id2;8.1"));
 
     QTest::newRow("three-items")
-            << (SequencePointList()
-                << (PointList("id1")
-                    << Point(41.29)
-                    << Point(4.3))
-                << (PointList("id2")
-                    << Point(1.25)
-                    << Point(3.4)
-                    << Point(8.34)
-                    << Point(15.6)
-                    << Point(38.009))
-                << (PointList("id3")
-                    << Point(2.44)
-                    << Point(5.8)))
             << (QStringList()
                 << QString("id1;41.29")
                 << QString("id1;4.3")
@@ -97,18 +55,26 @@ void TCSVPointListExporter::TestExportPointList_data()
 
 void TCSVPointListExporter::TestExportPointList()
 {
-    QFETCH(SequencePointList, pointList);
     QFETCH(QStringList, result);
 
 
     const QString sourseDataBaseName = QString(QTest::currentDataTag()) +  QTest::currentTestFunction() + ".db";
     const QString tableName = "Points";
-    const QString targetFileName = QString(QTest::currentDataTag()) + QTest::currentTestFunction() + ".csv";
+    const QString importFileName = QString(QTest::currentDataTag()) + QTest::currentTestFunction() + "source.csv";
+    const QString exportFileName = QString(QTest::currentDataTag()) + QTest::currentTestFunction() + "target.csv";
 
 
-    if(QFile::exists(targetFileName))
+    if(QFile::exists(importFileName))
     {
-        if(!QFile::remove(targetFileName))
+        if(!QFile::remove(importFileName))
+        {
+            QFAIL("can't remove testing source file");
+        }
+    }
+
+    if(QFile::exists(exportFileName))
+    {
+        if(!QFile::remove(exportFileName))
         {
             QFAIL("can't remove testing target file");
         }
@@ -122,34 +88,61 @@ void TCSVPointListExporter::TestExportPointList()
         }
     }
 
-    SqlPointListWriter writer(sourseDataBaseName, tableName);
-    writer.open();
-    writer.write(pointList);
+
+    QFile importFile(importFileName);
+    if(!importFile.open(QFile::WriteOnly | QIODevice::Text))
+    {
+        QFAIL("can't open testing source file for writing");
+    }
+    QTextStream sourceFileStream(&importFile);
+    sourceFileStream << result.join("\n");
+    importFile.flush();
+    importFile.close();
+
+
+    CSVPointListImporter importer(importFileName, sourseDataBaseName, tableName);
+    if(!importer.import())
+    {
+        QFAIL("can't import testing data base");
+    }
 
     QVERIFY(QFile::exists(sourseDataBaseName));
 
 
     CSVPointListExporter exporter(sourseDataBaseName,
                                   tableName,
-                                  targetFileName);
+                                  exportFileName);
     exporter.exportFromDataBase();
 
-    QVERIFY(QFile::exists(targetFileName));
+    QVERIFY(QFile::exists(exportFileName));
 
-    QFile file(targetFileName);
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    QFile exportFile(exportFileName);
+    if (!exportFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qWarning() << targetFileName << " not open";
-        return;
+        QFAIL(QString(exportFileName + " not open").toStdString().c_str());
     }
 
-    QStringList fileData;
-    while (!file.atEnd())
+    QStringList fileTargetData;
+    while (!exportFile.atEnd())
     {
-        fileData.append(file.readLine());
+        fileTargetData.append(exportFile.readLine());
+    }
+
+    importFile.setFileName(importFileName);
+    if (!importFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QFAIL(QString(importFileName + " not open").toStdString().c_str());
+    }
+
+    QStringList fileSourceData;
+    while (!importFile.atEnd())
+    {
+        fileSourceData.append(importFile.readLine());
     }
 
 
-    const QStringList actualData = fileData;
-    const QStringList expectedData = result;
+    const QStringList actualData = fileTargetData;
+    const QStringList expectedData = fileSourceData;
+
+    QCOMPARE(actualData, expectedData);
 }

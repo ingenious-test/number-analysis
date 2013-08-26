@@ -63,7 +63,9 @@ SOURCES += main.cpp\
     src/CSVPointListValidator.cpp \
     tests/TCSVPointListExporter.cpp \
     src/CSVPointListExporter.cpp \
-    src/MedianAnalysis.cpp
+    src/MedianAnalysis.cpp \
+    src/PointList.cpp \
+    src/SequencePointList.cpp
 
 HEADERS  += AnalysisWindow.h \
     src/StupidAnalysis.h \
@@ -104,4 +106,6 @@ HEADERS  += AnalysisWindow.h \
     src/CSVPointListValidator.h \
     tests/TCSVPointListExporter.h \
     src/CSVPointListExporter.h \
-    src/MedianAnalysis.h
+    src/MedianAnalysis.h \
+    src/PointList.h \
+    src/SequencePointList.h

@@ -19,6 +19,7 @@ Q_DECLARE_METATYPE(PointListStorageStatistics)
 Q_DECLARE_METATYPE(PointListStatistics)
 Q_DECLARE_METATYPE(Qt::SortOrder)
 Q_DECLARE_METATYPE(AbstractStatictics*)
+Q_DECLARE_METATYPE(AbstractAnalysis*)
 Q_DECLARE_METATYPE(ParsedPoint)
 
 #endif // METATYPES_H

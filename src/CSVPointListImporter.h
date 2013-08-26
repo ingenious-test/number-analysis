@@ -42,7 +42,7 @@ public:
                          const QString &targetFileName,
                          const QString &targetTableName);
 
-    void import();
+    bool import();
 
     static ParsedPoint parseLine(const QString &line);
 
