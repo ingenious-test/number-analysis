@@ -2,7 +2,7 @@
 
 #define FIRSTQUARTILEANALYSIS_H
 
-#include "AbstractAnalysis.h"
+#include "MedianAnalysis.h"
 
 class FirstQuartileAnalysis : public AbstractAnalysis
 {

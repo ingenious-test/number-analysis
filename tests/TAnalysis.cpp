@@ -256,6 +256,8 @@ void TAnalysis::TestMedian_data()
 
     QTest::newRow("one-value") << (PointList() << Point(26.0)) << 26.0;
 
+    QTest::newRow("two-value") << (PointList() << Point(5.0) << Point(4.0)) << (5.0 + 4.0) / 2.0;
+
     QTest::newRow("four-value-sorted") << (PointList()
                                            << Point(1.0)
                                            << Point(2.0)
@@ -316,7 +318,7 @@ void TAnalysis::TestFirstAndThirdQuartile_data()
                                            << Point(3.0)
                                            << Point(4.0))
                                        << (1.0 + 2.0) / 2.0
-                                       <<  (3.0 + 5.0) / 2.0;
+                                       <<  (3.0 + 4.0) / 2.0;
 
     QTest::newRow("four-value-unsorter") << (PointList()
                                              << Point(23.0)
@@ -332,8 +334,8 @@ void TAnalysis::TestFirstAndThirdQuartile_data()
                                            << Point(3.0)
                                            << Point(4.0)
                                            << Point(5.0))
-                                       << (1.0 + 2.0 + 3.0) / 3.0
-                                       <<  (3.0 + 4.0 + 5.0) / 3.0;
+                                       << 2.0
+                                       <<  4.0;
 
     QTest::newRow("five-value-unsorted") << (PointList()
                                              << Point(-3.0)
@@ -341,8 +343,19 @@ void TAnalysis::TestFirstAndThirdQuartile_data()
                                              << Point(17.5)
                                              << Point(15.0)
                                              << Point(-4.5))
-                                         << (-3.0 + -4.5 + 13.0) / 3.0
-                                         <<  (13.0 + 15.0 + 17.5) / 3.0;
+                                         << -3.0
+                                         <<  15.0;
+
+    QTest::newRow("six-value-sorted") << (PointList()
+                                           << Point(1.0)
+                                           << Point(2.0)
+                                           << Point(3.0)
+                                           << Point(4.0)
+                                           << Point(5.0)
+                                           << Point(6.0))
+                                       << 2.0
+                                       <<  5.0;
+
 }
 
 void TAnalysis::TestFirstAndThirdQuartile()

@@ -28,15 +28,14 @@ double MedianAnalysis::analyze(const PointList &values) const
     }
 
     const bool even = (listCount % 2 == 0);
+    const int index = listCount / 2;
 
     if(even)
     {
-        const int index = listCount / 2;
         return (sortedList.at(index) + sortedList.at(index-1)) / 2.0;
     }
     else
     {
-        const int index = listCount / 2;
         return sortedList.at(index);
     }
 }
