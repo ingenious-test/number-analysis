@@ -18,6 +18,7 @@
 #include "benchmarks/BSqlPointListInterface.h"
 #include "benchmarks/BSqlPointListReadWrite.h"
 #include "benchmarks/BStatisticsCollection.h"
+#include "benchmarks/BCSVImporterExporter.h"
 
 #include "AnalysisWindow.h"
 
@@ -46,72 +47,77 @@ int main(int argc, char *argv[])
     TAnalysis tAnalysis;
     QTest::qExec(&tAnalysis);
 
-    qDebug() << "\r\n";
+    qDebug() << "\n";
 
     TAnalysisCollection tAnalysisCollection;
     QTest::qExec(&tAnalysisCollection);
 
-    qDebug() << "\r\n";
+    qDebug() << "\n";
 
     TAnalysisTableModel tAnalysisTableModel;
     QTest::qExec(&tAnalysisTableModel);
 
-    qDebug() << "\r\n";
+    qDebug() << "\n";
 
     TItemListModel tItemListModel;
     QTest::qExec(&tItemListModel);
 
-    qDebug() << "\r\n";
+    qDebug() << "\n";
 
     TSqlPointListReader tSqlPointListReader;
     QTest::qExec(&tSqlPointListReader);
 
-    qDebug() << "\r\n";
+    qDebug() << "\n";
 
     TPointListGenerator tPointListGenerator;
     QTest::qExec(&tPointListGenerator);
 
-    qDebug() << "\r\n";
+    qDebug() << "\n";
 
     TPointListStorageStatistics tPointListStorageStatistics;
     QTest::qExec(&tPointListStorageStatistics);
 
-    qDebug() << "\r\n";
+    qDebug() << "\n";
 
     TCSVPointListImporter tCSVPointListImporter;
     QTest::qExec(&tCSVPointListImporter);
 
-    qDebug() << "\r\n";
+    qDebug() << "\n";
 
     TCSVPointListValidator tCSVPointListValidator;
     QTest::qExec(&tCSVPointListValidator);
 
-    qDebug() << "\r\n";
+    qDebug() << "\n";
 
     TCSVPointListExporter tCSVPointListExporter;
     QTest::qExec(&tCSVPointListExporter);
 #ifdef STRESS 
-    qDebug() << "\r\n";
+   /* qWarning() << "\n" << "Analysis collection benchmark" << "\n";
 
     BAnalysisCollections bAnalysisCollections(0);
     bAnalysisCollections.run();
 
-    qDebug() << "\r\n";
+    qWarning() << "\r\n" << "SqlInterface benchmark"  << "\n";;
 
     BSqlPointListInterface bSqlPointListInterface(0);
     bSqlPointListInterface.run();
 
-    qDebug() << "\r\n";
+    qWarning() << "\r\n" << "SqlPointListReadWrite benchmark"  << "\n";
 
     BSqlPointListReadWrite bSqlPointListReadWrite(0);
     bSqlPointListReadWrite.runWrite();
     bSqlPointListReadWrite.runRead();
 
-    qDebug() << "\r\n";
+    qWarning() << "\r\n" << "StaticCollection benchmark"  << "\n";;
 
     BStatisticsCollection  bStatisticsCollection;
-    bStatisticsCollection.generateDatabase(20000, 200);
-    bStatisticsCollection.statistics();
+    bStatisticsCollection.generateDatabase(0, 0);
+    bStatisticsCollection.statistics();*/
+
+    qWarning() << "\r\n" << "CSV import, export and validation benchmarck"  << "\n";
+
+    BCSVImporterExporter  bCSVImporterExporter(10000, 100);
+    bCSVImporterExporter.run();
 #endif  
 
     QDir::setCurrent(currentDir);
