@@ -1,16 +1,18 @@
 #include "AnalysisWindow.h"
 
-AnalysisWindow::AnalysisWindow(QWidget *parent)
-    : QWidget(parent)
+AnalysisWindow::AnalysisWindow(QWidget *parent) :
+    QWidget(parent),
+    dataBaseName_("database.db"),
+    tableName_("points")
 {
     DatabaseGenerator databaseGenerator;
 
-    databaseGenerator.generateDataBase("database.db", "points");
+    databaseGenerator.generateDataBase(dataBaseName_,tableName_);
 
     IDList list;
     list << "First" << "Second" << "Third";
 
-    reader_ = new SqlPointListReader("database.db", "points");
+    reader_ = new SqlPointListReader(dataBaseName_, tableName_);
     static_cast<SqlPointListReader*>(reader_)->open();
 
     StatisticsList statisticsList;
@@ -103,6 +105,11 @@ void AnalysisWindow::createMenu()
     mainMenu_ = new QMenuBar;
 
     mainMenu_->addAction("Статисткика", this, SLOT(onStatisticsClick()));
+
+
+    QMenu* menuData = mainMenu_->addMenu("Данные");
+    menuData->addAction("Импорт", this, SLOT(onImportClick()));
+    menuData->addAction("Экспорт", this, SLOT(onExportClick()));
 }
 
 void AnalysisWindow::addItem(const ID &item)
@@ -124,7 +131,35 @@ void AnalysisWindow::onAnalyzeButtonClick()
 
 void AnalysisWindow::onStatisticsClick()
 {
-
     PointListStorageStatisticsDialog dialog(reader_->statistics());
     dialog.exec();
+}
+
+void AnalysisWindow::onExportClick()
+{
+    QString exportFileName = QFileDialog::getSaveFileName(this, QString("Export File"),
+                                QDir::currentPath(),
+                                QString("CSV (*.csv)"));
+    if(!exportFileName.isEmpty())
+    {
+        CSVPointListExporter csvExporter(dataBaseName_, tableName_, exportFileName);
+        csvExporter.exportFromDataBase();
+    }
+}
+
+void AnalysisWindow::onImportClick()
+{
+    QString importFileName = QFileDialog::getOpenFileName(this, QString("Import File"),
+                                                    QDir::currentPath(),
+                                                    QString("CSV (*.csv)"));
+    if(!importFileName.isEmpty())
+    {
+        CSVPointListImporter csvImporter(importFileName, dataBaseName_, tableName_);
+        if(!csvImporter.import())
+        {
+            qWarning() << importFileName << "not imported";
+            return;
+        }
+        seqPointListModel_->update();
+    }
 }

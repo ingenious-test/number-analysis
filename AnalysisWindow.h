@@ -5,6 +5,7 @@
 #include <QtGui/QLayout>
 #include <QPushButton>
 #include <QMenuBar>
+#include <QFileDialog>
 
 #include "src/ItemListView.h"
 
@@ -17,6 +18,8 @@
 #include "src/SqlPointListWriter.h"
 #include "src/DatabaseGenerator.h"
 #include "src/PointListStorageStatisticsDialog.h"
+#include "src/CSVPointListImporter.h"
+#include "src/CSVPointListExporter.h"
 
 class AnalysisWindow : public QWidget
 {
@@ -39,13 +42,20 @@ private:
 
     QMenuBar* mainMenu_;
 
+    const QString dataBaseName_;
+    const QString tableName_;
+
 
     void createMenu();
 
 private slots:
     void addItem(const ID &item);
+
     void onAnalyzeButtonClick();
     void onStatisticsClick();
+
+    void onExportClick();
+    void onImportClick();
 };
 
 #endif // WIDGET_H

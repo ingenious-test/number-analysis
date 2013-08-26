@@ -5,13 +5,20 @@ ItemListModel::ItemListModel(AbstractPointListReader *reader,
     QAbstractListModel(parent),
     reader_(reader)
 {
-    appendPointList(reader_->readAllItems());
+    update();
 }
 
 ItemListModel::ItemListModel(const IDList &items, QObject *parent):
     QAbstractListModel(parent)
 {
     appendPointList(items);
+}
+
+void ItemListModel::update()
+{
+    clear();
+    appendPointList(reader_->readAllItems());
+    this->reset();
 }
 
 QModelIndex ItemListModel::index(int row, int column, const QModelIndex &parent) const
@@ -85,4 +92,9 @@ void ItemListModel::appendPointList(const IDList &items)
     {
         appendPointList(id);
     }
+}
+
+void ItemListModel::clear()
+{
+    items_.clear();
 }

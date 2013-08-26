@@ -29,12 +29,17 @@ public:
     bool appendPointList(const ID& id);
     void appendPointList(const IDList &items);
 
+    void clear();
+
 protected:
     ItemListModel(const IDList &items, QObject *parent = 0);
 
- private:
+private:
     IDList items_;
     AbstractPointListReader *reader_;
+
+public slots:
+    void update();
 
 };
 
