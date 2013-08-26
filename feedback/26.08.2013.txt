@@ -1,0 +1,34 @@
+ƒанный текст не претендует на принадлежность к русскому €зыку. ≈сли какие-то замечани€ противоречат формулировке заданий на багтрекере, то прошу об этом сообщить.
+
+¬ MedianAnalysis::analyze €вное дублирование sortedList.count().
+
+¬ TCSVPointListExporter::TestExportPointList нужно всегда вызывать QFAIL если что-то не открылось или не удалилилось.
+
+Ќе увидел в TCSVPointListExporter::TestExportPointList какого-то тестировани€ вообще.
+
+CSVPointListExporter можно было бы очень просто проверить через CSVPointListImporter: последовательный импорт из старой базы и экспорт в другую новую базу должен приводить к созданию копии старой базы.
+
+¬ TCSVPointListValidator::TestValidation можно было добавить тест на проверку одной строки, как на парсинг одной строки в TCSVPointListImporter.
+
+ћало тестов в TCSVPointListValidator::TestValidation.
+
+Ќе понимаю зачем в CSVPointListValidator::errorMSG вызывать QString::toStdString().c_str().
+
+ƒл€ CSVPointListValidator::validation не требовалось ничего кроме указывать наличие ошибки и номера строки, в которой эта ошибка встретилась. ¬ышел очень сложный метод CSVPointListValidator::validation. ƒостаточно было применить регул€рное выражение.  роме того вызов QString::toDouble может преобразовывать строки типа ".0" или "1.e-19" к корректным даблам, но такие строки валидацию проходить не должны.
+
+ћало тестов в TCSVPointListImporter::TestParseLine.
+
+ѕлохое оформление кода в SequencePointList. ≈сли класс разрастаетс€, то можно подумать о выносе его отдельные h и cpp файлы.
+
+ќпасный код в CSVPointListImporter::parseLine. 
+
+Ќе увидел отображени€ статистики дл€ демо-базы.
+
+
+
+
+
+
+
+
+ 
