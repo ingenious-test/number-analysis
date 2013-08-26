@@ -7,6 +7,8 @@
 #include "../src/AverageAnalysis.h"
 #include "../src/AverageIgnoreNullAnalysis.h"
 #include "../src/StandardDeviationAnalysis.h"
+#include "../src/FirstQuartileAnalysis.h"
+#include "../src/ThirdQuartileAnalysis.h"
 #include "../src/MedianAnalysis.h"
 
 #include "../src/Metatypes.h"
@@ -40,6 +42,9 @@ private slots:
 
     void TestMedian_data();
     void TestMedian();
+
+    void TestFirstAndThirdQuartile_data();
+    void TestFirstAndThirdQuartile();
 };
 
 #endif // TANALYSIS_H

@@ -257,34 +257,34 @@ void TAnalysis::TestMedian_data()
     QTest::newRow("one-value") << (PointList() << Point(26.0)) << 26.0;
 
     QTest::newRow("four-value-sorted") << (PointList()
-                                    << Point(1.0)
-                                    << Point(2.0)
-                                    << Point(3.0)
-                                    << Point(4.0))
-                                << 5.0 / 2.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
+                                           << Point(1.0)
+                                           << Point(2.0)
+                                           << Point(3.0)
+                                           << Point(4.0))
+                                       << 5.0 / 2.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
 
     QTest::newRow("four-value-unsorter") << (PointList()
-                                    << Point(23.0)
-                                    << Point(-5.0)
-                                    << Point(0.0)
-                                    << Point(31.0))
-                                << 23.0 / 2.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
+                                             << Point(23.0)
+                                             << Point(-5.0)
+                                             << Point(0.0)
+                                             << Point(31.0))
+                                         << 23.0 / 2.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
 
     QTest::newRow("five-value-sorted") << (PointList()
-                                    << Point(1.0)
-                                    << Point(2.0)
-                                    << Point(3.0)
-                                    << Point(5.0)
-                                    << Point(5.0))
-                                << 3.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
+                                           << Point(1.0)
+                                           << Point(2.0)
+                                           << Point(3.0)
+                                           << Point(4.0)
+                                           << Point(5.0))
+                                       << 3.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
 
     QTest::newRow("five-value-unsorted") << (PointList()
-                                    << Point(-3.0)
-                                    << Point(13.0)
-                                    << Point(17.5)
-                                    << Point(15.0)
-                                    << Point(-4.5))
-                                << 13.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
+                                             << Point(-3.0)
+                                             << Point(13.0)
+                                             << Point(17.5)
+                                             << Point(15.0)
+                                             << Point(-4.5))
+                                         << 13.0; //Значения с сайта калькулятора http://www.wolframalpha.com/
 }
 
 void TAnalysis::TestMedian()
@@ -298,4 +298,69 @@ void TAnalysis::TestMedian()
     const double expectedResult = result;
 
     FUZZY_COMPARE(actualResult, expectedResult);
+}
+
+void TAnalysis::TestFirstAndThirdQuartile_data()
+{
+    QTest::addColumn< PointList >("values");
+    QTest::addColumn<double>("firstQuartileResult");
+    QTest::addColumn<double>("thirdQuartileResult");
+
+    QTest::newRow("empty") << PointList() << 0.0 << 0.0;
+
+    QTest::newRow("one-value") << (PointList() << Point(26.0)) << 26.0 << 26.0;
+
+    QTest::newRow("four-value-sorted") << (PointList()
+                                           << Point(1.0)
+                                           << Point(2.0)
+                                           << Point(3.0)
+                                           << Point(4.0))
+                                       << (1.0 + 2.0) / 2.0
+                                       <<  (3.0 + 5.0) / 2.0;
+
+    QTest::newRow("four-value-unsorter") << (PointList()
+                                             << Point(23.0)
+                                             << Point(-5.0)
+                                             << Point(0.0)
+                                             << Point(31.0))
+                                         << (0.0 + -5.0) / 2.0
+                                         <<  (23.0 + 31.0) / 2.0;
+
+    QTest::newRow("five-value-sorted") << (PointList()
+                                           << Point(1.0)
+                                           << Point(2.0)
+                                           << Point(3.0)
+                                           << Point(4.0)
+                                           << Point(5.0))
+                                       << (1.0 + 2.0 + 3.0) / 3.0
+                                       <<  (3.0 + 4.0 + 5.0) / 3.0;
+
+    QTest::newRow("five-value-unsorted") << (PointList()
+                                             << Point(-3.0)
+                                             << Point(13.0)
+                                             << Point(17.5)
+                                             << Point(15.0)
+                                             << Point(-4.5))
+                                         << (-3.0 + -4.5 + 13.0) / 3.0
+                                         <<  (13.0 + 15.0 + 17.5) / 3.0;
+}
+
+void TAnalysis::TestFirstAndThirdQuartile()
+{
+    QFETCH(PointList, values);
+    QFETCH(double, firstQuartileResult);
+    QFETCH(double, thirdQuartileResult);
+
+    FirstQuartileAnalysis firstQuartile;
+    ThirdQuartileAnalysis thirdQuartile;
+
+    const double actualFirstQuartileResult = firstQuartile.analyze(values);
+    const double expectedFirstQuartileResult = firstQuartileResult;
+
+    FUZZY_COMPARE(actualFirstQuartileResult, expectedFirstQuartileResult);
+
+    const double actualThirdQuartileResult = thirdQuartile.analyze(values);
+    const double expectedThirdQuartileResult = thirdQuartileResult;
+
+    FUZZY_COMPARE(actualThirdQuartileResult, expectedThirdQuartileResult);
 }

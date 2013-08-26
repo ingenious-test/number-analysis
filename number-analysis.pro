@@ -66,7 +66,9 @@ SOURCES += main.cpp\
     src/MedianAnalysis.cpp \
     src/PointList.cpp \
     src/SequencePointList.cpp \
-    benchmarks/BCSVImporterExporter.cpp
+    benchmarks/BCSVImporterExporter.cpp \
+    src/FirstQuartileAnalysis.cpp \
+    src/ThirdQuartileAnalysis.cpp
 
 HEADERS  += AnalysisWindow.h \
     src/StupidAnalysis.h \
@@ -110,4 +112,6 @@ HEADERS  += AnalysisWindow.h \
     src/MedianAnalysis.h \
     src/PointList.h \
     src/SequencePointList.h \
-    benchmarks/BCSVImporterExporter.h
+    benchmarks/BCSVImporterExporter.h \
+    src/FirstQuartileAnalysis.h \
+    src/ThirdQuartileAnalysis.h
