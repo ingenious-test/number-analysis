@@ -3,6 +3,7 @@
 #define ITEMLISTVIEW_H
 
 #include <QtGui/QListView>
+#include <QScrollBar>
 #include "AbstractAnalysis.h"
 
 class ItemListView :public QListView
@@ -11,6 +12,8 @@ class ItemListView :public QListView
 public:
     ItemListView(QWidget *parent = 0);
     ~ItemListView();
+private:
+    QScrollBar* scroll_;
 
 private slots:
     void doubleClicked(const QModelIndex &index);

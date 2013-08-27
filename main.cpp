@@ -23,10 +23,8 @@
 #endif
 
 
-#ifndef TEST
-#ifndef STRESS
+#ifdef APP
 #include "AnalysisWindow.h"
-#endif
 #endif
 
 
@@ -100,39 +98,37 @@ int main(int argc, char *argv[])
 #ifdef STRESS
     /* qWarning() << "\n" << "Analysis collection benchmark" << "\n";
 
-    BAnalysisCollections bAnalysisCollections(0);
+    BAnalysisCollections bAnalysisCollections(10000);
     bAnalysisCollections.run();
 
-    qWarning() << "\r\n" << "SqlInterface benchmark"  << "\n";;
+    qWarning() << "\n" << "SqlInterface benchmark"  << "\n";;
 
-    BSqlPointListInterface bSqlPointListInterface(0);
+    BSqlPointListInterface bSqlPointListInterface(10000);
     bSqlPointListInterface.run();
 
-    qWarning() << "\r\n" << "SqlPointListReadWrite benchmark"  << "\n";
+    qWarning() << "\n" << "SqlPointListReadWrite benchmark"  << "\n";
 
-    BSqlPointListReadWrite bSqlPointListReadWrite(0);
+    BSqlPointListReadWrite bSqlPointListReadWrite(10000);
     bSqlPointListReadWrite.runWrite();
     bSqlPointListReadWrite.runRead();
 
-    qWarning() << "\r\n" << "StaticCollection benchmark"  << "\n";;
+    qWarning() << "\n" << "StaticCollection benchmark"  << "\n";;
 
     BStatisticsCollection  bStatisticsCollection;
-    bStatisticsCollection.generateDatabase(0, 0);
+    bStatisticsCollection.generateDatabase(10000, 100);
     bStatisticsCollection.statistics();*/
 
-    qWarning() << "\r\n" << "CSV import, export and validation benchmarck"  << "\n";
+    qWarning() << "\n" << "CSV import, export and validation benchmarck"  << "\n";
 
-    BCSVImporterExporter  bCSVImporterExporter(10000, 100);
+    BCSVImporterExporter  bCSVImporterExporter(20000, 200);
     bCSVImporterExporter.run();
 #endif
     QDir::setCurrent(currentDir);
 
 
-#ifndef TEST
-#ifndef STRESS
+#ifdef APP
     AnalysisWindow analysisWindow;
     analysisWindow.show();
-#endif
 #endif
     
     return a.exec();
