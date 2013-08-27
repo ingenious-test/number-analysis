@@ -1,8 +1,7 @@
 #include <QtGui/QApplication>
-
-#include <QDebug>
 #include <QTextCodec>
 
+#ifdef TEST
 #include "tests/TAnalysis.h"
 #include "tests/TAnalysisCollection.h"
 #include "tests/TAnalysisTableModel.h"
@@ -13,16 +12,22 @@
 #include "tests/TCSVPointListImporter.h"
 #include "tests/TCSVPointListValidator.h"
 #include "tests/TCSVPointListExporter.h"
+#endif
 
+#ifdef STRESS
 #include "benchmarks/BAnalysisCollections.h"
 #include "benchmarks/BSqlPointListInterface.h"
 #include "benchmarks/BSqlPointListReadWrite.h"
 #include "benchmarks/BStatisticsCollection.h"
 #include "benchmarks/BCSVImporterExporter.h"
+#endif
 
+
+#ifndef TEST
+#ifndef STRESS
 #include "AnalysisWindow.h"
-
-#include "tests/TestingUtilities.h"
+#endif
+#endif
 
 
 int main(int argc, char *argv[])
@@ -33,7 +38,6 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
 
-#ifdef TEST
     const QString currentDir = QDir::currentPath();
     const QString testingFilesDir = currentDir + "\\testingFiles\\";
 
@@ -43,56 +47,58 @@ int main(int argc, char *argv[])
     }
 
     QDir::setCurrent(testingFilesDir);
-
+#ifdef TEST
     TAnalysis tAnalysis;
     QTest::qExec(&tAnalysis);
 
-    qDebug() << "\n";
+    qWarning() << "\n";
 
     TAnalysisCollection tAnalysisCollection;
     QTest::qExec(&tAnalysisCollection);
 
-    qDebug() << "\n";
+    qWarning() << "\n";
 
     TAnalysisTableModel tAnalysisTableModel;
     QTest::qExec(&tAnalysisTableModel);
 
-    qDebug() << "\n";
+    qWarning() << "\n";
 
     TItemListModel tItemListModel;
     QTest::qExec(&tItemListModel);
 
-    qDebug() << "\n";
+    qWarning() << "\n";
 
     TSqlPointListReader tSqlPointListReader;
     QTest::qExec(&tSqlPointListReader);
 
-    qDebug() << "\n";
+    qWarning() << "\n";
 
     TPointListGenerator tPointListGenerator;
     QTest::qExec(&tPointListGenerator);
 
-    qDebug() << "\n";
+    qWarning() << "\n";
 
     TPointListStorageStatistics tPointListStorageStatistics;
     QTest::qExec(&tPointListStorageStatistics);
 
-    qDebug() << "\n";
+    qWarning() << "\n";
 
     TCSVPointListImporter tCSVPointListImporter;
     QTest::qExec(&tCSVPointListImporter);
 
-    qDebug() << "\n";
+    qWarning() << "\n";
 
     TCSVPointListValidator tCSVPointListValidator;
     QTest::qExec(&tCSVPointListValidator);
 
-    qDebug() << "\n";
+    qWarning() << "\n";
 
     TCSVPointListExporter tCSVPointListExporter;
     QTest::qExec(&tCSVPointListExporter);
-#ifdef STRESS 
-   /* qWarning() << "\n" << "Analysis collection benchmark" << "\n";
+#endif
+
+#ifdef STRESS
+    /* qWarning() << "\n" << "Analysis collection benchmark" << "\n";
 
     BAnalysisCollections bAnalysisCollections(0);
     bAnalysisCollections.run();
@@ -118,14 +124,15 @@ int main(int argc, char *argv[])
 
     BCSVImporterExporter  bCSVImporterExporter(10000, 100);
     bCSVImporterExporter.run();
-#endif  
-
-    QDir::setCurrent(currentDir);
 #endif
+    QDir::setCurrent(currentDir);
+
 
 #ifndef TEST
+#ifndef STRESS
     AnalysisWindow analysisWindow;
     analysisWindow.show();
+#endif
 #endif
     
     return a.exec();
