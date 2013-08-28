@@ -78,18 +78,6 @@ public:
         return *this;
     }
 
-    QList< QPair<ID, double> > project(const IDAnalysis &analysis) const
-    {
-        QList< QPair<ID, double> > projection;
-
-        foreach(const ID &item, keys())
-        {
-            projection << QPair<ID, double>(item, value(item).value(analysis, 0.0));
-        }
-
-        return projection;
-    }
-
     QString toString() const
     {
         QString stringRepresentation;

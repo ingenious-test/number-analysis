@@ -45,6 +45,13 @@ public:
     void appendPointList(const IDList& items);
     bool containsPointList(const ID& id) const;
 
+    const int seqCount() const { return items_.count();}
+
+    void setItemsCountOnPage(const int count);
+    int pagesCount() const;
+    const int currentPage() const;
+    void setCurrentPage(const int page);
+
 
     static bool columnIDLessThan(const ID &s1, const ID &s2);
     static bool columnIDMoreThan(const ID &s1, const ID &s2);
@@ -63,6 +70,16 @@ private:
     AnalysisCollection collection_;
     IDList items_;
     AbstractPointListReader *reader_;
+
+    int currentPage_;
+    int itemsCountOnPage_;
+
+    void appendPointList_(const ID& id);
+
+signals:
+    void currentPageChanged();
+    void itemsCountOnPageChanged();
+    void dataChanged();
 };
 
 #endif // ANALYSISTABLEMODEL_H

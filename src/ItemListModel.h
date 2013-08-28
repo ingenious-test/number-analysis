@@ -29,7 +29,7 @@ public:
     void appendPointList(const ID& id);
     void appendPointList(const IDList &items);
 
-    inline const int seqCount() const { return items_.count();}
+    const int seqCount() const { return items_.count();}
 
     void setItemsCountOnPage(const int count);
     int pagesCount() const;

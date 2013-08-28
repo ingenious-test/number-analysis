@@ -47,9 +47,13 @@ private:
     const QString dataBaseName_;
     const QString tableName_;
 
-    QToolButton* prevPageButton_;
-    QLabel* pageLabel_;
-    QToolButton* nextPageButton_;
+    QToolButton* prevSeqPageButton_;
+    QLabel* seqPageLabel_;
+    QToolButton* nextSeqPageButton_;
+
+    QToolButton* prevAnalysisPageButton_;
+    QLabel* analysisPageLabel_;
+    QToolButton* nextAnalysisPageButton_;
 
 
     void createMenu();
@@ -64,11 +68,13 @@ private slots:
     void onExportClick();
     void onImportClick();
 
-    void onPrevPageButtonClick();
-    void onNextPageButtonClick();
+    void onPrevSeqPageButtonClick();
+    void onNextSeqPageButtonClick();
+    void onChangeSeqPage();
 
-
-    void onChangePage();
+    void onPrevAnalysisPageButtonClick();
+    void onNextAnalysisPageButtonClick();
+    void onChangeAnalysisPage();
 };
 
 #endif // WIDGET_H

@@ -90,27 +90,36 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     analyzeButton = new QPushButton("Провести анализ");
 
 
-    QHBoxLayout* buttonsSection = new QHBoxLayout;
-    buttonsSection->addStretch();
-    buttonsSection->addWidget(analyzeButton);
+    QHBoxLayout* analysisButtonsSection = new QHBoxLayout;
+    prevAnalysisPageButton_ = new QToolButton;
+    prevAnalysisPageButton_->setArrowType(Qt::LeftArrow);
+    analysisPageLabel_ = new QLabel("0/0");
+    nextAnalysisPageButton_ = new QToolButton;
+    nextAnalysisPageButton_->setArrowType(Qt::RightArrow);
+
+    analysisButtonsSection->addWidget(prevAnalysisPageButton_);
+    analysisButtonsSection->addWidget(analysisPageLabel_);
+    analysisButtonsSection->addWidget(nextAnalysisPageButton_);
+    analysisButtonsSection->addStretch();
+    analysisButtonsSection->addWidget(analyzeButton);
 
     QVBoxLayout* analyzesResultSectionLayout = new QVBoxLayout;
     analyzesResultSectionLayout->addWidget(analyzesView_);
-    analyzesResultSectionLayout->addLayout(buttonsSection);
+    analyzesResultSectionLayout->addLayout(analysisButtonsSection);
 
 
 
     QHBoxLayout* sequenceButtonsSection = new QHBoxLayout;
-    prevPageButton_ = new QToolButton;
-    prevPageButton_->setArrowType(Qt::LeftArrow);
-    pageLabel_ = new QLabel("0/0");
-    nextPageButton_ = new QToolButton;
-    nextPageButton_->setArrowType(Qt::RightArrow);
+    prevSeqPageButton_ = new QToolButton;
+    prevSeqPageButton_->setArrowType(Qt::LeftArrow);
+    seqPageLabel_ = new QLabel("0/0");
+    nextSeqPageButton_ = new QToolButton;
+    nextSeqPageButton_->setArrowType(Qt::RightArrow);
 
     sequenceButtonsSection->addStretch();
-    sequenceButtonsSection->addWidget(prevPageButton_);
-    sequenceButtonsSection->addWidget(pageLabel_);
-    sequenceButtonsSection->addWidget(nextPageButton_);
+    sequenceButtonsSection->addWidget(prevSeqPageButton_);
+    sequenceButtonsSection->addWidget(seqPageLabel_);
+    sequenceButtonsSection->addWidget(nextSeqPageButton_);
 
     QVBoxLayout* sequenceSection = new QVBoxLayout;
     sequenceSection->addWidget(seqPointListView_);
@@ -138,14 +147,23 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     connect(seqPointListView_, SIGNAL(itemsActivated(IDList)), this, SLOT(addItems(IDList)));
     connect(analyzeButton, SIGNAL(clicked()), this, SLOT(onAnalyzeButtonClick()));
 
-    connect(prevPageButton_, SIGNAL(clicked()), this, SLOT(onPrevPageButtonClick()));
-    connect(nextPageButton_, SIGNAL(clicked()), this, SLOT(onNextPageButtonClick()));
 
-    connect(seqPointListModel_, SIGNAL(currentPageChanged()), this, SLOT(onChangePage()));
-    connect(seqPointListModel_, SIGNAL(itemsCountOnPageChanged()), this, SLOT(onChangePage()));
-    connect(seqPointListModel_, SIGNAL(dataChanged()), this, SLOT(onChangePage()));
+    connect(seqPointListModel_, SIGNAL(currentPageChanged()), this, SLOT(onChangeSeqPage()));
+    connect(seqPointListModel_, SIGNAL(itemsCountOnPageChanged()), this, SLOT(onChangeSeqPage()));
+    connect(seqPointListModel_, SIGNAL(dataChanged()), this, SLOT(onChangeSeqPage()));
+    connect(prevSeqPageButton_, SIGNAL(clicked()), this, SLOT(onPrevSeqPageButtonClick()));
+    connect(nextSeqPageButton_, SIGNAL(clicked()), this, SLOT(onNextSeqPageButtonClick()));
+
+    connect(analyzesModel_, SIGNAL(currentPageChanged()), this, SLOT(onChangeAnalysisPage()));
+    connect(analyzesModel_, SIGNAL(itemsCountOnPageChanged()), this, SLOT(onChangeAnalysisPage()));
+    connect(analyzesModel_, SIGNAL(dataChanged()), this, SLOT(onChangeAnalysisPage()));
+    connect(prevAnalysisPageButton_, SIGNAL(clicked()), this, SLOT(onPrevAnalysisPageButtonClick()));
+    connect(nextAnalysisPageButton_, SIGNAL(clicked()), this, SLOT(onNextAnalysisPageButtonClick()));
 
     seqPointListModel_->setItemsCountOnPage(5);
+    seqPointListModel_->setCurrentPage(0);
+    analyzesModel_->setItemsCountOnPage(5);
+    analyzesModel_->setCurrentPage(0);
 }
 
 AnalysisWindow::~AnalysisWindow()
@@ -182,7 +200,7 @@ void AnalysisWindow::addItems(const IDList &items)
 {
     foreach(const ID& item, items)
     {
-        analyzesModel_->appendPointList(item);
+        addItem(item);
     }
 }
 
@@ -226,7 +244,7 @@ void AnalysisWindow::onImportClick()
     }
 }
 
-void AnalysisWindow::onPrevPageButtonClick()
+void AnalysisWindow::onPrevSeqPageButtonClick()
 {
     if(seqPointListModel_->currentPage() != 0)
     {
@@ -234,7 +252,7 @@ void AnalysisWindow::onPrevPageButtonClick()
     }
 }
 
-void AnalysisWindow::onNextPageButtonClick()
+void AnalysisWindow::onNextSeqPageButtonClick()
 {
     if(seqPointListModel_->currentPage() + 1 != seqPointListModel_->pagesCount())
     {
@@ -242,11 +260,41 @@ void AnalysisWindow::onNextPageButtonClick()
     }
 }
 
-void AnalysisWindow::onChangePage()
+void AnalysisWindow::onChangeSeqPage()
 {
-    prevPageButton_->setEnabled(seqPointListModel_->currentPage() != 0);
-    nextPageButton_->setEnabled(seqPointListModel_->currentPage() + 1 != seqPointListModel_->pagesCount());
+    prevSeqPageButton_->setEnabled(seqPointListModel_->currentPage() != 0);
+    nextSeqPageButton_->setEnabled(seqPointListModel_->currentPage() + 1 != seqPointListModel_->pagesCount());
 
     const QString pageLabelText = QString::number(seqPointListModel_->currentPage() + 1) + "/" + QString::number(seqPointListModel_->pagesCount());
-    pageLabel_->setText(pageLabelText);
+    seqPageLabel_->setText(pageLabelText);
+}
+
+void AnalysisWindow::onPrevAnalysisPageButtonClick()
+{
+    if(analyzesModel_->currentPage() != 0)
+    {
+        analyzesModel_->setCurrentPage(analyzesModel_->currentPage() - 1);
+    }
+}
+
+void AnalysisWindow::onNextAnalysisPageButtonClick()
+{
+    if(analyzesModel_->currentPage() + 1 != analyzesModel_->pagesCount())
+    {
+        analyzesModel_->setCurrentPage(analyzesModel_->currentPage() + 1);
+    }
+}
+
+void AnalysisWindow::onChangeAnalysisPage()
+{
+    prevAnalysisPageButton_->setVisible(analyzesModel_->pagesCount() > 1);
+    nextAnalysisPageButton_->setVisible(analyzesModel_->pagesCount() > 1);
+    analysisPageLabel_->setVisible(analyzesModel_->pagesCount() > 1);
+
+
+    prevAnalysisPageButton_->setEnabled(analyzesModel_->currentPage() != 0);
+    nextAnalysisPageButton_->setEnabled(analyzesModel_->currentPage() + 1 != analyzesModel_->pagesCount());
+
+    const QString pageLabelText = QString::number(analyzesModel_->currentPage() + 1) + "/" + QString::number(analyzesModel_->pagesCount());
+    analysisPageLabel_->setText(pageLabelText);
 }

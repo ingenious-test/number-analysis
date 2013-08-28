@@ -130,6 +130,7 @@ int main(int argc, char *argv[])
     AnalysisWindow analysisWindow;
     analysisWindow.show();
 #endif
+
     
     return a.exec();
 

@@ -4,7 +4,9 @@
 
 AnalysisTableModel::AnalysisTableModel(AbstractPointListReader *reader, QObject *parent):
     QAbstractItemModel(parent),
-    reader_(reader)
+    reader_(reader),
+    currentPage_(0),
+    itemsCountOnPage_(0)
 {
 
 }
@@ -26,7 +28,13 @@ QModelIndex AnalysisTableModel::parent(const QModelIndex &child) const
 
 int AnalysisTableModel::rowCount(const QModelIndex &parent) const
 {
-    return items_.size();
+    if(currentPage_ + 1 == pagesCount())
+    {
+        const int rows = (pagesCount() * itemsCountOnPage_) - items_.count();
+        return itemsCountOnPage_ - rows;
+    }
+
+    return itemsCountOnPage_ == 0 ? items_.size() : itemsCountOnPage_;
 }
 
 int AnalysisTableModel::columnCount(const QModelIndex &parent) const
@@ -45,9 +53,22 @@ QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole)
     {
+        int ind = index.row();
+        if(itemsCountOnPage_ > 0)
+        {
+            ind = (currentPage_ * itemsCountOnPage_) + index.row();
+        }
+
+        bool indIsValid = ind >= 0 && ind < items_.count();
+
+        if(!indIsValid)
+        {
+            return QVariant();
+        }
+
         if(index.column() == 0)
         {
-            return items_.at(index.row());
+            return items_.at(ind);
         }
         else
         {
@@ -55,7 +76,7 @@ QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
             {
                 return 0;
             }
-            return results_.value(items_.at(index.row())).value(listAnalysis.at(index.column() - 1));
+            return results_.value(items_.at(ind)).value(listAnalysis.at(index.column() - 1));
         }
     }
     else
@@ -119,8 +140,20 @@ void AnalysisTableModel::sort(int column, Qt::SortOrder order)
     {
         const QString  sortingAnalysis = collection_.getIDAt(column - 1);
 
-        QList< QPair<ID, double> > resultPairs =
-                results_.project(sortingAnalysis);
+        QList< QPair<ID, double> > resultPairs;
+
+        foreach(const ID& item, items_)
+        {
+            double result = 0.0;
+            if(results_.contains(item))
+            {
+                if(results_.value(item).contains(sortingAnalysis))
+                {
+                    result = results_.value(item).value(sortingAnalysis);
+                }
+            }
+            resultPairs.append(QPair<ID, double>(item, result));
+        }
 
         switch(order)
         {
@@ -175,30 +208,18 @@ void AnalysisTableModel::removeAnalysis(const QString &id)
 }
 
 void AnalysisTableModel::appendPointList(const ID &id)
-{ 
-    if(id.isEmpty())
-    {
-        qWarning() << "ID not set";
-        return;
-    }
-
-    if(!items_.contains(id))
-    {
-        items_.append(id);
-        reset();
-    }
-    else
-    {
-        qWarning() << QString("AnalysisTableModel contains ID: %1").arg(id);
-    }
+{
+    appendPointList_(id);
+    emit dataChanged();
 }
 
 void AnalysisTableModel::appendPointList(const IDList &items)
 {
     foreach(ID id, items)
     {
-        appendPointList(id);
+        appendPointList_(id);
     }
+    emit dataChanged();
 }
 
 bool AnalysisTableModel::containsPointList(const ID &id) const
@@ -220,8 +241,8 @@ void AnalysisTableModel::analyze(const ID &item)
 {
     PointList pointList = reader_->read(item);
     AnalysisResult result = collection_.analyze(pointList);
-    reset();
     results_.insertInc(item, result);
+    reset();
 }
 
 bool AnalysisTableModel::sortByAnalysisLessThan(const QPair<ID, double> &pair1,
@@ -236,3 +257,70 @@ bool AnalysisTableModel::sortByAnalysisMoreThan(const QPair<ID, double> &pair1,
     return sortByAnalysisLessThan(pair2, pair1);
 }
 
+void AnalysisTableModel::appendPointList_(const ID &id)
+{
+    if(id.isEmpty())
+    {
+        qWarning() << "ID not set";
+        return;
+    }
+
+    if(!items_.contains(id))
+    {
+        items_.append(id);
+        reset();
+    }
+    else
+    {
+        qWarning() << QString("AnalysisTableModel contains ID: %1").arg(id);
+    }
+}
+
+void AnalysisTableModel::setItemsCountOnPage(const int count)
+{
+    if(count >= 0)
+    {
+        itemsCountOnPage_ = count;
+        emit itemsCountOnPageChanged();
+        if(currentPage_ >= pagesCount())
+        {
+            setCurrentPage(0);
+        }
+        reset();
+    }
+}
+
+int AnalysisTableModel::pagesCount() const
+{
+    if(itemsCountOnPage_ == 0)
+    {
+        return 1;
+    }
+
+    if(items_.isEmpty())
+    {
+        return 1;
+    }
+
+    int pages  = items_.count() / itemsCountOnPage_;
+    if(items_.count() % itemsCountOnPage_ != 0)
+    {
+        pages++;
+    }
+    return pages;
+}
+
+const int AnalysisTableModel::currentPage() const
+{
+    return currentPage_;
+}
+
+void AnalysisTableModel::setCurrentPage(const int page)
+{
+    if(page >= 0 && page < pagesCount())
+    {
+        currentPage_ = page;
+        emit currentPageChanged();
+        reset();
+    }
+}
