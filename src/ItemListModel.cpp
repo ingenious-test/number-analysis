@@ -3,25 +3,26 @@
 ItemListModel::ItemListModel(AbstractPointListReader *reader,
                              QObject *parent):
     QAbstractListModel(parent),
-    reader_(reader)
+    reader_(reader),
+    currentPage_(0),
+    itemsCountOnPage_(0)
 {
-    setPage(0);
-    setItemsCountOnPage(0);
     update();
 }
 
 ItemListModel::ItemListModel(const IDList &items, QObject *parent):
     QAbstractListModel(parent),
-    page_(0),
-    itemsOnPage_(0)
+    currentPage_(0),
+    itemsCountOnPage_(0)
 {
     appendPointList(items);
 }
 
 void ItemListModel::update()
 {
-    clear();
+    items_.clear();
     appendPointList(reader_->readAllItems());
+    emit dataChanged();
     this->reset();
 }
 
@@ -37,13 +38,13 @@ QModelIndex ItemListModel::parent(const QModelIndex &child) const
 
 int ItemListModel::rowCount(const QModelIndex &parent) const
 {
-    if(page_ + 1 == pagesCount())
+    if(currentPage_ + 1 == pagesCount())
     {
-        const int rows = (pagesCount() * itemsOnPage_) - items_.count();
-        return itemsOnPage_ - rows;
+        const int rows = (pagesCount() * itemsCountOnPage_) - items_.count();
+        return itemsCountOnPage_ - rows;
     }
 
-    return itemsOnPage_ == 0 ? items_.size() : itemsOnPage_;
+    return itemsCountOnPage_ == 0 ? items_.size() : itemsCountOnPage_;
 }
 
 int ItemListModel::columnCount(const QModelIndex &parent) const
@@ -63,13 +64,13 @@ QVariant ItemListModel::data(const QModelIndex &index, int role) const
     {
         if(index.column() == 0)
         {
-            if(itemsOnPage_ == 0)
+            if(itemsCountOnPage_ == 0)
             {
                 return items_[index.row()];
             }
             else
             {
-                int ind = (page_ * itemsOnPage_) + index.row();
+                int ind = (currentPage_ * itemsCountOnPage_) + index.row();
                 if(ind >= 0 && ind < items_.count())
                 {
                     return items_[ind];
@@ -85,54 +86,58 @@ QVariant ItemListModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool ItemListModel::appendPointList(const ID &id)
+void ItemListModel::appendPointList_(const ID &id)
 {
     if(id.isNull())
     {
         qWarning() << "ID not set";
-        return false;
     }
 
     if(!items_.contains(id))
     {
         items_.append(id);
-
-        return true;
     }
     else
     {
         qWarning() << QString("ItemListModel contains ID: %1").arg(id);
-        return false;
     }
-    return false;
+}
+
+void ItemListModel::appendPointList(const ID &id)
+{
+    appendPointList_(id);
+    qSort(items_);
+    emit dataChanged();
 }
 
 void ItemListModel::appendPointList(const IDList &items)
 {
     foreach(const ID& id, items)
     {
-        appendPointList(id);
+        appendPointList_(id);
     }
     qSort(items_);
+    emit dataChanged();
 }
 
-void ItemListModel::clear()
-{
-    items_.clear();
-}
 
 void ItemListModel::setItemsCountOnPage(const int count)
 {
-    if(count >= 0 && count < items_.count())
+    if(count >= 0)
     {
-        itemsOnPage_ = count;
+        itemsCountOnPage_ = count;
+        emit itemsCountOnPageChanged();
+        if(currentPage_ >= pagesCount())
+        {
+            setCurrentPage(0);
+        }
         reset();
     }
 }
 
 int ItemListModel::pagesCount() const
 {
-    if(itemsOnPage_ == 0)
+    if(itemsCountOnPage_ == 0)
     {
         return 1;
     }
@@ -142,25 +147,25 @@ int ItemListModel::pagesCount() const
         return 1;
     }
 
-    int pages  = items_.count() / itemsOnPage_;
-    if(items_.count() % itemsOnPage_ != 0)
+    int pages  = items_.count() / itemsCountOnPage_;
+    if(items_.count() % itemsCountOnPage_ != 0)
     {
         pages++;
     }
     return pages;
 }
 
-const int ItemListModel::page() const
+const int ItemListModel::currentPage() const
 {
-    return page_;
+    return currentPage_;
 }
 
-void ItemListModel::setPage(const int page)
+void ItemListModel::setCurrentPage(const int page)
 {
     if(page >= 0 && page < pagesCount())
     {
-        page_ = page;
-        emit pageChanged();
+        currentPage_ = page;
+        emit currentPageChanged();
         reset();
     }
 }

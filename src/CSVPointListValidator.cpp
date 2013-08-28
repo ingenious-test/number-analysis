@@ -41,7 +41,7 @@ bool CSVPointListValidator::validation(const QString &fileName)
             }
         }
 
-        const QString regExprStr = QString("^\\w+;-?\\d+(.\\d+)?$");
+        const QString regExprStr = QString("^\\w.+;-?\\d+(.\\d+)?$");
         const QRegExp regExpr(regExprStr);
 
         const bool isMatch = regExpr.exactMatch(lineData);

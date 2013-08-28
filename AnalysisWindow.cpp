@@ -5,7 +5,7 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     dataBaseName_("database.db"),
     tableName_("points")
 {
-    /*if(QFile::exists(dataBaseName_))
+   /* if(QFile::exists(dataBaseName_))
     {
         if(!QFile::remove(dataBaseName_))
         {
@@ -16,22 +16,24 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     SqlPointListWriter writer(dataBaseName_, tableName_);
     writer.open();
     SequencePointList seq;
-    for(int i = 0; i < 10000; i++)
+    for(int i = 0; i < 300000; i++)
     {
+        qDebug() << i;
         PointList pointList(QString("id%1").arg(i));
-        for(int j = 0; j < 100; j++)
+        for(int j = 0; j < 1; j++)
         {
             pointList << Point(j);
-            qWarning() << i << j;
-        }
+  }
         seq.append(pointList);
     }
 
-    writer.write(seq);*/
+    qWarning() << "------BEGIN-WRITE-------";
+    writer.write(seq);
+    qWarning() << "------END-WRITE-------";
 
     DatabaseGenerator databaseGenerator;
 
-    databaseGenerator.generateDataBase(dataBaseName_,tableName_);
+    databaseGenerator.generateDataBase(dataBaseName_,tableName_);*/
 
     reader_ = new SqlPointListReader(dataBaseName_, tableName_);
     static_cast<SqlPointListReader*>(reader_)->open();
@@ -133,15 +135,17 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     setLayout(mainLayout);
 
     connect(seqPointListView_, SIGNAL(itemActivated(ID)), this, SLOT(addItem(ID)));
+    connect(seqPointListView_, SIGNAL(itemsActivated(IDList)), this, SLOT(addItems(IDList)));
     connect(analyzeButton, SIGNAL(clicked()), this, SLOT(onAnalyzeButtonClick()));
 
     connect(prevPageButton_, SIGNAL(clicked()), this, SLOT(onPrevPageButtonClick()));
     connect(nextPageButton_, SIGNAL(clicked()), this, SLOT(onNextPageButtonClick()));
-    connect(seqPointListModel_, SIGNAL(pageChanged()), this, SLOT(onChangePage()));
 
+    connect(seqPointListModel_, SIGNAL(currentPageChanged()), this, SLOT(onChangePage()));
+    connect(seqPointListModel_, SIGNAL(itemsCountOnPageChanged()), this, SLOT(onChangePage()));
+    connect(seqPointListModel_, SIGNAL(dataChanged()), this, SLOT(onChangePage()));
 
-    seqPointListModel_->setItemsCountOnPage(3);
-    seqPointListModel_->setPage(0);
+    seqPointListModel_->setItemsCountOnPage(5);
 }
 
 AnalysisWindow::~AnalysisWindow()
@@ -171,6 +175,14 @@ void AnalysisWindow::addItem(const ID &item)
     else
     {
         qWarning() << QString("PointList with id:{%1} already in the table for analysis").arg(item);
+    }
+}
+
+void AnalysisWindow::addItems(const IDList &items)
+{
+    foreach(const ID& item, items)
+    {
+        analyzesModel_->appendPointList(item);
     }
 }
 
@@ -216,25 +228,25 @@ void AnalysisWindow::onImportClick()
 
 void AnalysisWindow::onPrevPageButtonClick()
 {
-    if(seqPointListModel_->page() != 0)
+    if(seqPointListModel_->currentPage() != 0)
     {
-        seqPointListModel_->setPage(seqPointListModel_->page() - 1);
+        seqPointListModel_->setCurrentPage(seqPointListModel_->currentPage() - 1);
     }
 }
 
 void AnalysisWindow::onNextPageButtonClick()
 {
-    if(seqPointListModel_->page() + 1 != seqPointListModel_->pagesCount())
+    if(seqPointListModel_->currentPage() + 1 != seqPointListModel_->pagesCount())
     {
-        seqPointListModel_->setPage(seqPointListModel_->page() + 1);
+        seqPointListModel_->setCurrentPage(seqPointListModel_->currentPage() + 1);
     }
 }
 
 void AnalysisWindow::onChangePage()
 {
-    prevPageButton_->setEnabled(seqPointListModel_->page() != 0);
-    nextPageButton_->setEnabled(seqPointListModel_->page() + 1 != seqPointListModel_->pagesCount());
+    prevPageButton_->setEnabled(seqPointListModel_->currentPage() != 0);
+    nextPageButton_->setEnabled(seqPointListModel_->currentPage() + 1 != seqPointListModel_->pagesCount());
 
-    const QString pageLabelText = QString::number(seqPointListModel_->page() + 1) + "/" + QString::number(seqPointListModel_->pagesCount());
+    const QString pageLabelText = QString::number(seqPointListModel_->currentPage() + 1) + "/" + QString::number(seqPointListModel_->pagesCount());
     pageLabel_->setText(pageLabelText);
 }

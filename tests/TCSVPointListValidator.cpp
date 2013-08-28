@@ -111,7 +111,7 @@ void TCSVPointListValidator::TestRegExp_data()
 
     QTest::newRow("first-correct") << "id1;0.0" << true;
     QTest::newRow("second-correct") << "id2;-1.0" << true;
-    QTest::newRow("third-correct") << "id3;123123" << true;
+    QTest::newRow("third-correct") << "id-3;123123" << true;
 
 }
 
@@ -120,7 +120,7 @@ void TCSVPointListValidator::TestRegExp()
     QFETCH(QString, testStr);
     QFETCH(bool, result);
 
-    QRegExp regexpr("^\\w+;-?\\d+(.\\d+)?$");
+    QRegExp regexpr("^\\w.+;-?\\d+(.\\d+)?$");
 
 
     const bool actualResult = regexpr.exactMatch(testStr);

@@ -26,17 +26,15 @@ public:
     int columnCount(const QModelIndex &parent  = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-    bool appendPointList(const ID& id);
+    void appendPointList(const ID& id);
     void appendPointList(const IDList &items);
-
-    void clear();
 
     inline const int seqCount() const { return items_.count();}
 
     void setItemsCountOnPage(const int count);
     int pagesCount() const;
-    const int page() const;
-    void setPage(const int page);
+    const int currentPage() const;
+    void setCurrentPage(const int page);
 
 protected:
     ItemListModel(const IDList &items, QObject *parent = 0);
@@ -45,14 +43,18 @@ private:
     IDList items_;
     AbstractPointListReader *reader_;
 
-    int page_;
-    int itemsOnPage_;
+    int currentPage_;
+    int itemsCountOnPage_;
+
+    void appendPointList_(const ID& id);
 
 public slots:
     void update();
 
 signals:
-    void pageChanged();
+    void currentPageChanged();
+    void itemsCountOnPageChanged();
+    void dataChanged();
 };
 
 #endif // ITEMLISTMODEL_H

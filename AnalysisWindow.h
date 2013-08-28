@@ -56,6 +56,7 @@ private:
 
 private slots:
     void addItem(const ID &item);
+    void addItems(const IDList &items);
 
     void onAnalyzeButtonClick();
     void onStatisticsClick();

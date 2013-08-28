@@ -3,7 +3,8 @@
 #define ITEMLISTVIEW_H
 
 #include <QtGui/QListView>
-#include <QScrollBar>
+#include <QMenu>
+#include <QContextMenuEvent>
 #include "AbstractAnalysis.h"
 
 class ItemListView :public QListView
@@ -14,11 +15,15 @@ public:
     ~ItemListView();
 
 private slots:
-    void doubleClicked(const QModelIndex &index);
+    void onDoubleClicked(QModelIndex index);
+    void contextMenuEvent(QContextMenuEvent *);
 
+    void onSelectedAllClick();
+    void onAddToAnalysisClick();
 
 signals:
     void itemActivated(const ID &item);
+    void itemsActivated(const IDList &items);
 };
 
 #endif // ITEMLISTVIEW_H
