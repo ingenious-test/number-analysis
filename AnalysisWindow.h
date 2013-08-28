@@ -6,6 +6,8 @@
 #include <QPushButton>
 #include <QMenuBar>
 #include <QFileDialog>
+#include <QToolButton>
+#include <QLabel>
 
 #include "src/ItemListView.h"
 
@@ -45,6 +47,10 @@ private:
     const QString dataBaseName_;
     const QString tableName_;
 
+    QToolButton* prevPageButton_;
+    QLabel* pageLabel_;
+    QToolButton* nextPageButton_;
+
 
     void createMenu();
 
@@ -56,6 +62,12 @@ private slots:
 
     void onExportClick();
     void onImportClick();
+
+    void onPrevPageButtonClick();
+    void onNextPageButtonClick();
+
+
+    void onChangePage();
 };
 
 #endif // WIDGET_H

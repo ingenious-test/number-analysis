@@ -16,3 +16,4 @@ void ItemListView::doubleClicked(const QModelIndex &index)
     ID id = index.data().toString();
     emit itemActivated(id);
 }
+

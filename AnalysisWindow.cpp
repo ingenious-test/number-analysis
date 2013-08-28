@@ -5,12 +5,33 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     dataBaseName_("database.db"),
     tableName_("points")
 {
+    /*if(QFile::exists(dataBaseName_))
+    {
+        if(!QFile::remove(dataBaseName_))
+        {
+            qWarning() << "can't remove testing database";
+        }
+    }
+
+    SqlPointListWriter writer(dataBaseName_, tableName_);
+    writer.open();
+    SequencePointList seq;
+    for(int i = 0; i < 10000; i++)
+    {
+        PointList pointList(QString("id%1").arg(i));
+        for(int j = 0; j < 100; j++)
+        {
+            pointList << Point(j);
+            qWarning() << i << j;
+        }
+        seq.append(pointList);
+    }
+
+    writer.write(seq);*/
+
     DatabaseGenerator databaseGenerator;
 
     databaseGenerator.generateDataBase(dataBaseName_,tableName_);
-
-    IDList list;
-    list << "First" << "Second" << "Third";
 
     reader_ = new SqlPointListReader(dataBaseName_, tableName_);
     static_cast<SqlPointListReader*>(reader_)->open();
@@ -75,7 +96,26 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     analyzesResultSectionLayout->addWidget(analyzesView_);
     analyzesResultSectionLayout->addLayout(buttonsSection);
 
-    subLayout->addWidget(seqPointListView_);
+
+
+    QHBoxLayout* sequenceButtonsSection = new QHBoxLayout;
+    prevPageButton_ = new QToolButton;
+    prevPageButton_->setArrowType(Qt::LeftArrow);
+    pageLabel_ = new QLabel("0/0");
+    nextPageButton_ = new QToolButton;
+    nextPageButton_->setArrowType(Qt::RightArrow);
+
+    sequenceButtonsSection->addStretch();
+    sequenceButtonsSection->addWidget(prevPageButton_);
+    sequenceButtonsSection->addWidget(pageLabel_);
+    sequenceButtonsSection->addWidget(nextPageButton_);
+
+    QVBoxLayout* sequenceSection = new QVBoxLayout;
+    sequenceSection->addWidget(seqPointListView_);
+    sequenceSection->addLayout(sequenceButtonsSection);
+
+
+    subLayout->addLayout(sequenceSection);
     subLayout->addLayout(analyzesResultSectionLayout);
 
     mainLayout->addWidget(mainMenu_);
@@ -87,11 +127,21 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     subLayout->setMargin(5);
     subLayout->setSpacing(5);
 
+    subLayout->setStretch(0,0);
+    subLayout->setStretch(1,1);
 
     setLayout(mainLayout);
 
     connect(seqPointListView_, SIGNAL(itemActivated(ID)), this, SLOT(addItem(ID)));
     connect(analyzeButton, SIGNAL(clicked()), this, SLOT(onAnalyzeButtonClick()));
+
+    connect(prevPageButton_, SIGNAL(clicked()), this, SLOT(onPrevPageButtonClick()));
+    connect(nextPageButton_, SIGNAL(clicked()), this, SLOT(onNextPageButtonClick()));
+    connect(seqPointListModel_, SIGNAL(pageChanged()), this, SLOT(onChangePage()));
+
+
+    seqPointListModel_->setItemsCountOnPage(3);
+    seqPointListModel_->setPage(0);
 }
 
 AnalysisWindow::~AnalysisWindow()
@@ -162,4 +212,29 @@ void AnalysisWindow::onImportClick()
         }
         seqPointListModel_->update();
     }
+}
+
+void AnalysisWindow::onPrevPageButtonClick()
+{
+    if(seqPointListModel_->page() != 0)
+    {
+        seqPointListModel_->setPage(seqPointListModel_->page() - 1);
+    }
+}
+
+void AnalysisWindow::onNextPageButtonClick()
+{
+    if(seqPointListModel_->page() + 1 != seqPointListModel_->pagesCount())
+    {
+        seqPointListModel_->setPage(seqPointListModel_->page() + 1);
+    }
+}
+
+void AnalysisWindow::onChangePage()
+{
+    prevPageButton_->setEnabled(seqPointListModel_->page() != 0);
+    nextPageButton_->setEnabled(seqPointListModel_->page() + 1 != seqPointListModel_->pagesCount());
+
+    const QString pageLabelText = QString::number(seqPointListModel_->page() + 1) + "/" + QString::number(seqPointListModel_->pagesCount());
+    pageLabel_->setText(pageLabelText);
 }

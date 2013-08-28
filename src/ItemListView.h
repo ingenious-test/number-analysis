@@ -12,11 +12,10 @@ class ItemListView :public QListView
 public:
     ItemListView(QWidget *parent = 0);
     ~ItemListView();
-private:
-    QScrollBar* scroll_;
 
 private slots:
     void doubleClicked(const QModelIndex &index);
+
 
 signals:
     void itemActivated(const ID &item);

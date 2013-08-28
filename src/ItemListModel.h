@@ -31,6 +31,13 @@ public:
 
     void clear();
 
+    inline const int seqCount() const { return items_.count();}
+
+    void setItemsCountOnPage(const int count);
+    int pagesCount() const;
+    const int page() const;
+    void setPage(const int page);
+
 protected:
     ItemListModel(const IDList &items, QObject *parent = 0);
 
@@ -38,9 +45,14 @@ private:
     IDList items_;
     AbstractPointListReader *reader_;
 
+    int page_;
+    int itemsOnPage_;
+
 public slots:
     void update();
 
+signals:
+    void pageChanged();
 };
 
 #endif // ITEMLISTMODEL_H

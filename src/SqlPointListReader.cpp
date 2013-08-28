@@ -27,14 +27,12 @@ bool SqlPointListReader::prepareQueries()
     }
 
     readAllPointsIDs_ = QSqlQuery(dataBase());
-    readAllPointsIDs_.prepare("SELECT DISTINCT " + columnID() + " FROM " + tableName() + "");
+    readAllPointsIDs_.prepare("SELECT DISTINCT " + columnID() + " FROM " + tableName());
     if(readAllPointsIDs_.lastError().text() != " ")
     {
         qWarning() << "prepare select points ids" << readAllPointsIDs_.lastError().text();
         return false;
     }
-
-
 
     return true;
 }
