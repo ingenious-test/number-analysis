@@ -5,7 +5,7 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     dataBaseName_("database.db"),
     tableName_("points")
 {
-    if(QFile::exists(dataBaseName_))
+   /* if(QFile::exists(dataBaseName_))
     {
         if(!QFile::remove(dataBaseName_))
         {
@@ -29,11 +29,11 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
 
     qWarning() << "------BEGIN-WRITE-------";
     writer.write(seq);
-    qWarning() << "------END-WRITE-------";
-/*
+    qWarning() << "------END-WRITE-------";*/
+
     DatabaseGenerator databaseGenerator;
 
-    databaseGenerator.generateDataBase(dataBaseName_,tableName_);*/
+    databaseGenerator.generateDataBase(dataBaseName_,tableName_);
 
     reader_ = new SqlPointListReader(dataBaseName_, tableName_);
     static_cast<SqlPointListReader*>(reader_)->open();

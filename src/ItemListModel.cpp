@@ -38,7 +38,11 @@ QModelIndex ItemListModel::parent(const QModelIndex &child) const
 
 int ItemListModel::rowCount(const QModelIndex &parent) const
 {
-    return outItemsCount_ == 0 ? items_.size() : outItemsCount_;
+    if(items_.count() - outItemsCount_ < 0)
+    {
+        return items_.count();
+    }
+    return outItemsCount_ == 0 ? items_.count() : outItemsCount_;
 }
 
 int ItemListModel::columnCount(const QModelIndex &parent) const
