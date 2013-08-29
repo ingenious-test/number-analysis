@@ -45,11 +45,11 @@ public:
     void appendPointList(const IDList& items);
     bool containsPointList(const ID& id) const;
 
-    const int seqCount() const { return items_.count();}
+    int seqCount() const { return items_.count();}
 
     void setItemsCountOnPage(const int count);
     int pagesCount() const;
-    const int currentPage() const;
+    int currentPage() const;
     void setCurrentPage(const int page);
 
 

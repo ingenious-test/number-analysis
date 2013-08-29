@@ -310,7 +310,7 @@ int AnalysisTableModel::pagesCount() const
     return pages;
 }
 
-const int AnalysisTableModel::currentPage() const
+int AnalysisTableModel::currentPage() const
 {
     return currentPage_;
 }

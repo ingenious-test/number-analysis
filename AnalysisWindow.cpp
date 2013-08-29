@@ -5,7 +5,7 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     dataBaseName_("database.db"),
     tableName_("points")
 {
-   /* if(QFile::exists(dataBaseName_))
+    if(QFile::exists(dataBaseName_))
     {
         if(!QFile::remove(dataBaseName_))
         {
@@ -16,7 +16,7 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     SqlPointListWriter writer(dataBaseName_, tableName_);
     writer.open();
     SequencePointList seq;
-    for(int i = 0; i < 300000; i++)
+    for(int i = 0; i < 1500; i++)
     {
         qDebug() << i;
         PointList pointList(QString("id%1").arg(i));
@@ -30,7 +30,7 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     qWarning() << "------BEGIN-WRITE-------";
     writer.write(seq);
     qWarning() << "------END-WRITE-------";
-
+/*
     DatabaseGenerator databaseGenerator;
 
     databaseGenerator.generateDataBase(dataBaseName_,tableName_);*/
@@ -107,26 +107,7 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     analyzesResultSectionLayout->addWidget(analyzesView_);
     analyzesResultSectionLayout->addLayout(analysisButtonsSection);
 
-
-
-    QHBoxLayout* sequenceButtonsSection = new QHBoxLayout;
-    prevSeqPageButton_ = new QToolButton;
-    prevSeqPageButton_->setArrowType(Qt::LeftArrow);
-    seqPageLabel_ = new QLabel("0/0");
-    nextSeqPageButton_ = new QToolButton;
-    nextSeqPageButton_->setArrowType(Qt::RightArrow);
-
-    sequenceButtonsSection->addStretch();
-    sequenceButtonsSection->addWidget(prevSeqPageButton_);
-    sequenceButtonsSection->addWidget(seqPageLabel_);
-    sequenceButtonsSection->addWidget(nextSeqPageButton_);
-
-    QVBoxLayout* sequenceSection = new QVBoxLayout;
-    sequenceSection->addWidget(seqPointListView_);
-    sequenceSection->addLayout(sequenceButtonsSection);
-
-
-    subLayout->addLayout(sequenceSection);
+    subLayout->addWidget(seqPointListView_);
     subLayout->addLayout(analyzesResultSectionLayout);
 
     mainLayout->addWidget(mainMenu_);
@@ -148,11 +129,12 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     connect(analyzeButton, SIGNAL(clicked()), this, SLOT(onAnalyzeButtonClick()));
 
 
-    connect(seqPointListModel_, SIGNAL(currentPageChanged()), this, SLOT(onChangeSeqPage()));
-    connect(seqPointListModel_, SIGNAL(itemsCountOnPageChanged()), this, SLOT(onChangeSeqPage()));
-    connect(seqPointListModel_, SIGNAL(dataChanged()), this, SLOT(onChangeSeqPage()));
-    connect(prevSeqPageButton_, SIGNAL(clicked()), this, SLOT(onPrevSeqPageButtonClick()));
-    connect(nextSeqPageButton_, SIGNAL(clicked()), this, SLOT(onNextSeqPageButtonClick()));
+    connect(seqPointListModel_, SIGNAL(dataChanged()), this, SLOT(onSeqModelDataChanged()));
+    connect(seqPointListView_->scroll(), SIGNAL(valueChanged(int)), this, SLOT(onSeqViewScrollValueChanged(int)));
+    connect(seqPointListView_, SIGNAL(listResized()), this, SLOT(onSeqViewResized()));
+    connect(seqPointListModel_, SIGNAL(itemsCountOnPageChanged()), this, SLOT(onSeqModelItemOnPagesChanged()));
+
+
 
     connect(analyzesModel_, SIGNAL(currentPageChanged()), this, SLOT(onChangeAnalysisPage()));
     connect(analyzesModel_, SIGNAL(itemsCountOnPageChanged()), this, SLOT(onChangeAnalysisPage()));
@@ -160,10 +142,11 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     connect(prevAnalysisPageButton_, SIGNAL(clicked()), this, SLOT(onPrevAnalysisPageButtonClick()));
     connect(nextAnalysisPageButton_, SIGNAL(clicked()), this, SLOT(onNextAnalysisPageButtonClick()));
 
-    seqPointListModel_->setItemsCountOnPage(5);
-    seqPointListModel_->setCurrentPage(0);
+
     analyzesModel_->setItemsCountOnPage(5);
     analyzesModel_->setCurrentPage(0);
+
+    seqPointListModel_->setStartOutItem(0);
 }
 
 AnalysisWindow::~AnalysisWindow()
@@ -244,30 +227,44 @@ void AnalysisWindow::onImportClick()
     }
 }
 
-void AnalysisWindow::onPrevSeqPageButtonClick()
+void AnalysisWindow::onSeqModelDataChanged()
 {
-    if(seqPointListModel_->currentPage() != 0)
-    {
-        seqPointListModel_->setCurrentPage(seqPointListModel_->currentPage() - 1);
-    }
+    seqPointListView_->scroll()->setRange(0, seqPointListModel_->lastStartOutItem());
+    seqPointListView_->scroll()->setToolTip(QString::number(seqPointListModel_->startOutItem())
+                                            + "/"
+                                            + QString::number(seqPointListModel_->lastStartOutItem()));
 }
 
-void AnalysisWindow::onNextSeqPageButtonClick()
+void AnalysisWindow::onSeqViewScrollValueChanged(int value)
 {
-    if(seqPointListModel_->currentPage() + 1 != seqPointListModel_->pagesCount())
-    {
-        seqPointListModel_->setCurrentPage(seqPointListModel_->currentPage() + 1);
-    }
+    const QModelIndex index = seqPointListView_->currentIndex();
+    seqPointListModel_->setStartOutItem(value);
+    seqPointListView_->setCurrentIndex(index);
+    seqPointListView_->scroll()->setToolTip(QString::number(seqPointListModel_->startOutItem())
+                                            + "/"
+                                            + QString::number(seqPointListModel_->lastStartOutItem()));
 }
 
-void AnalysisWindow::onChangeSeqPage()
+void AnalysisWindow::onSeqViewResized()
 {
-    prevSeqPageButton_->setEnabled(seqPointListModel_->currentPage() != 0);
-    nextSeqPageButton_->setEnabled(seqPointListModel_->currentPage() + 1 != seqPointListModel_->pagesCount());
+    const QModelIndex index = seqPointListView_->currentIndex();
 
-    const QString pageLabelText = QString::number(seqPointListModel_->currentPage() + 1) + "/" + QString::number(seqPointListModel_->pagesCount());
-    seqPageLabel_->setText(pageLabelText);
+    QFontMetrics metrics(seqPointListView_->font());
+    seqPointListModel_->setOutItemsCount(((seqPointListView_->height()) / (metrics.height() + 2)));
+    seqPointListView_->scroll()->setRange(0, seqPointListModel_->lastStartOutItem());
+    seqPointListView_->scroll()->setValue(seqPointListModel_->startOutItem());
+
+    seqPointListView_->setCurrentIndex(index);
 }
+
+void AnalysisWindow::onSeqModelItemOnPagesChanged()
+{
+    seqPointListView_->scroll()->setRange(0, seqPointListModel_->lastStartOutItem());
+    seqPointListView_->scroll()->setToolTip(QString::number(seqPointListModel_->startOutItem())
+                                            + "/"
+                                            + QString::number(seqPointListModel_->lastStartOutItem()));
+}
+
 
 void AnalysisWindow::onPrevAnalysisPageButtonClick()
 {

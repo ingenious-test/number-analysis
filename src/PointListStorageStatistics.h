@@ -36,7 +36,7 @@ public:
 
     const QStringList toString();
 
-    const int size() const;
+    int size() const;
     bool contains(const IDStatistics &id) const;
 
     inline PointListStorageStatistics &operator<< (const PointListStatistics &statistics)

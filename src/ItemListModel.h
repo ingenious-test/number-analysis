@@ -29,12 +29,15 @@ public:
     void appendPointList(const ID& id);
     void appendPointList(const IDList &items);
 
-    const int seqCount() const { return items_.count();}
+    int seqCount() const { return items_.count();}
 
-    void setItemsCountOnPage(const int count);
-    int pagesCount() const;
-    const int currentPage() const;
-    void setCurrentPage(const int page);
+    void setOutItemsCount(const int count);
+    int outItemsCount() const;
+
+    int startOutItem() const;
+    void setStartOutItem(const int page);
+
+    int lastStartOutItem() const;
 
 protected:
     ItemListModel(const IDList &items, QObject *parent = 0);
@@ -43,8 +46,8 @@ private:
     IDList items_;
     AbstractPointListReader *reader_;
 
-    int currentPage_;
-    int itemsCountOnPage_;
+    int startOutItem_;
+    int outItemsCount_;
 
     void appendPointList_(const ID& id);
 

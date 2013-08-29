@@ -146,7 +146,7 @@ public:
     const IDAnalysisList getIDList() const;
     const IDAnalysis getIDAt(const int index) const;
 
-    const int size() const;
+    int size() const;
 
     AnalysisCollection* clone();
 

@@ -55,7 +55,7 @@ const QStringList PointListStorageStatistics::toString()
 }
 
 
-const int PointListStorageStatistics::size() const
+int PointListStorageStatistics::size() const
 {
     return statistics_.size();
 }

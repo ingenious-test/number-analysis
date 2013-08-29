@@ -109,7 +109,7 @@ const IDAnalysis AnalysisCollection::getIDAt(const int index) const
     return analysisTable_.at(index)->id();
 }
 
-const int AnalysisCollection::size() const
+int AnalysisCollection::size() const
 {
     return analysisTable_.size();
 }

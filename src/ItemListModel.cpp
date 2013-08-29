@@ -4,16 +4,16 @@ ItemListModel::ItemListModel(AbstractPointListReader *reader,
                              QObject *parent):
     QAbstractListModel(parent),
     reader_(reader),
-    currentPage_(0),
-    itemsCountOnPage_(0)
+    startOutItem_(0),
+    outItemsCount_(0)
 {
     update();
 }
 
 ItemListModel::ItemListModel(const IDList &items, QObject *parent):
     QAbstractListModel(parent),
-    currentPage_(0),
-    itemsCountOnPage_(0)
+    startOutItem_(0),
+    outItemsCount_(0)
 {
     appendPointList(items);
 }
@@ -38,13 +38,7 @@ QModelIndex ItemListModel::parent(const QModelIndex &child) const
 
 int ItemListModel::rowCount(const QModelIndex &parent) const
 {
-    if(currentPage_ + 1 == pagesCount())
-    {
-        const int rows = (pagesCount() * itemsCountOnPage_) - items_.count();
-        return itemsCountOnPage_ - rows;
-    }
-
-    return itemsCountOnPage_ == 0 ? items_.size() : itemsCountOnPage_;
+    return outItemsCount_ == 0 ? items_.size() : outItemsCount_;
 }
 
 int ItemListModel::columnCount(const QModelIndex &parent) const
@@ -64,13 +58,14 @@ QVariant ItemListModel::data(const QModelIndex &index, int role) const
     {
         if(index.column() == 0)
         {
-            if(itemsCountOnPage_ == 0)
+            if(outItemsCount_ == 0)
             {
                 return items_[index.row()];
             }
             else
             {
-                int ind = (currentPage_ * itemsCountOnPage_) + index.row();
+                //int ind = (currentPage_ * itemsCountOnPage_) + index.row();
+                const int ind = startOutItem_ + index.row();
                 if(ind >= 0 && ind < items_.count())
                 {
                     return items_[ind];
@@ -121,51 +116,52 @@ void ItemListModel::appendPointList(const IDList &items)
 }
 
 
-void ItemListModel::setItemsCountOnPage(const int count)
+void ItemListModel::setOutItemsCount(const int count)
 {
     if(count >= 0)
     {
-        itemsCountOnPage_ = count;
+        outItemsCount_ = count;
         emit itemsCountOnPageChanged();
-        if(currentPage_ >= pagesCount())
+        if(startOutItem_ >= lastStartOutItem())
         {
-            setCurrentPage(0);
+            setStartOutItem(0);
         }
+
         reset();
     }
 }
 
-int ItemListModel::pagesCount() const
+int ItemListModel::outItemsCount() const
 {
-    if(itemsCountOnPage_ == 0)
+    return outItemsCount_;
+}
+
+int ItemListModel::startOutItem() const
+{
+    return startOutItem_;
+}
+
+void ItemListModel::setStartOutItem(const int page)
+{
+    if(page >= 0 && page <= lastStartOutItem())
+    {
+        startOutItem_ = page;
+        emit currentPageChanged();
+        reset();
+    }
+}
+
+int ItemListModel::lastStartOutItem() const
+{
+    if(outItemsCount_ == 0)
     {
         return 1;
     }
 
     if(items_.isEmpty())
     {
-        return 1;
+        return 0;
     }
 
-    int pages  = items_.count() / itemsCountOnPage_;
-    if(items_.count() % itemsCountOnPage_ != 0)
-    {
-        pages++;
-    }
-    return pages;
-}
-
-const int ItemListModel::currentPage() const
-{
-    return currentPage_;
-}
-
-void ItemListModel::setCurrentPage(const int page)
-{
-    if(page >= 0 && page < pagesCount())
-    {
-        currentPage_ = page;
-        emit currentPageChanged();
-        reset();
-    }
+    return items_.count() - outItemsCount_;
 }

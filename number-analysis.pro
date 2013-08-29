@@ -141,3 +141,17 @@ CONFIG(release, debug|release) {
     RCC_DIR = build/release/.rcc
     UI_DIR = build/release/.ui
 }
+
+win32{
+
+QMAKE_CXXFLAGS += -W \
+-Wundef \
+#-Wfloat-equal \
+#-Wshadow \
+-Wunsafe-loop-optimizations \
+-Wconversion \
+#-Wlogical-op \
+#-Wpadded \
+#-Winvalid-pch \
+-Wdisabled-optimization \
+}
