@@ -16,7 +16,7 @@ AnalysisWindow::AnalysisWindow(QWidget *parent) :
     SqlPointListWriter writer(dataBaseName_, tableName_);
     writer.open();
     SequencePointList seq;
-    for(int i = 0; i < 100000; i++)
+    for(int i = 0; i < 1000; i++)
     {
         qDebug() << i;
         PointList pointList(QString("id%1").arg(i));

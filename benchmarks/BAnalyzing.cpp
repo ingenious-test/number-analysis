@@ -29,9 +29,8 @@ void BAnalyzing::run()
     qsrand(QTime(0,0).secsTo(QTime::currentTime()));
     for(int j = 0; j < pointsCount_; j++)
     {
-        const int pointsCount = (qrand() % (500) + 1);
         PointList points(QString("id%1").arg(j));
-        for(int pointNum = 0; pointNum < pointsCount; pointNum++)
+        for(int pointNum = 0; pointNum < 100; pointNum++)
         {
             points << pointNum;
         }

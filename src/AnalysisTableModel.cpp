@@ -53,8 +53,14 @@ QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
         {
             if(results_.isEmpty())
             {
-                return 0;
+                return 0.0;
             }
+
+            if(!results_.value(items_.at(index.row())).contains(listAnalysis.at(index.column() - 1)))
+            {
+                return 0.0;
+            }
+
             return results_.value(items_.at(index.row())).value(listAnalysis.at(index.column() - 1));
         }
     }
@@ -180,15 +186,10 @@ void AnalysisTableModel::addAnalysis(AbstractAnalysis *analysis)
     reset();
 }
 
-void AnalysisTableModel::removeAnalysis(const QString &id)
-{
-    removeAnalysis(id);
-    reset();
-}
-
 void AnalysisTableModel::appendPointList(const ID &id)
 {
     appendPointList_(id);
+    reset();
 }
 
 void AnalysisTableModel::appendPointList(const IDList &items)
@@ -197,6 +198,7 @@ void AnalysisTableModel::appendPointList(const IDList &items)
     {
         appendPointList_(id);
     }
+    reset();
 }
 
 bool AnalysisTableModel::containsPointList(const ID &id) const
@@ -212,6 +214,7 @@ void AnalysisTableModel::analyzeAll()
     {
         analyze(item);
     }
+    reset();
 }
 
 void AnalysisTableModel::analyze(const ID &item)
@@ -219,7 +222,6 @@ void AnalysisTableModel::analyze(const ID &item)
     PointList pointList = reader_->read(item);
     AnalysisResult result = collection_.analyze(pointList);
     results_.insertInc(item, result);
-    reset();
 }
 
 bool AnalysisTableModel::sortByAnalysisLessThan(const QPair<ID, double> &pair1,
@@ -242,10 +244,10 @@ void AnalysisTableModel::appendPointList_(const ID &id)
         return;
     }
 
-    if(!items_.contains(id))
+    if(!results_.contains(id))
     {
         items_.append(id);
-        reset();
+        results_.insert(id, AnalysisResult());
     }
     else
     {

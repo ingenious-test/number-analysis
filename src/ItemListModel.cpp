@@ -19,7 +19,6 @@ void ItemListModel::update()
     items_.clear();
     items_ = reader_->readAllItems();
     //appendPointList(reader_->readAllItems());
-    this->reset();
 }
 
 QModelIndex ItemListModel::index(int row, int column, const QModelIndex &parent) const

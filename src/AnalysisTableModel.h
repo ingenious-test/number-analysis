@@ -39,7 +39,6 @@ public:
     void  setResults(const AnalysisResults& results);
 
     void addAnalysis(AbstractAnalysis *analysis);
-    void removeAnalysis(const QString &id);
 
     void appendPointList(const ID& id);
     void appendPointList(const IDList& items);
