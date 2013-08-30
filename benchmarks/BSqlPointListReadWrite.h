@@ -13,6 +13,9 @@ public:
     void runRead();
     void runWrite();
 
+    void runReadAll();
+    void runWriteAll();
+
 private:
     int pointsCount_;
 };

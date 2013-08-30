@@ -3,17 +3,13 @@
 ItemListModel::ItemListModel(AbstractPointListReader *reader,
                              QObject *parent):
     QAbstractListModel(parent),
-    reader_(reader),
-    startOutItem_(0),
-    outItemsCount_(0)
+    reader_(reader)
 {
-    update();
+   update();
 }
 
 ItemListModel::ItemListModel(const IDList &items, QObject *parent):
-    QAbstractListModel(parent),
-    startOutItem_(0),
-    outItemsCount_(0)
+    QAbstractListModel(parent)
 {
     appendPointList(items);
 }
@@ -21,8 +17,8 @@ ItemListModel::ItemListModel(const IDList &items, QObject *parent):
 void ItemListModel::update()
 {
     items_.clear();
-    appendPointList(reader_->readAllItems());
-    emit dataChanged();
+    items_ = reader_->readAllItems();
+    //appendPointList(reader_->readAllItems());
     this->reset();
 }
 
@@ -38,11 +34,7 @@ QModelIndex ItemListModel::parent(const QModelIndex &child) const
 
 int ItemListModel::rowCount(const QModelIndex &parent) const
 {
-    if(items_.count() - outItemsCount_ < 0)
-    {
-        return items_.count();
-    }
-    return outItemsCount_ == 0 ? items_.count() : outItemsCount_;
+    return items_.count();
 }
 
 int ItemListModel::columnCount(const QModelIndex &parent) const
@@ -62,19 +54,9 @@ QVariant ItemListModel::data(const QModelIndex &index, int role) const
     {
         if(index.column() == 0)
         {
-            if(outItemsCount_ == 0)
-            {
-                return items_[index.row()];
-            }
-            else
-            {
-                //int ind = (currentPage_ * itemsCountOnPage_) + index.row();
-                const int ind = startOutItem_ + index.row();
-                if(ind >= 0 && ind < items_.count())
-                {
-                    return items_[ind];
-                }
-            }
+
+            return items_[index.row()];
+
         }
     }
     else
@@ -106,7 +88,6 @@ void ItemListModel::appendPointList(const ID &id)
 {
     appendPointList_(id);
     qSort(items_);
-    emit dataChanged();
 }
 
 void ItemListModel::appendPointList(const IDList &items)
@@ -116,56 +97,4 @@ void ItemListModel::appendPointList(const IDList &items)
         appendPointList_(id);
     }
     qSort(items_);
-    emit dataChanged();
-}
-
-
-void ItemListModel::setOutItemsCount(const int count)
-{
-    if(count >= 0)
-    {
-        outItemsCount_ = count;
-        emit itemsCountOnPageChanged();
-        if(startOutItem_ >= lastStartOutItem())
-        {
-            setStartOutItem(0);
-        }
-
-        reset();
-    }
-}
-
-int ItemListModel::outItemsCount() const
-{
-    return outItemsCount_;
-}
-
-int ItemListModel::startOutItem() const
-{
-    return startOutItem_;
-}
-
-void ItemListModel::setStartOutItem(const int page)
-{
-    if(page >= 0 && page <= lastStartOutItem())
-    {
-        startOutItem_ = page;
-        emit currentPageChanged();
-        reset();
-    }
-}
-
-int ItemListModel::lastStartOutItem() const
-{
-    if(outItemsCount_ == 0)
-    {
-        return 1;
-    }
-
-    if(items_.isEmpty())
-    {
-        return 0;
-    }
-
-    return items_.count() - outItemsCount_;
 }

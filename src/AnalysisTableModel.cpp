@@ -4,9 +4,7 @@
 
 AnalysisTableModel::AnalysisTableModel(AbstractPointListReader *reader, QObject *parent):
     QAbstractItemModel(parent),
-    reader_(reader),
-    currentPage_(0),
-    itemsCountOnPage_(0)
+    reader_(reader)
 {
 
 }
@@ -28,13 +26,7 @@ QModelIndex AnalysisTableModel::parent(const QModelIndex &child) const
 
 int AnalysisTableModel::rowCount(const QModelIndex &parent) const
 {
-    if(currentPage_ + 1 == pagesCount())
-    {
-        const int rows = (pagesCount() * itemsCountOnPage_) - items_.count();
-        return itemsCountOnPage_ - rows;
-    }
-
-    return itemsCountOnPage_ == 0 ? items_.size() : itemsCountOnPage_;
+    return items_.count();
 }
 
 int AnalysisTableModel::columnCount(const QModelIndex &parent) const
@@ -53,22 +45,9 @@ QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole)
     {
-        int ind = index.row();
-        if(itemsCountOnPage_ > 0)
-        {
-            ind = (currentPage_ * itemsCountOnPage_) + index.row();
-        }
-
-        bool indIsValid = ind >= 0 && ind < items_.count();
-
-        if(!indIsValid)
-        {
-            return QVariant();
-        }
-
         if(index.column() == 0)
         {
-            return items_.at(ind);
+            return items_.at(index.row());
         }
         else
         {
@@ -76,7 +55,7 @@ QVariant AnalysisTableModel::data(const QModelIndex &index, int role) const
             {
                 return 0;
             }
-            return results_.value(items_.at(ind)).value(listAnalysis.at(index.column() - 1));
+            return results_.value(items_.at(index.row())).value(listAnalysis.at(index.column() - 1));
         }
     }
     else
@@ -210,7 +189,6 @@ void AnalysisTableModel::removeAnalysis(const QString &id)
 void AnalysisTableModel::appendPointList(const ID &id)
 {
     appendPointList_(id);
-    emit dataChanged();
 }
 
 void AnalysisTableModel::appendPointList(const IDList &items)
@@ -219,7 +197,6 @@ void AnalysisTableModel::appendPointList(const IDList &items)
     {
         appendPointList_(id);
     }
-    emit dataChanged();
 }
 
 bool AnalysisTableModel::containsPointList(const ID &id) const
@@ -276,51 +253,3 @@ void AnalysisTableModel::appendPointList_(const ID &id)
     }
 }
 
-void AnalysisTableModel::setItemsCountOnPage(const int count)
-{
-    if(count >= 0)
-    {
-        itemsCountOnPage_ = count;
-        emit itemsCountOnPageChanged();
-        if(currentPage_ >= pagesCount())
-        {
-            setCurrentPage(0);
-        }
-        reset();
-    }
-}
-
-int AnalysisTableModel::pagesCount() const
-{
-    if(itemsCountOnPage_ == 0)
-    {
-        return 1;
-    }
-
-    if(items_.isEmpty())
-    {
-        return 1;
-    }
-
-    int pages  = items_.count() / itemsCountOnPage_;
-    if(items_.count() % itemsCountOnPage_ != 0)
-    {
-        pages++;
-    }
-    return pages;
-}
-
-int AnalysisTableModel::currentPage() const
-{
-    return currentPage_;
-}
-
-void AnalysisTableModel::setCurrentPage(const int page)
-{
-    if(page >= 0 && page < pagesCount())
-    {
-        currentPage_ = page;
-        emit currentPageChanged();
-        reset();
-    }
-}

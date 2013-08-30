@@ -17,8 +17,7 @@ SqlPointListReader::~SqlPointListReader()
 bool SqlPointListReader::prepareQueries()
 {
     readPointsByID_ = QSqlQuery(dataBase());
-
-
+    readPointsByID_.setForwardOnly(true);
     readPointsByID_.prepare("SELECT " + columnVALUE() + " FROM " + tableName() + " WHERE " + columnID() + " = :id");
     if(readPointsByID_.lastError().text() != " ")
     {
@@ -27,6 +26,7 @@ bool SqlPointListReader::prepareQueries()
     }
 
     readAllPointsIDs_ = QSqlQuery(dataBase());
+    readAllPointsIDs_.setForwardOnly(true);
     readAllPointsIDs_.prepare("SELECT DISTINCT " + columnID() + " FROM " + tableName());
     if(readAllPointsIDs_.lastError().text() != " ")
     {

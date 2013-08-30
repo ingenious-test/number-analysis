@@ -57,13 +57,15 @@ CONFIG(stress){
         benchmarks/BSqlPointListInterface.cpp \
         benchmarks/BSqlPointListReadWrite.cpp \
         benchmarks/BStatisticsCollection.cpp \
-        benchmarks/BCSVImporterExporter.cpp
+        benchmarks/BCSVImporterExporter.cpp \
+        benchmarks/BAnalyzing.cpp
 
     HEADERS += benchmarks/BAnalysisCollections.h \
         benchmarks/BSqlPointListInterface.h \
         benchmarks/BSqlPointListReadWrite.h \
         benchmarks/BStatisticsCollection.h \
-        benchmarks/BCSVImporterExporter.h
+        benchmarks/BCSVImporterExporter.h \
+        benchmarks/BAnalyzing.h
 }
 
 SOURCES += main.cpp\

@@ -128,6 +128,10 @@ bool SqlPointListInterface::open()
         return false;
     }
 
+    query.exec("PRAGMA synchronous = OFF;");
+    query.exec("PRAGMA cache_size = 20000;");
+
+
 
     if(prepareQueries())
     {

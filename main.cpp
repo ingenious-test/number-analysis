@@ -20,6 +20,7 @@
 #include "benchmarks/BSqlPointListReadWrite.h"
 #include "benchmarks/BStatisticsCollection.h"
 #include "benchmarks/BCSVImporterExporter.h"
+#include "benchmarks/BAnalyzing.h"
 #endif
 
 
@@ -96,32 +97,41 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef STRESS
-    /* qWarning() << "\n" << "Analysis collection benchmark" << "\n";
+//    qWarning() << "\n" << "Analysis collection benchmark" << "\n";
 
-    BAnalysisCollections bAnalysisCollections(10000);
-    bAnalysisCollections.run();
+//    BAnalysisCollections bAnalysisCollections(10000);
+//    bAnalysisCollections.run();
 
-    qWarning() << "\n" << "SqlInterface benchmark"  << "\n";;
+//    qWarning() << "\n" << "SqlInterface benchmark"  << "\n";;
 
-    BSqlPointListInterface bSqlPointListInterface(10000);
-    bSqlPointListInterface.run();
+//    BSqlPointListInterface bSqlPointListInterface(10000);
+//    bSqlPointListInterface.run();
 
-    qWarning() << "\n" << "SqlPointListReadWrite benchmark"  << "\n";
+//    qWarning() << "\n" << "SqlPointListReadWrite benchmark"  << "\n";
 
-    BSqlPointListReadWrite bSqlPointListReadWrite(10000);
-    bSqlPointListReadWrite.runWrite();
-    bSqlPointListReadWrite.runRead();
+//    BSqlPointListReadWrite bSqlPointListReadWrite(10000);
+//    bSqlPointListReadWrite.runWriteAll();
+//    bSqlPointListReadWrite.runReadAll();
 
-    qWarning() << "\n" << "StaticCollection benchmark"  << "\n";;
+//    bSqlPointListReadWrite.runWrite();
+//    bSqlPointListReadWrite.runRead();
 
-    BStatisticsCollection  bStatisticsCollection;
-    bStatisticsCollection.generateDatabase(10000, 100);
-    bStatisticsCollection.statistics();*/
+//    qWarning() << "\n" << "StaticCollection benchmark"  << "\n";
 
-    qWarning() << "\n" << "CSV import, export and validation benchmarck"  << "\n";
+//    BStatisticsCollection  bStatisticsCollection;
+//    bStatisticsCollection.generateDatabase(10000, 100);
+//    bStatisticsCollection.statistics();
 
-    BCSVImporterExporter  bCSVImporterExporter(20000, 200);
-    bCSVImporterExporter.run();
+//    qWarning() << "\n" << "CSV import, export and validation benchmarck"  << "\n";
+
+//    BCSVImporterExporter  bCSVImporterExporter(20000, 200);
+//    bCSVImporterExporter.run();
+
+    qWarning() << "\n" << "Analyzing benchmark"  << "\n";
+
+    BAnalyzing  bAnalyzing(100000);
+    bAnalyzing.run();
+
 #endif
     QDir::setCurrent(currentDir);
 
@@ -131,7 +141,5 @@ int main(int argc, char *argv[])
     analysisWindow.show();
 #endif
 
-    
     return a.exec();
-
 }

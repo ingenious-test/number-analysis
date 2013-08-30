@@ -48,10 +48,6 @@ private:
     const QString dataBaseName_;
     const QString tableName_;
 
-    QToolButton* prevAnalysisPageButton_;
-    QLabel* analysisPageLabel_;
-    QToolButton* nextAnalysisPageButton_;
-
     void createMenu();
 
 private slots:
@@ -63,16 +59,6 @@ private slots:
 
     void onExportClick();
     void onImportClick();
-
-
-    void onSeqModelDataChanged();
-    void onSeqViewScrollValueChanged(int value);
-    void onSeqViewResized();
-    void onSeqModelItemOnPagesChanged();
-
-    void onPrevAnalysisPageButtonClick();
-    void onNextAnalysisPageButtonClick();
-    void onChangeAnalysisPage();
 };
 
 #endif // WIDGET_H

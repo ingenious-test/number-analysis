@@ -16,6 +16,7 @@ class SqlPointListInterface
     friend class BSqlPointListReadWrite;
     friend class TAnalysisTableModel;
     friend class TItemListModel;
+    friend class BAnalyzing;
 
 public:
     SqlPointListInterface(const QString &dataBaseName = QString(), const QString &tableName = QString());

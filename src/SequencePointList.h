@@ -11,6 +11,8 @@ class SequencePointList
     inline const PointList& at(int i) const { return sequencsePoints_.at(i);}
     inline int count() const{ return sequencsePoints_.count();}
 
+    inline void clear() { sequencsePoints_.clear();}
+
     inline void append(const PointList& pointList) {sequencsePoints_.append(pointList);}
 
     inline bool isEmpty() const { return sequencsePoints_.isEmpty();}
