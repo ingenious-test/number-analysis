@@ -46,8 +46,6 @@ public:
 
     void analyzeAll();
 
-    static bool columnIDLessThan(const ID &s1, const ID &s2);
-    static bool columnIDMoreThan(const ID &s1, const ID &s2);
 
 protected slots:
     void analyze(const ID& item);
@@ -56,6 +54,8 @@ protected slots:
                                 const QPair<ID, double> &pair2);
     static bool sortByAnalysisMoreThan(const QPair<ID, double> &pair1,
                                        const QPair<ID, double> &pair2);
+    static bool columnIDLessThan(const ID &s1, const ID &s2);
+    static bool columnIDMoreThan(const ID &s1, const ID &s2);
 
 private:
     AnalysisResults results_;

@@ -28,7 +28,6 @@
 #include "AnalysisWindow.h"
 #endif
 
-
 int main(int argc, char *argv[])
 {
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -138,7 +137,7 @@ int main(int argc, char *argv[])
 
 #ifdef APP
     AnalysisWindow analysisWindow;
-    analysisWindow.show();
+    analysisWindow.show();  
 #endif
 
     return a.exec();

@@ -227,13 +227,14 @@ void AnalysisTableModel::analyze(const ID &item)
 bool AnalysisTableModel::sortByAnalysisLessThan(const QPair<ID, double> &pair1,
                                                 const QPair<ID, double> &pair2)
 {
-    return pair1.second < pair2.second;
+    return pair1.second <= pair2.second;
 }
 
 bool AnalysisTableModel::sortByAnalysisMoreThan(const QPair<ID, double> &pair1,
                                                 const QPair<ID, double> &pair2)
 {
-    return sortByAnalysisLessThan(pair2, pair1);
+
+   return sortByAnalysisLessThan(pair2, pair1);
 }
 
 void AnalysisTableModel::appendPointList_(const ID &id)
