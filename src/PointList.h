@@ -23,10 +23,10 @@ public:
     inline bool isValid() const { return !id_.isNull();}
 
     QList<Point> points() const;
-    const Point& at(int i) const;
+    const Point& at(const int i) const;
 
     void append(const Point& point);
-    void insert(const int ind, const Point& point);
+    void setPointAt(const int ind, const Point& point);
     inline void clear() {*this = PointList();}
 
     QString toString() const;

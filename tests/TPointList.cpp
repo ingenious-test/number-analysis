@@ -24,6 +24,30 @@ void TPointList::TestToList_data()
                                 << Point(3.0)
                                 << Point(5.21)
                                 << Point(2.0));
+
+    QTest::newRow("second") <<  (QList<int>()
+                                << 5 << 10 << 15)
+                            << (QList<Point>()
+                                << Point(1.1)
+                                << Point(4.35)
+                                << Point(3.5))
+                            << (QList<Point>()
+                                << Point(0.0)
+                                << Point(0.0)
+                                << Point(0.0)
+                                << Point(0.0)
+                                << Point(0.0)
+                                << Point(1.1)
+                                << Point(1.1)
+                                << Point(1.1)
+                                << Point(1.1)
+                                << Point(1.1)
+                                << Point(4.35)
+                                << Point(4.35)
+                                << Point(4.35)
+                                << Point(4.35)
+                                << Point(4.35)
+                                << Point(3.5));
 }
 
 void TPointList::TestToList()
@@ -43,7 +67,7 @@ void TPointList::TestToList()
     {
         const int ind = indexes.at(i);
         const Point value = points.at(i);
-        pointList.insert(ind, value);
+        pointList.setPointAt(ind, value);
     }
 
     const QList<Point> actualResult = pointList.points();

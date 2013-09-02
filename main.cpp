@@ -12,6 +12,7 @@
 #include "tests/TCSVPointListImporter.h"
 #include "tests/TCSVPointListValidator.h"
 #include "tests/TCSVPointListExporter.h"
+#include "tests/TPointList.h"
 #endif
 
 #ifdef STRESS
@@ -93,6 +94,11 @@ int main(int argc, char *argv[])
 
     TCSVPointListExporter tCSVPointListExporter;
     QTest::qExec(&tCSVPointListExporter);
+
+    qWarning() << "\n";
+
+    TPointList tPointList;
+    QTest::qExec(&tPointList);
 #endif
 
 #ifdef STRESS
