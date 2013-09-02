@@ -12,7 +12,7 @@ ThirdQuartileAnalysis::ThirdQuartileAnalysis(const ThirdQuartileAnalysis &a):
 
 double ThirdQuartileAnalysis::analyze(const PointList &values) const
 {
-    QList<Point> sortedList = values.clonePoints();
+    QList<Point> sortedList = values.points();
     qSort(sortedList);
     const int listCount = sortedList.count();
 

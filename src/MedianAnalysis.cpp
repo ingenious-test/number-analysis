@@ -13,7 +13,7 @@ MedianAnalysis::MedianAnalysis(const MedianAnalysis &a):
 
 double MedianAnalysis::analyze(const PointList &values) const
 {
-    QList<Point> sortedList = values.clonePoints();
+    QList<Point> sortedList = values.points();
     qSort(sortedList);
     const int listCount = sortedList.count();
 

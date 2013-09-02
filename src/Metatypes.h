@@ -21,5 +21,7 @@ Q_DECLARE_METATYPE(Qt::SortOrder)
 Q_DECLARE_METATYPE(AbstractStatictics*)
 Q_DECLARE_METATYPE(AbstractAnalysis*)
 Q_DECLARE_METATYPE(ParsedPoint)
+Q_DECLARE_METATYPE(QList<int>)
+Q_DECLARE_METATYPE(QList<Point>)
 
 #endif // METATYPES_H

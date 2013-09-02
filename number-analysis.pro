@@ -94,7 +94,8 @@ SOURCES += main.cpp\
     src/PointList.cpp \
     src/SequencePointList.cpp \
     src/FirstQuartileAnalysis.cpp \
-    src/ThirdQuartileAnalysis.cpp
+    src/ThirdQuartileAnalysis.cpp \
+    tests/TPointList.cpp
 
 HEADERS  += src/StupidAnalysis.h \
     src/AbstractAnalysis.h \    
@@ -123,7 +124,8 @@ HEADERS  += src/StupidAnalysis.h \
     src/PointList.h \
     src/SequencePointList.h \    
     src/FirstQuartileAnalysis.h \
-    src/ThirdQuartileAnalysis.h
+    src/ThirdQuartileAnalysis.h \
+    tests/TPointList.h
 
 
 

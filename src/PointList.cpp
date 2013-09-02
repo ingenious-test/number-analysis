@@ -10,10 +10,30 @@ PointList::PointList(const ID &id) :
 {
 }
 
+QList<Point> PointList::points() const
+{
+    return QList<Point>();
+}
+
+const Point &PointList::at(int i) const
+{
+    return Point(0.0);
+}
+
+void PointList::append(const Point &point)
+{
+
+}
+
+void PointList::insert(const int ind, const Point &point)
+{
+
+}
+
 QString PointList::toString() const
 {
     QStringList pointsRepresentation;
-    foreach(const Point &p, list_)
+    foreach(const Point &p, points_)
     {
         pointsRepresentation << QString::number(p);
     }

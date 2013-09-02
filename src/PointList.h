@@ -17,16 +17,16 @@ public:
     inline const ID& id() const { return id_;}
     inline void setID(const ID& id) { id_ = id;}
 
-    inline int count() const{ return list_.count();}
+    inline int count() const{ return points_.count();}
 
-    inline bool isEmpty() const { return list_.isEmpty();}
+    inline bool isEmpty() const { return points_.isEmpty();}
     inline bool isValid() const { return !id_.isNull();}
 
-    inline const QList<Point> &points() const { return list_;}
-    inline QList<Point> clonePoints() const { return QList<Point>(list_);}
-    inline const Point& at(int i) const { return list_.at(i);}
+    QList<Point> points() const;
+    const Point& at(int i) const;
 
-    inline void append(const Point& point) {list_.append(point);}
+    void append(const Point& point);
+    void insert(const int ind, const Point& point);
     inline void clear() {*this = PointList();}
 
     QString toString() const;
@@ -36,15 +36,15 @@ public:
     static bool fuzzyComparePoints(const Point actual, const Point expected);
 
 
-    inline const Point &operator[](int i) const { return list_[i];}
-    inline Point &operator[](int i) { return list_[i];}
+    inline const Point &operator[](int i) const { return points_[i];}
+    inline Point &operator[](int i) { return points_[i];}
 
     inline PointList &operator<< (const Point &point)
     { append(point); return *this; }
 
 private:
     ID id_;
-    QList<Point> list_;
+    QHash<int, Point> points_;
 };
 
 #endif // POINTLIST_H
